@@ -1,12 +1,14 @@
 {
-  "name": "areact",
+  "name": "react_base",
   "version": "1.0.0",
-  "description": "",
+  "description": "Build up of REACT from npm, 'npm run dev' will set a monitor",
   "main": "index.js",
   "scripts": {
+    "dev": "webpack -d --watch",
+    "build": "webpack -d",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Matt Cliff",
   "license": "ISC",
   "dependencies": {
     "babel-loader": "^7.1.4",
