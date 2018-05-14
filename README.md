@@ -1,10 +1,47 @@
-# myslsapp
-My Serverless App
+# My Serverless App
+
+
+The repository is a collection of resouces to support a serverless application on **AWS Cloud** using the **REACT** framework.
 
 This app will have login capability, a list of customers, a list of items, and orders.
 
-added *react_base* which is a skeleton based off these [notes](http://blog.tamizhvendan.in/blog/2015/11/23/a-beginner-guide-to-setup-react-dot-js-environment-using-babel-6-and-webpack/) for a simple REACT framework.
+## REACT front-end
 
+### REACT base
+The *react_base* folder has a basic **REACT** framework, the only dependency is that node.js and npm are installed.
+
+In the *react_base* directory to install the necessary *Node.js* components
+
+`npm install`
+
+Then to turn on webpack as a watcher.
+
+`npm run dev`
+
+This will create the *src/client/public/bundle.js* file which our hard coded *src/client/index.html* references and can be accessed from any static content provider.
+
+skeleton based off these [notes](http://blog.tamizhvendan.in/blog/2015/11/23/a-beginner-guide-to-setup-react-dot-js-environment-using-babel-6-and-webpack/) for a simple REACT framework.
+
+### MyDemo
+
+This is the React Starter Kit *isomorphic* web app boilerplate.  This is really a model for how to tie in the pieces one by one.
+
+
+### nav-app
+
+I need to rename this;  this is a REACT framework using the *react create script* in Node Js.
+
+This will start a web server on port 3000, and a watcher on the react resources
+
+`npm start`
+
+
+
+
+
+
+
+## AWS Lambda
 
 Follow along with [Serverless Stack](https://serverless-stack.com/)
 
@@ -15,11 +52,15 @@ Git directories
 - static  (code to build the static REACT framework)
 
 
+## AWS CloudFormation
+
 cfn-ec2workstation.json    #  cloudformation template to build a SLS workstation
   - it is intended for system work, we can stand this up,  update the repo as necessary and, tear down
-  - will set up the 
+  - will set up the
   - TODO:  should I make a brand new VPC for this?
 
+
+## Build and Deploy Process
 
 To Build
 - create a SLS workstation using the CFN template
