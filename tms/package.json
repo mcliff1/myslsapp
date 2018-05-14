@@ -1,6 +1,7 @@
 {
-  "name": "nav-app",
+  "name": "tms",
   "version": "0.1.0",
+  "author" : "Matt Cliff",
   "private": true,
   "dependencies": {
     "react": "^16.3.2",
