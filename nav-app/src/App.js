@@ -14,7 +14,7 @@ Joe Smith, Denver Colorado
 const Home = () => (
 <div>
 <h2>Home</h2>
-This is only the beginning
+This is only the beginning, what am I doing?
 <CustDetail />
 </div>
 );
