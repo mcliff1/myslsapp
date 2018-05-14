@@ -3,6 +3,9 @@ My Serverless App
 
 This app will have login capability, a list of customers, a list of items, and orders.
 
+added *react_base* which is a skeleton based off these [notes](http://blog.tamizhvendan.in/blog/2015/11/23/a-beginner-guide-to-setup-react-dot-js-environment-using-babel-6-and-webpack/) for a simple REACT framework.
+
+
 Follow along with [Serverless Stack](https://serverless-stack.com/)
 
 Git directories
