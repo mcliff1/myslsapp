@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route,  Link } from 'react-router-dom';
+import { Nav, NavItem, NavLink } from 'reactstrap';
 import './App.css';
 import Home from './Home.js';
 import Customer from './Customer.js';
 import Load from './Load.js';
 import Carrier from './Carrier.js';
+import AppNav from './AppNav.js';
 
 // https://react-bootstrap.github.io/components/label/
 
@@ -26,13 +28,7 @@ const routes = [
 const App = () => (
       <Router>
       <div className="App">
-        <nav className="navbar">
-          <div className="nav-link"><Link to="/">Home</Link></div>
-          <div className="nav-link"><Link to="/customer">Customer</Link></div>
-          <div className="nav-link"><Link to="/load">Load</Link></div>
-          <div className="nav-link"><Link to="/carrier">Carrier</Link></div>
-          <div className="nav-link">Logged In User</div>
-        </nav>
+        <AppNav />
 
        <div className="container">
        <Route exact path="/" component={Home} />

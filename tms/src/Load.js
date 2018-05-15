@@ -72,9 +72,11 @@ class Load extends React.Component {
   render() {
     return(
       <div>
-        <h2>Load</h2>
+        <div align="left">
         <Link to="/load/detail">Load Detail</Link> &nbsp; - &nbsp;
         <Link to="/load/list">Load List</Link>
+        </div>
+
 
         <Route exact path="/load/detail" component={LoadDetail} />
         <Route exact path="/load/list" component={LoadList} />
