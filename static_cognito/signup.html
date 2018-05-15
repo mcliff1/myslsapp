@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme-3.3.7.min.css">
+    <link rel="stylesheet" href="/css/site.css">
+    <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADw8PAA7k8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIiEAAAAAAAACIhAAAAAAAAIiIQAAAAAAACIiEAAAAAAAAiIhAAAAAAAAIiIQAAAAAAACIiEAAAAAAAAiIhAAAAARERIiIQAAACIiIiIiEAAAAiIiIiIhAAAAIiIQAAAAAAACIiEAAAAAAAAiIhAAAAAAAAIiIQAAAAAAACIiEAAP/wAAh/8AAIP/AADB/wAA4P8AAPB/AAD4PwAA/B8AAMAPAADABwAA4AMAAPB/AAD4PwAA/B8AAP4PAAD/BwAA" rel="icon" type="image/x-icon" />
+  </head>
+  <body>
+    <div class="container" role="main">
+      <h1>Sign up for GladNews!</h1>
+      <form id="signUp" class="col-md-8" action="">
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input class="form-control" id="email" placeholder="me@myself.i">
+          <label for="username">Username</label>
+          <input class="form-control" id="newUsername" placeholder="al3x">
+          <label for="fullname">Full Name</label>
+          <input class="form-control" id="fullname" placeholder="Alex Williams">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="newPassword" placeholder="Password">
+        </div>
+        <button type="button" id="buttonSignUp" class="btn btn-primary">Sign Up</button>
+      </form>
+      <div class="col-md-4">
+        <h4>Or Sign In</h4>
+        <form id="login" action="">
+          <div class="form-group">
+            <label for="password">Username/Email</label>
+            <input class="form-control" id="username" placeholder="somebody">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password">
+          </div>
+          <button type="button" id="buttonLogin" class="btn btn-primary">Sign In</button>
+        </form>
+        <!-- <button type="button" id="buttonLogout" class="btn btn-default">Log Out</button> -->
+      </div>
+    </div>
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="/js/bootstrap-3.3.7.min.js"></script>
+    <script src="/aws-sdks/amazon-cognito-sdk.v1.16.0.min.js"></script>
+    <script src="/aws-sdks/amazon-cognito-identity.v1.16.0.min.js"></script>
+    <script src="/js/cognito-utils.js"></script>
+    <script src="/js/config.js"></script>
+    <script src="/js/gql.js"></script>
+    <script src="/js/signup.js"></script>
+  </body>
+</html>

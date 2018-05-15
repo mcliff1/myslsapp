@@ -1,0 +1,7 @@
+.nav>.authenticated {
+  display: none
+}
+
+#features>p>.btn {
+  min-width: 20em
+}
