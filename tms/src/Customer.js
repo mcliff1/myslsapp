@@ -31,11 +31,15 @@ class CustomerList extends React.Component {
   render() {
     return(
       <div>
-      <h3>Customer List</h3>
-      <table>
-      <tr><td><CustomerSummary /></td></tr>
-      <tr><td><CustomerSummary /></td></tr>
-      </table>
+        <h3>Customer List</h3>
+        <div className="container">
+          <div className="row">
+            <CustomerSummary />
+          </div>
+          <div className="row">
+            <CustomerSummary />
+          </div>
+        </div>
       </div>
     )
   };

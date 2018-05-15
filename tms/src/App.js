@@ -6,6 +6,7 @@ import Customer from './Customer.js';
 import Load from './Load.js';
 import Carrier from './Carrier.js';
 
+// https://react-bootstrap.github.io/components/label/
 
 
 
@@ -25,15 +26,15 @@ const routes = [
 const App = () => (
       <Router>
       <div className="App">
-        <nav class="navbar">
-          <div class="nav-link"><Link to="/">Home</Link></div>
-          <div class="nav-link"><Link to="/customer">Customer</Link></div>
-          <div class="nav-link"><Link to="/load">Load</Link></div>
-          <div class="nav-link"><Link to="/carrier">Carrier</Link></div>
-          <div class="nav-link">Logged In User</div>
+        <nav className="navbar">
+          <div className="nav-link"><Link to="/">Home</Link></div>
+          <div className="nav-link"><Link to="/customer">Customer</Link></div>
+          <div className="nav-link"><Link to="/load">Load</Link></div>
+          <div className="nav-link"><Link to="/carrier">Carrier</Link></div>
+          <div className="nav-link">Logged In User</div>
         </nav>
 
-       <div class="container">
+       <div className="container">
        <Route exact path="/" component={Home} />
        <Route path="/customer" component={Customer} />
        <Route path="/load" component={Load} />
