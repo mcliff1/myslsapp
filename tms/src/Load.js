@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import Select from 'react-select';
 import { BrowserRouter as Router,  Route, Link } from 'react-router-dom';
-import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { Form, FormGroup, Label, Col, Input, FormText } from 'reactstrap';
 
 
 class SelectBox extends React.Component {
@@ -17,20 +16,13 @@ class SelectBox extends React.Component {
     const { selectedOption } = this.state;
 
     return(
-      <div className="container">
-        <div className="row">
+      <div>
         <div className="col">Label</div>
         <div className="col">
-        <Select
-          name="form-field-name"
-          value={selectedOption}
-          onChange={this.handleChange}
-          options={[
-            { value: 'one', label: 'One' },
-            { value: 'two', label: 'Two' },
-          ]}
-        />
-        </div>
+        <Input
+          type="select"
+          name="mySelect"
+          id="exampleMySelect" />
         </div>
       </div>
     );
@@ -42,21 +34,17 @@ class LoadDetail extends React.Component {
   render() {
     return(
       <div>
-        <div className="container">
-          <div className="row">
-            <div className="col"><SelectBox /></div>
-            <div className="col">
-            <FormGroup controlId="formControlProduct">
-              <ControlLabel>Product</ControlLabel>
-              <FormControl componentClass="text" placeholder="add text" />
-            </FormGroup>
-            </div>
-            <div className="col"><SelectBox /></div>
-            <div className="col"><SelectBox /></div>
-            <div className="col"><SelectBox /></div>
-
-          </div>
-        </div>
+        <Form>
+          <FormGroup row>
+            <SelectBox />
+          </FormGroup>
+          <FormGroup row>
+              <Label for="productName" sm={2}>Product</Label>
+              <Col sm={10}>
+                <Input type="email" name="email" id="productName" placeholder="product..." />
+              </Col>
+          </FormGroup>
+        </Form>
         <h3>Shipper</h3>
         <h3>Consignee</h3>
         <h3>Carrier</h3>
