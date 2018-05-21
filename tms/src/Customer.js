@@ -7,7 +7,7 @@ class CustomerDetail extends React.Component {
 
   render() {
     return(
-      <div>
+      <div style={{ background: "#f0f0f0" }}>
       <h3>Customer Detail</h3>
       </div>
     )
