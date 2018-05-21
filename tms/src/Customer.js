@@ -40,7 +40,7 @@ class CustomerDetail extends React.Component {
 
     this.state = {
       name : 'fred'
-    }
+    };
   }
 
   render() {
@@ -61,11 +61,15 @@ class CustomerDetail extends React.Component {
 
 
 class LoadContent extends React.Component {
-  state = {
-    loading: true,
-    error: false,
-    data: [],
-  };
+  constructor(props) {
+    super(props);
+
+    this.setState({
+      loading: true,
+      error: false,
+      data: [],
+    });
+  }
 
   componentDidMount1() {
     fetch(this.props.url)
@@ -124,7 +128,7 @@ class CustomerAdd extends React.Component {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    this.setState({ [name]: value} );
+    this.setState({ [name]: value});
   }
 
   handleSubmit(event) {
@@ -133,7 +137,9 @@ class CustomerAdd extends React.Component {
 
     const name = target.name;
 
-    alert('name was submitted: ' + event.name);
+    //alert('name was submitted: ' + event.name);
+    console.log(event);
+    alert(event);
     event.preventDefault();
     this.props.history.push('/customer/');
   }
@@ -268,13 +274,12 @@ class Customer extends React.Component {
   render() {
     return(
       <div>
-      <h2>Customer</h2>
       <Link to="/customer/add">Add</Link> &nbsp; - &nbsp;
       <Link to="/customer/detail">Customer Detail</Link> &nbsp; - &nbsp;
       <Link to="/customer/">Customer List</Link>
 
       <Route exact path="/customer/add" component={CustomerAdd} />
-      <Route exact path="/customer/detail" component={CustomerDetail} />
+      <Route exact path="/customer/detail" component={CustomerSummary} />
       <Route exact path="/customer/" component={CustomerList} />
 
       </div>
