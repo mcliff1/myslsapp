@@ -8,6 +8,14 @@ custom:
   region: ${opt:region, self:provider.region}
   extra: ${file(serverless-${self:custom.stage}.json)}
 
+  # todo - move this out to parameter
+  domainname: mattcliff.net
+
+  customDomain:
+      domainName: tms-${self:custom.stage}-api.${self:custom.domainname}
+      certificateName: tms-${self:custmom.stage}-api.${self:custom.domainname}
+      createRoute53Record: attribute
+
 
 provider:
   name: aws
