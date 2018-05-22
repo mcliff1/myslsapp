@@ -39,11 +39,10 @@ provider:
 
 functions:
   customer:
-    handler: apihandler.handle
+    handler: resthandler.handle
     tags:
       created: serverless for Customer REST API
       Name: REST Customer  Lambda Function
-      valua: var is ${self:custom.extra.ProvisionedThroughput}
 
     events:
       - http:
