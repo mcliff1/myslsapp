@@ -126,7 +126,7 @@ def get_call(jsonstr):
             No Parameters - Query most recent row in table matching this bot_type
             """
 
-            rslt = db_table.query()['Items']
+            rslt = db_table.scan()
             jstr = rslt['Items']
             rc = 200
 
@@ -214,7 +214,7 @@ def handle(event, context):
 
 
     operation = event['httpMethod']
-    data = event['queryStringParameters'] if operation == 'GET' else (if event['body'] is not None json.loads(event['body'] else None)
+    data = event['queryStringParameters'] if operation == 'GET' else (if event['body'] is not None json.loads(event['body']) else None)
 
     logging.debug("incoming data: %s", data)
 

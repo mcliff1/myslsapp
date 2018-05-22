@@ -1,6 +1,9 @@
 service: tms
 
 frameworkVersion: ">=1.1.0 < 2.0.0"
+#plugins:
+#  - serverless-domain-manager
+
 
 # used for readability
 custom:
@@ -11,10 +14,11 @@ custom:
   # todo - move this out to parameter
   domainname: mattcliff.net
 
-  customDomain:
-      domainName: tms-${self:custom.stage}-api.${self:custom.domainname}
-      certificateName: tms-${self:custmom.stage}-api.${self:custom.domainname}
-      createRoute53Record: attribute
+  #customDomain:
+  #    domainName: tms-${self:custom.stage}-api.${self:custom.domainname}
+  #    certificateName: tms-${self:custom.stage}-api.${self:custom.domainname}
+  #    createRoute53Record: attribute
+  #    endpointType: regional
 
 
 provider:
