@@ -32,7 +32,6 @@ class DecimalEncoder(json.JSONEncoder):
 
 dynamodb = boto3.resource('dynamodb')
 db_table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
-" todo - add parameter for column names here
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
@@ -81,7 +80,7 @@ def post_call(in_json):
         logging.info("about to execute")
         ddb_json = decode_json(in_json)
         ddb_json['CreatedAt'] = timestamp
-        ddb_json['Id'] = # generate UUID or auto-increment
+        ddb_json['Id'] = 1 # generate UUID or auto-increment
         db_table.put_item(Item=ddb_json)
         rc = 200
         #logging.info("class %s json - %s", type(ddb_json), ddb_json)
@@ -125,22 +124,9 @@ def get_call(jsonstr):
             """
             No Parameters - Query most recent row in table matching this bot_type
             """
-            nrow = db_table.query(IndexName="BotTypeIndex", Select="COUNT", KeyConditionExpression=Key('bottype').eq(bot_type))['Count']
-            rslt = db_table.query(IndexName="BotTypeIndex", ScanIndexForward=False, Limit=1, KeyConditionExpression=Key('bottype').eq(bot_type))['Items']
-            r_deviceid = None
-            r_CreatedAt = None
-            if len(rslt) > 0:
-                r_CreatedAt = rslt[0]['CreatedAt']
-                r_deviceid = rslt[0]['Id']  # todo trim this later
 
-
-            # trims off the bottype from Id
-            if len(r_deviceid) > 0:
-                r_deviceid = '-'.join(r_deviceid.split('-')[1:])
-
-            jstr = {"count" : nrow,
-                    "deviceid": r_deviceid,
-                    "CreatedAt": r_CreatedAt}
+            rslt = db_table.query()['Items']
+            jstr = rslt['Items']
             rc = 200
 
         elif 'deviceid' in jsonstr.keys():
@@ -229,25 +215,22 @@ def handle(event, context):
     operation = event['httpMethod']
     data = event['queryStringParameters'] if operation == 'GET' else json.loads(event['body'])
 
-    bot_type = event['pathParameters']['bottype']
-
-    logging.info("read the bottype: %s", bot_type)
     logging.debug("incoming data: %s", data)
 
     operations = {
-        'POST' : lambda jsonstr, bot_type: post_call(bot_type, jsonstr),
-        'GET' : lambda jsonstr, bot_type: get_call(bot_type, jsonstr)
+        'POST' : lambda jsonstr: post_call(jsonstr),
+        'GET' : lambda jsonstr: get_call(jsonstr)
     }
 
 
     # see if we can delegate the call
-    if (operation in operations and bot_type in BOT_TYPES):
-        return operations[operation](data, bot_type)
+    if (operation in operations):
+        return operations[operation](data)
 
     logging.error("unknown method(%s) or resource(%s)", operation, resource)
 
     return {
-        "body": {"message" : "unknown method(%s) or bot_type(%s)" % (operation, bot_type)},
+        "body": {"message" : "unknown method(%s)" % (operation, )},
         "statusCode" : 400,
         "headers": {
             "Content-Type" : "application/json",
