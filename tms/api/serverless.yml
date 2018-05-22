@@ -23,6 +23,7 @@ provider:
         - dynamodb:Query
         - dynamodb:GetItem
         - dynamodb:PutItem
+        - dynamodb:Scan
         - dynamodb:UpdateItem
       Resource:
         "Fn::Join":

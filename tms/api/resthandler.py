@@ -14,6 +14,7 @@ import os
 import datetime
 import json
 import logging
+import uuid
 from dateutil.parser import parse
 from decimal import Decimal
 
@@ -73,14 +74,14 @@ def post_call(in_json):
     """
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    logging.info("insertReading: %s", in_json)
+    logging.info("insert: %s", in_json)
     rc = 503
     jstr = None
     try:
         logging.info("about to execute")
         ddb_json = decode_json(in_json)
         ddb_json['CreatedAt'] = timestamp
-        ddb_json['Id'] = 1 # generate UUID or auto-increment
+        ddb_json['Id'] = str(uuid.uuid4())
         db_table.put_item(Item=ddb_json)
         rc = 200
         #logging.info("class %s json - %s", type(ddb_json), ddb_json)
@@ -213,7 +214,7 @@ def handle(event, context):
 
 
     operation = event['httpMethod']
-    data = event['queryStringParameters'] if operation == 'GET' else json.loads(event['body'])
+    data = event['queryStringParameters'] if operation == 'GET' else (if event['body'] is not None json.loads(event['body'] else None)
 
     logging.debug("incoming data: %s", data)
 

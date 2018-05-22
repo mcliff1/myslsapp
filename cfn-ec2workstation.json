@@ -267,6 +267,17 @@
                        },
                        {
                          "Action":[
+                           "logs:DeleteLogGroup",
+                           "logs:DeleteLogStream"
+                         ],
+                         "Resource": [
+                           "arn:aws:logs:*:*:log-group:/aws/lambda/tms-*:*",
+                           "arn:aws:logs:*:*:log-group:/aws/lambda/dynabot-*:*",
+                         ],
+                         "Effect":"Allow"
+                       },
+                       {
+                         "Action":[
                            "events:Put*",
                            "events:Remove*",
                            "events:Delete*"
