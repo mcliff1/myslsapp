@@ -26,7 +26,6 @@ class CustomerDetail extends React.Component {
     super(props);
 
     this.state = {
-      name : 'fred',
       info : props.info || blank_cust,
     };
   }
@@ -80,20 +79,30 @@ class CustomerAdd extends React.Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault();
+
     const target = event.target;
     //const value = target.type === 'checkbox' ? target.checked : target.value;
 
     const name = target.name;
 
+
+    const formData = {};
+    for (const field in this.refs) {
+      formData[field] = this.refs[field].value;
+    }
+    console.log('-->', formData);
+
     //alert('name was submitted: ' + event.name);
     console.log(event);
+    //const data = new FormData(event.target);
     fetch('https://tms-dev-api.mattcliff.net', {
       method: 'POST',
       headers: {
         'Accept' : 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({})
+      body: JSON.stringify(formData),
     })
     .then(res => res.json())
     .then((data) => console.log(data))
@@ -101,7 +110,6 @@ class CustomerAdd extends React.Component {
 
 
     alert(event);
-    event.preventDefault();
     this.props.history.push('/customer/');
   }
 
@@ -114,14 +122,14 @@ class CustomerAdd extends React.Component {
         <FormGroup row>
           <Label for="custName" sm={2}>Name</Label>
           <Col sm={10}>
-            <input type="text" value={this.state.name} name="name" id="custName" onChange={this.handleChange} />
+            <input type="text" value={this.state.name} ref="name" name="name" id="custName" onChange={this.handleChange} />
           </Col>
         </FormGroup>
 
         <FormGroup row>
           <Label for="custAddress1" sm={2}>Address</Label>
           <Col sm={10}>
-            <input type="text" value={this.state.address1} name="address1" id="custAddress" onChange={this.handleChange} />
+            <input type="text" value={this.state.address1} ref="address1" name="address1" id="custAddress" onChange={this.handleChange} />
           </Col>
         </FormGroup>
 

@@ -274,8 +274,8 @@
                            "logs:DeleteLogStream"
                          ],
                          "Resource": [
-                           "arn:aws:logs:*:*:log-group:/aws/lambda/tms-*:*:*",
-                           "arn:aws:logs:*:*:log-group:/aws/lambda/dynabot-*:*:*",
+                           "arn:aws:logs:*:*:log-group:/aws/lambda/tms-*:log-stream:*",
+                           "arn:aws:logs:*:*:log-group:/aws/lambda/dynabot-*:log-stream:*",
                          ],
                          "Effect":"Allow"
                        },
