@@ -1,0 +1,107 @@
+service: customer
+
+frameworkVersion: ">=1.1.0 < 2.0.0"
+
+# used for readability
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  region: ${opt:region, self:provider.region}
+  extra: ${file(serverless-${self:custom.stage}.json)}
+
+
+provider:
+  name: aws
+  runtime: python3.6
+
+  environment:
+    STAGE: ${self:custom.stage}
+    DYNAMODB_TABLE: {Ref: CustomerDB}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+      Resource:
+        "Fn::Join":
+          - ""
+          -
+            - "arn:aws:dynamodb:"
+            - Ref: "AWS::Region"
+            - ":"
+            - Ref: "AWS::AccountId"
+            - ":table/"
+            - Ref: CustomerDB
+            - "*"
+
+
+functions:
+  customer:
+    handler: apihandler.handle
+    tags:
+      created: serverless for Customer REST API
+      Name: REST Customer  Lambda Function
+      valua: var is ${self:custom.extra.ProvisionedThroughput}
+
+    events:
+      - http:
+          path: /
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - Access-Control-Allow-Origin
+            allowCredentials: false
+
+      - http:
+          path: /
+          method: post
+
+
+
+resources:
+  Resources:
+    CustomerDB:
+      Type: 'AWS::DynamoDB::Table'
+      #DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: Id
+            AttributeType: S
+          - AttributeName: CreatedAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: Id
+            KeyType: HASH
+          - AttributeName: CreatedAt
+            KeyType: RANGE
+        Tags:
+          - Key: "Created"
+            Value: "part of TMS Customer SLS"
+          - Key: "Name"
+            Value: "TMS Customer Serverless DB"
+        #ProvisionedThroughput: ${self:custom.extra.DynamoCapacity}
+        ProvisionedThroughput: { "ReadCapacityUnits": "1", "WriteCapacityUnits": "1"}
+
+  Outputs:
+    ExportServiceEndpoint:
+      Description: "URL Endpoint for the REST Service"
+      Value:
+        "Fn::Join":
+          - ""
+          -
+            - "https://"
+            - Ref: "ApiGatewayRestApi"
+            - ".execute-api."
+            - Ref: "AWS::Region"
+            - ".amazonaws.com/"
+            - ${self:custom.stage}
+      Export:
+        Name: SLSServiceEndpoint
