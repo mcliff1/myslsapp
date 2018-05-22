@@ -124,8 +124,10 @@
                      "Statement": [
                        {
                          "Action":[
+                           "acm:ListCertificates",
                            "iam:PassRole",
                            "route53:ChangeResourceRecordSets",
+                           "route53:ListHostedZones",
                            "lambda:Get*",
                            "lambda:List*",
                            "lambda:CreateFunction",
@@ -220,7 +222,8 @@
                            "apigateway:DELETE"
                          ],
                          "Resource": [
-                           "arn:aws:apigateway:*::/restapis*"
+                           "arn:aws:apigateway:*::/restapis*",
+                           "arn:aws:apigateway:*::/domainnames*"
                          ],
                          "Effect":"Allow"
                        },
@@ -271,8 +274,8 @@
                            "logs:DeleteLogStream"
                          ],
                          "Resource": [
-                           "arn:aws:logs:*:*:log-group:/aws/lambda/tms-*:*",
-                           "arn:aws:logs:*:*:log-group:/aws/lambda/dynabot-*:*",
+                           "arn:aws:logs:*:*:log-group:/aws/lambda/tms-*:*:*",
+                           "arn:aws:logs:*:*:log-group:/aws/lambda/dynabot-*:*:*",
                          ],
                          "Effect":"Allow"
                        },

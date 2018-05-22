@@ -1,37 +1,24 @@
 import React from 'react';
 import { BrowserRouter as Router, Route,  Link } from 'react-router-dom';
 import { Form, FormGroup, Label, Col, Button, Text } from 'reactstrap';
+import LoadContent from './LoadContent.js';
+
+const blank_cust =
+{
+  'name': '',
+  'address1': '',
+  'address2': '',
+  'city': '',
+  'state': '',
+  'zip' : '',
+  'phone' : '',
+  'fax' : '',
+  'email' : '',
+  'website' : ''
+};
 
 
-const customer_list = [
-  {
-    'id' : '1',
-    'name': 'My Company',
-    'address1': '123 Fake Street',
-    'address2': 'PO Box 123',
-    'city': 'Centenntial',
-    'state': 'CO',
-    'zip' : '80111',
-    'phone' : '(303) 123-1234',
-    'fax' : null,
-    'email' : 'chewie@bacca.com',
-    'website' : 'https://myco.com'
-  },
-  {
-    'id' : '2',
-    'name': 'The Mint',
-    'address1': '101 Broadway',
-    'address2': 'The Vault Room',
-    'city': 'Denver',
-    'state': 'CO',
-    'zip' : '80001',
-    'phone' : '(303) GET-CASH',
-    'fax' : null,
-    'email' : 'money@bank.com',
-    'website' : 'https://themint.com'
-  }
 
-]
 
 
 class CustomerDetail extends React.Component {
@@ -39,18 +26,20 @@ class CustomerDetail extends React.Component {
     super(props);
 
     this.state = {
-      name : 'fred'
+      name : 'fred',
+      info : props.info || blank_cust,
     };
   }
 
   render() {
+    var info = this.state.info;
     return(
       <div className="card-deck mt4">
       <div className="card border border-info rounded">
         <div className="card-body">
-        <h5 className="card-title">{ this.props.info.name }</h5>
-        <p className="card-text">{ this.props.info.city }, {this.props.info.state }</p>
-        <p className="card-text">phone: { this.props.info.phone } email: {this.props.info.email }</p>
+        <h5 className="card-title">{ info.name }</h5>
+        <p className="card-text">{ info.city }, {info.state }</p>
+        <p className="card-text">phone: { info.phone } email: {info.email }</p>
         </div>
       </div>
       </div>
@@ -59,47 +48,6 @@ class CustomerDetail extends React.Component {
   };
 }
 
-
-class LoadContent extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.setState({
-      loading: true,
-      error: false,
-      data: [],
-    });
-  }
-
-  componentDidMount1() {
-    fetch(this.props.url)
-      // we should check status code here and throw on errors
-      .then(res => res.json())
-      .then((data) => this.setState({data, loading: false}))
-      .catch((err) => this.setState({loading: false, error: true}))
-  }
-
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        loading: false,
-        data: customer_list
-      });
-    }, 500);
-  }
-
-
-  render() {
-    return(
-      <div>
-        {this.props.children({
-          ...this.props,
-          ...this.state,
-        })}
-      </div>
-    )
-  }
-}
 
 
 class CustomerAdd extends React.Component {
@@ -133,12 +81,25 @@ class CustomerAdd extends React.Component {
 
   handleSubmit(event) {
     const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    //const value = target.type === 'checkbox' ? target.checked : target.value;
 
     const name = target.name;
 
     //alert('name was submitted: ' + event.name);
     console.log(event);
+    fetch('https://tms-dev-api.mattcliff.net', {
+      method: 'POST',
+      headers: {
+        'Accept' : 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({})
+    })
+    .then(res => res.json())
+    .then((data) => console.log(data))
+    .catch((err) => alert(err));
+
+
     alert(event);
     event.preventDefault();
     this.props.history.push('/customer/');
@@ -238,6 +199,21 @@ class CustomerSummary extends React.Component {
     return(
       <div>
         This is a single <Link to="/customer/detail">John doe</Link> record
+        <LoadContent url="https://tms-dev-api.mattcliff.net/">
+        {
+          ({ loading, error, data}) => {
+
+            if (loading) return <span>Loading...</span>
+            return (
+              <div>
+                {
+                  data.map((item, idx) => <div key={idx}>{item.name}</div>)
+                }
+              </div>
+            )
+          }
+        }
+        </LoadContent>
       </div>
     )
   };
@@ -252,16 +228,29 @@ class CustomerList extends React.Component {
       <div>
         <div className="App-title">Customer List</div>
 
-        <div className="container">
-        { customer_list.map( (customer, idx) => {
-          return(
-            <div className="row" key={idx}>
-            <CustomerDetail info={customer} key={idx} />
-            <p/>
-            </div>
-          )
-        })}
-        </div>
+        <LoadContent url="https://tms-dev-api.mattcliff.net/">
+        {
+          ({ loading, error, data}) => {
+
+            if (loading) return <span>Loading...</span>
+            return (
+              <div>
+              {
+                data.map((item, idx) => {
+                  return(
+                  <div key={idx}>
+                    <CustomerDetail info={item} key={idx} />
+                  </div>
+                );
+                })
+              }
+              </div>
+            )
+          }
+        }
+        </LoadContent>
+
+
       </div>
     )
   };

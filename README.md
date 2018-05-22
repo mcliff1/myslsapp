@@ -7,8 +7,11 @@ This app will have login capability, a list of customers, a list of items, and o
 
 ## Setup
 **Preqrequisite** - have a hosted zone available in Route53.
+ - ACM record must be set up for certificate
 
 The [cfn-ec2workstation.json](cfn-ec2workstation.json) cloudformation template creates a server with the appropriate roles to build and deploy the serverless example applications.
+
+For a new domain name, the `sls create_domain --region <region>` must be called to create the appropriate record in API Gateway to link the SSL cert.
 
 When running *sls* commands, the **--region** flag MUST be specified, since we are using roles for access, and not having to run *aws config* or set up any keys in the environment.
 
