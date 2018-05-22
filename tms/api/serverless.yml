@@ -103,4 +103,4 @@ resources:
             - ".amazonaws.com/"
             - ${self:custom.stage}
       Export:
-        Name: SLSServiceEndpoint
+        Name: TMSCustomerServiceEndpoint

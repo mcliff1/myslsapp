@@ -133,6 +133,7 @@
                            "cloudformation:Get*",
                            "cloudformation:CreateUploadBucket",
                            "cloudformation:PreviewStackUpdate",
+                           "cloudformation:ValidateTemplate",
                            "cloudwatch:GetMetricStatistics",
                            "logs:DescribeLogStreams",
                            "logs:DescribeLogGroups",
@@ -145,8 +146,7 @@
                          "Action":[
                            "cloudformation:CreateStack",
                            "cloudformation:DeleteStack",
-                           "cloudformation:DescribeStackEvents",
-                           "cloudformation:DescribeStackResources",
+                           "cloudformation:DescribeStack*",
                            "cloudformation:UpdateStack",
                            "cloudformation:DescribeStacks"
                          ],
