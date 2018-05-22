@@ -5,6 +5,14 @@ The repository is a collection of resouces to support a serverless application o
 
 This app will have login capability, a list of customers, a list of items, and orders.
 
+## Setup
+**Preqrequisite** - have a hosted zone available in Route53.
+
+The [cfn-ec2workstation.json](cfn-ec2workstation.json) cloudformation template creates a server with the appropriate roles to build and deploy the serverless example applications.
+
+When running *sls* commands, the **--region** flag MUST be specified, since we are using roles for access, and not having to run *aws config* or set up any keys in the environment.
+
+
 ## REACT front-end
 
 ### REACT base
@@ -74,6 +82,6 @@ To Build
 - - somehow export what is needed for REACT/Amplify build
 - (repeat for sls1, sls2, ...)
 - cd ~/myslsapp/static
-- npm run build  
+- npm run build
 - - requires as input some of the information from other cloudformations
 - aws s3 sync build/* s3://my-deploy-bucket/   (can this be added to myslsapp/static/json.package to run as npm run deploy or something?)

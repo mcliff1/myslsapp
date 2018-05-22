@@ -1,23 +1,23 @@
-{  
+{
    "AWSTemplateFormatVersion":"2010-09-09",
    "Description":"Template will build SLS workstation, can be used in all stages has SLS and REACT frameworks installed",
-   "Parameters":{  
-      "myKeyPair":{  
+   "Parameters":{
+      "myKeyPair":{
          "Description":"Amazon EC2 Key Pair",
          "Type":"AWS::EC2::KeyPair::KeyName"
       },
-      "myDomain":{  
+      "myDomain":{
          "Description":"(optional) Domain to add the sls-${region}",
          "Type":"String",
          "Default":"nodomainname"
       }
    },
-   "Conditions":{  
-      "CreateDnsResources":{  
-         "Fn::Not":[  
-            {  
-               "Fn::Equals":[  
-                  {  
+   "Conditions":{
+      "CreateDnsResources":{
+         "Fn::Not":[
+            {
+               "Fn::Equals":[
+                  {
                      "Ref":"myDomain"
                   },
                   "nodomainname"
@@ -26,53 +26,53 @@
          ]
       }
    },
-   "Resources":{  
-      "EC2Instance":{  
+   "Resources":{
+      "EC2Instance":{
          "Type":"AWS::EC2::Instance",
-         "Properties":{  
-            "ImageId":{  
-               "Fn::FindInMap":[  
+         "Properties":{
+            "ImageId":{
+               "Fn::FindInMap":[
                   "AWSRegionArch2AMI",
-                  {  
+                  {
                      "Ref":"AWS::Region"
                   },
                   "HVM64"
                ]
             },
-            "KeyName":{  
+            "KeyName":{
                "Ref":"myKeyPair"
             },
             "InstanceType":"t2.micro",
-            "IamInstanceProfile":{  
+            "IamInstanceProfile":{
                "Ref":"InstanceRole"
             },
-            "SecurityGroups":[  
-               {  
+            "SecurityGroups":[
+               {
                   "Ref":"SG"
                }
             ],
-            "Tags":[  
-               {  
+            "Tags":[
+               {
                   "Key":"Name",
                   "Value":"SLS Workstation"
                },
-               {  
+               {
                   "Key":"Created",
                   "Value":"CFN github aws/cgn-ec2workstation.json"
                }
             ],
-            "UserData":{  
-               "Fn::Base64":{  
-                  "Fn::Join":[  
+            "UserData":{
+               "Fn::Base64":{
+                  "Fn::Join":[
                      "",
-                     [  
+                     [
                         "#!/bin/bash",
                         "\n",
                         "yum update -y",
                         "\n",
-                        "yum install -y git docker tmux jq",
+                        "yum install -y git docker tmux python36 jq",
                         "\n",
-                        "curl https://bootstrap.pypa.io/get-pip.py | /usr/bin/python2.7",
+                        "curl https://bootstrap.pypa.io/get-pip.py | /usr/bin/python3.6",
                         "\n",
                         "curl https://rpm.nodesource.com/setup_8.x | bash -",
                         "\n",
@@ -96,77 +96,233 @@
             }
          }
       },
-      "SLSRole":{  
+      "SLSRole":{
          "Type":"AWS::IAM::Role",
-         "Properties":{  
-            "AssumeRolePolicyDocument":{  
+         "Properties":{
+            "AssumeRolePolicyDocument":{
                "Version":"2012-10-17",
-               "Statement":[  
-                  {  
+               "Statement":[
+                  {
                      "Effect":"Allow",
-                     "Principal":{  
-                        "Service":[  
+                     "Principal":{
+                        "Service":[
                            "ec2.amazonaws.com"
                         ]
                      },
-                     "Action":[  
+                     "Action":[
                         "sts:AssumeRole"
                      ]
                   }
                ]
             },
             "Path":"/",
-            "Policies":[  
-               {  
+            "Policies":[
+               {
                   "PolicyName":"sls-iam-instance-policy",
-                  "PolicyDocument":{  
+                  "PolicyDocument": {
                      "Version":"2012-10-17",
-                     "Statement":[  
-                        {  
-                           "Action":[  
-                              "route53:ChangeResourceRecordSets",
-                              "cloudformation:*"
-                           ],
-                           "Resource":"*",
-                           "Effect":"Allow"
-                        }
+                     "Statement": [
+                       {
+                         "Action":[
+                           "iam:PassRole",
+                           "route53:ChangeResourceRecordSets",
+                           "lambda:Get*",
+                           "lambda:List*",
+                           "lambda:CreateFunction",
+                           "cloudformation:List*",
+                           "cloudformation:Get*",
+                           "cloudformation:CreateUploadBucket",
+                           "cloudformation:PreviewStackUpdate",
+                           "cloudwatch:GetMetricStatistics",
+                           "logs:DescribeLogStreams",
+                           "logs:DescribeLogGroups",
+                           "logs:FilterLogEvents"
+                         ],
+                         "Resource": "*",
+                         "Effect":"Allow"
+                       },
+                       {
+                         "Action":[
+                           "cloudformation:CreateStack",
+                           "cloudformation:DeleteStack",
+                           "cloudformation:DescribeStackEvents",
+                           "cloudformation:DescribeStackResources",
+                           "cloudformation:UpdateStack",
+                           "cloudformation:DescribeStacks"
+                         ],
+                         "Resource": [
+                           "arn:aws:cloudformation:*:*:stack/tms-*/*",
+                           "arn:aws:cloudformation:*:*:stack/dynabot-*/*"
+                         ],
+                         "Effect":"Allow"
+                       },
+                       {
+                         "Action":[
+                           "s3:CreateBucket",
+                           "s3:PutObject",
+                           "s3:GetObject",
+                           "s3:ListBucket",
+                           "s3:DeleteObject",
+                           "s3:DeleteBucket",
+                           "s3:ListBucketVersions"
+                         ],
+                         "Resource": [
+                           "arn:aws:s3:::tms*serverlessdeploymentbucket*",
+                           "arn:aws:s3:::dynabot*serverlessdeploymentbucket*"
+                         ],
+                         "Effect":"Allow"
+                       },
+                       {
+                         "Action":[
+                           "s3:CreateBucket"
+                         ],
+                         "Resource": [
+                           "arn:aws:s3:::*"
+                         ],
+                         "Effect":"Allow"
+                       },
+                       {
+                         "Action":[
+                           "s3:PutObject",
+                           "s3:GetObject",
+                           "s3:ListBucket",
+                           "s3:DeleteObject",
+                           "s3:DeleteBucket",
+                           "s3:ListBucketVersions"
+                         ],
+                         "Resource": [
+                           "arn:aws:s3:::tms*serverlessdeploymentbucket*",
+                           "arn:aws:s3:::dynabot*serverlessdeploymentbucket*"
+                         ],
+                         "Effect":"Allow"
+                       },
+                       {
+                         "Action":[
+                           "lambda:AddPermission",
+                           "lambda:CreateAlias",
+                           "lambda:DeleteFunction",
+                           "lambda:InvokeFunction",
+                           "lambda:PublishVersion",
+                           "lambda:RemovePermission",
+                           "lambda:Update*"
+                         ],
+                         "Resource": [
+                           "arn:aws:lambda:*:*:function:tms-*-*",
+                           "arn:aws:lambda:*:*:function:dynabot-*-*"
+                         ],
+                         "Effect":"Allow"
+                       },
+                       {
+                         "Action":[
+                           "apigateway:GET",
+                           "apigateway:POST",
+                           "apigateway:PUT",
+                           "apigateway:DELETE"
+                         ],
+                         "Resource": [
+                           "arn:aws:apigateway:*::/restapis*"
+                         ],
+                         "Effect":"Allow"
+                       },
+                       {
+                         "Action":[
+                           "kinesis:*"
+                         ],
+                         "Resource": [
+                           "arn:aws:kinesis:*:*:stream/tms-*-*",
+                           "arn:aws:kinesis:*:*:stream/dynabot-*-*"
+                         ],
+                         "Effect":"Allow"
+                       },
+                       {
+                         "Action":[
+                           "iam:*"
+                         ],
+                         "Resource": [
+                           "arn:aws:iam::*:role/tms-*-*-lambdaRole",
+                           "arn:aws:iam::*:role/dynabot-*-*-lambdaRole"
+                         ],
+                         "Effect":"Allow"
+                       },
+                       {
+                         "Action":[
+                           "sqs:*"
+                         ],
+                         "Resource": [
+                           "arn:aws:sqs:*:*:tms-*-*",
+                           "arn:aws:sqs:*:*:dynabot-*-*"
+                         ],
+                         "Effect":"Allow"
+                       },
+                       {
+                         "Action":[
+                           "logs:CreateLogGroup",
+                           "logs:CreateLogStream",
+                           "logs:PutLogEvents"
+                         ],
+                         "Resource": [
+                           "*"
+                         ],
+                         "Effect":"Allow"
+                       },
+                       {
+                         "Action":[
+                           "events:Put*",
+                           "events:Remove*",
+                           "events:Delete*"
+                         ],
+                         "Resource": [
+                           "arn:aws:events:*:*:rule/tms-*-*",
+                           "arn:aws:events:*:*:rule/dynabot-*-*"
+                         ],
+                         "Effect":"Allow"
+                       },
+                       {
+                         "Action":[
+                           "dynamodb:*"
+                         ],
+                         "Resource": [
+                           "arn:aws:dynamodb:*:*:table/*"
+                         ],
+                         "Effect":"Allow"
+                       }
                      ]
                   }
                }
             ]
          }
       },
-      "InstanceRole":{  
+      "InstanceRole":{
          "Type":"AWS::IAM::InstanceProfile",
-         "Properties":{  
+         "Properties":{
             "Path":"/",
-            "Roles":[  
-               {  
+            "Roles":[
+               {
                   "Ref":"SLSRole"
                }
             ]
          }
       },
-      "SG":{  
+      "SG":{
          "Type":"AWS::EC2::SecurityGroup",
-         "Properties":{  
+         "Properties":{
             "GroupDescription":"SLS Workstation CFN generated group",
-            "SecurityGroupIngress":[  
-               {  
+            "SecurityGroupIngress":[
+               {
                   "Description":"Access to SSH",
                   "IpProtocol":"tcp",
                   "FromPort":"22",
                   "ToPort":"22",
                   "CidrIp":"0.0.0.0/0"
                },
-               {  
+               {
                   "Description":"REACT dev port",
                   "IpProtocol":"tcp",
                   "FromPort":"3000",
                   "ToPort":"3000",
                   "CidrIp":"0.0.0.0/0"
                },
-               {  
+               {
                   "Description":"http test port",
                   "IpProtocol":"tcp",
                   "FromPort":"8000",
@@ -174,56 +330,56 @@
                   "CidrIp":"0.0.0.0/0"
                }
             ],
-            "Tags":[  
-               {  
+            "Tags":[
+               {
                   "Key":"Name",
                   "Value":"SLS Workstation"
                },
-               {  
+               {
                   "Key":"Created",
                   "Value":"CFN github aws/cgn-ec2workstation.json"
                }
             ]
          }
       },
-      "DnsRecord":{  
+      "DnsRecord":{
          "Type":"AWS::Route53::RecordSet",
          "Condition":"CreateDnsResources",
-         "Properties":{  
+         "Properties":{
             "Comment":"ec2-sls  workstation nstance",
             "Type":"A",
             "TTL":"900",
-            "HostedZoneName":{  
-               "Fn::Join":[  
+            "HostedZoneName":{
+               "Fn::Join":[
                   "",
-                  [  
-                     {  
+                  [
+                     {
                         "Ref":"myDomain"
                      },
                      "."
                   ]
                ]
             },
-            "Name":{  
-               "Fn::Join":[  
+            "Name":{
+               "Fn::Join":[
                   "",
-                  [  
+                  [
                      "sls",
                      "-",
-                     {  
+                     {
                         "Ref":"AWS::Region"
                      },
                      ".",
-                     {  
+                     {
                         "Ref":"myDomain"
                      },
                      "."
                   ]
                ]
             },
-            "ResourceRecords":[  
-               {  
-                  "Fn::GetAtt":[  
+            "ResourceRecords":[
+               {
+                  "Fn::GetAtt":[
                      "EC2Instance",
                      "PublicIp"
                   ]
@@ -232,60 +388,60 @@
          }
       }
    },
-   "Mappings":{  
-      "AWSRegionArch2AMI":{  
-         "us-east-1":{  
+   "Mappings":{
+      "AWSRegionArch2AMI":{
+         "us-east-1":{
             "HVM64":"ami-97785bed"
          },
-         "us-west-2":{  
+         "us-west-2":{
             "HVM64":"ami-f2d3638a"
          },
-         "us-west-1":{  
+         "us-west-1":{
             "HVM64":"ami-824c4ee2"
          },
-         "eu-west-1":{  
+         "eu-west-1":{
             "HVM64":"ami-d834aba1"
          },
-         "eu-west-2":{  
+         "eu-west-2":{
             "HVM64":"ami-403e2524"
          },
-         "eu-west-3":{  
+         "eu-west-3":{
             "HVM64":"ami-8ee056f3"
          },
-         "eu-central-1":{  
+         "eu-central-1":{
             "HVM64":"ami-5652ce39"
          },
-         "ap-northeast-1":{  
+         "ap-northeast-1":{
             "HVM64":"ami-ceafcba8"
          },
-         "ap-northeast-2":{  
+         "ap-northeast-2":{
             "HVM64":"ami-863090e8"
          },
-         "ap-northeast-3":{  
+         "ap-northeast-3":{
             "HVM64":"ami-83444afe"
          },
-         "ap-southeast-1":{  
+         "ap-southeast-1":{
             "HVM64":"ami-68097514"
          },
-         "ap-southeast-2":{  
+         "ap-southeast-2":{
             "HVM64":"ami-942dd1f6"
          },
-         "ap-south-1":{  
+         "ap-south-1":{
             "HVM64":"ami-531a4c3c"
          },
-         "us-east-2":{  
+         "us-east-2":{
             "HVM64":"ami-f63b1193"
          },
-         "ca-central-1":{  
+         "ca-central-1":{
             "HVM64":"ami-a954d1cd"
          },
-         "sa-east-1":{  
+         "sa-east-1":{
             "HVM64":"ami-84175ae8"
          },
-         "cn-north-1":{  
+         "cn-north-1":{
             "HVM64":"ami-cb19c4a6"
          },
-         "cn-northwest-1":{  
+         "cn-northwest-1":{
             "HVM64":"ami-3e60745c"
          }
       }
