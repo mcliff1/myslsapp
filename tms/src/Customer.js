@@ -94,23 +94,30 @@ class CustomerAdd extends React.Component {
     console.log('-->', formData);
 
     //alert('name was submitted: ' + event.name);
-    console.log(event);
+
+    // see https://stackoverflow.com/questions/29775797/fetch-post-json-data?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+    //  (Francisco Presnecia for better way)
+
     //const data = new FormData(event.target);
     fetch('https://tms-dev-api.mattcliff.net', {
       method: 'POST',
       headers: {
-        'Accept' : 'application/json',
+        'Accept' : 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(formData),
     })
     .then(res => res.json())
     .then((data) => console.log(data))
-    .catch((err) => alert(err));
+    .catch((err) => console.log('error ==>', err));
 
 
-    alert(event);
-    this.props.history.push('/customer/');
+    //this.props.router.push('/customer/');
+    return(
+      <Router>
+      <Route path="/" component={Customer} />
+     </Router>
+    )
   }
 
 
