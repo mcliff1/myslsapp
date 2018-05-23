@@ -1,6 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route,  Link } from 'react-router-dom';
-import { Nav, NavItem, NavLink } from 'reactstrap';
+import { BrowserRouter as Router, Route  } from 'react-router-dom';
 import './App.css';
 import Home from './Home.js';
 import Customer from './Customer.js';
@@ -10,19 +9,6 @@ import AppNav from './AppNav.js';
 
 // https://react-bootstrap.github.io/components/label/
 
-
-
-// not using this yet
-const routes = [
- {
-  path: "/",
-  component: Home
- },
- {
-  path: "/customer",
-  component: Customer
- }
-];
 
 
 const App = () => (

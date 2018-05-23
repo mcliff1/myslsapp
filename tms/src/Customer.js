@@ -115,6 +115,7 @@ class CustomerAdd extends React.Component {
 
 
   render() {
+    var info = this.state.info;
     return(
       <div>
         <Form onSubmit={this.handleSubmit}>
@@ -136,56 +137,56 @@ class CustomerAdd extends React.Component {
         <FormGroup row>
           <Label for="custAddress2" sm={2}>Address2</Label>
           <Col sm={10}>
-            <input type="text" value={this.state.address2} name="address2" id="custAddress2" onChange={this.handleChange} />
+            <input type="text" value={this.state.address2} ref="address2" name="address2" id="custAddress2" onChange={this.handleChange} />
           </Col>
         </FormGroup>
 
         <FormGroup row>
           <Label for="custCity" sm={2}>City</Label>
           <Col sm={10}>
-            <input type="text" value={this.state.city} name="city" id="custCity" onChange={this.handleChange} />
+            <input type="text" value={this.state.city} ref="city" name="city" id="custCity" onChange={this.handleChange} />
           </Col>
         </FormGroup>
 
         <FormGroup row>
           <Label for="custState" sm={2}>State</Label>
           <Col sm={10}>
-            <input type="text" value={this.state.state} name="state" id="custState" onChange={this.handleChange} />
+            <input type="text" value={this.state.state} ref="state" name="state" id="custState" onChange={this.handleChange} />
           </Col>
         </FormGroup>
 
         <FormGroup row>
           <Label for="custZip" sm={2}>Zip</Label>
           <Col sm={10}>
-            <input type="text" value={this.state.zip} name="zip" id="custZip" onChange={this.handleChange} />
+            <input type="text" value={this.state.zip} ref="zip" name="zip" id="custZip" onChange={this.handleChange} />
           </Col>
         </FormGroup>
 
         <FormGroup row>
           <Label for="custPhone" sm={2}>Phone</Label>
           <Col sm={10}>
-            <input type="text" value={this.state.phone} name="phone" id="custPhone" onChange={this.handleChange} />
+            <input type="text" value={this.state.phone} ref="phone" name="phone" id="custPhone" onChange={this.handleChange} />
           </Col>
         </FormGroup>
 
         <FormGroup row>
           <Label for="custFax" sm={2}>Fax</Label>
           <Col sm={10}>
-            <input type="text" value={this.state.fax} name="fax" id="custFax" onChange={this.handleChange} />
+            <input type="text" value={this.state.fax} ref="fax" name="fax" id="custFax" onChange={this.handleChange} />
           </Col>
         </FormGroup>
 
         <FormGroup row>
           <Label for="custEmail" sm={2}>Email</Label>
           <Col sm={10}>
-            <input type="text" value={this.state.email} name="email" id="custEmail" onChange={this.handleChange} />
+            <input type="text" value={this.state.email} ref="email" name="email" id="custEmail" onChange={this.handleChange} />
           </Col>
         </FormGroup>
 
         <FormGroup row>
           <Label for="custWebsite" sm={2}>Website</Label>
           <Col sm={10}>
-            <input type="text" value={this.state.website} name="website" id="custWebsite" onChange={this.handleChange} />
+            <input type="text" value={this.state.website} ref="website" name="website" id="custWebsite" onChange={this.handleChange} />
           </Col>
         </FormGroup>
 
