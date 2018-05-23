@@ -45,3 +45,5 @@ needs to show results from call like update customer view
 - State
 - Phone
 - Email
+
+Delete Trigger

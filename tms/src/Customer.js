@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route,  Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route,  Link, withRouter } from 'react-router-dom';
 import { Form, FormGroup, Label, Col, Button, Text } from 'reactstrap';
+import PropTypes from 'prop-types';
 import LoadContent from './LoadContent.js';
 
 const blank_cust =
@@ -21,20 +22,35 @@ const blank_cust =
 
 
 
-class CustomerDetail extends React.Component {
+class CustomerListDetail extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       info : props.info || blank_cust,
-    };
+    }
+
+    this.openDetail = this.openDetail.bind(this);
+  }
+
+  // this should open the customer detail for the selected user
+  openDetail(evt, info) {
+    //this.props.history.push('/customer/d2');
+    this.context.router.push('/customer/d2');
+    //return(
+    //  <Router>
+    //  <Route path="/" component={Customer} />
+    // </Router>
+    //)
+
   }
 
   render() {
     var info = this.state.info;
     return(
       <div className="card-deck mt4">
-      <div className="card border border-info rounded">
+      <div className="card border border-info rounded"
+        onClick={ (evt) => this.openDetail(evt, info)}>
         <div className="card-body">
         <h5 className="card-title">{ info.name }</h5>
         <p className="card-text">{ info.city }, {info.state }</p>
@@ -46,6 +62,9 @@ class CustomerDetail extends React.Component {
     )
   };
 }
+CustomerListDetail.propTypes = {
+  info: PropTypes.object,
+};
 
 
 
@@ -209,27 +228,21 @@ class CustomerAdd extends React.Component {
 
 
 
+
 class CustomerSummary extends React.Component {
+// expects a customer object  passed as info
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      info: this.props.info || blank_cust
+    }
+  }
 
   render() {
     return(
       <div>
-        This is a single <Link to="/customer/detail">John doe</Link> record
-        <LoadContent url="https://tms-dev-api.mattcliff.net/">
-        {
-          ({ loading, error, data}) => {
-
-            if (loading) return <span>Loading...</span>
-            return (
-              <div>
-                {
-                  data.map((item, idx) => <div key={idx}>{item.name}</div>)
-                }
-              </div>
-            )
-          }
-        }
-        </LoadContent>
+        <p> Name is {this.state.info.name}</p>
       </div>
     )
   };
@@ -255,7 +268,7 @@ class CustomerList extends React.Component {
                 data.map((item, idx) => {
                   return(
                   <div key={idx}>
-                    <CustomerDetail info={item} key={idx} />
+                    <CustomerListDetail info={item} key={idx} />
                   </div>
                 );
                 })
@@ -286,6 +299,7 @@ class Customer extends React.Component {
       <Route exact path="/customer/add" component={CustomerAdd} />
       <Route exact path="/customer/detail" component={CustomerSummary} />
       <Route exact path="/customer/" component={CustomerList} />
+      <Route exact path="/customer/d2" render={(props) => <CustomerSummary {...props} />} />
 
       </div>
     )
