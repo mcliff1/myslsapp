@@ -83,6 +83,22 @@
     "WebBucket" : {
       "Type" : "AWS::S3::Bucket",
       "Properties" : {
+        "CorsConfiguration" : {
+          "CorsRules" : [
+            {
+              "AllowedHeaders" : [ "*" ],
+              "AllowedMethods" : [ "GET" ],
+              "AllowedOrigins" : [ "*" ],
+              "ExposedHeaders" : [ "Date" ],
+              "Id" : "corsRuleGet",
+              "MaxAge" : 3600
+            }
+          ]
+        },
+        "WebsiteConfiguration" : {
+          "IndexDocument" : "index.html",
+          "ErrorDocument" : "indexhtml"
+        },
         "Tags" : [
           { "Key" : "Name", "Value" : {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-WebBucket"]]}},
           { "Key" : "Project", "Value" : {"Ref": "Project"} }
