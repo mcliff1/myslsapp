@@ -1,0 +1,64 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description": "Creates framework necessary for TMS SLS services, including ACM certs, S3 buckets and cognito identity pool",
+  "Parameters" : {
+    "Project" : {
+      "Description" : "Enter Project Name",
+      "Type" : "String",
+      "Default" : "TMS Serverless Base"
+    }
+  },
+  "Resources": {
+
+    "SNSTopic" : {
+       "Type" : "AWS::SNS::Topic",
+       "Properties" : {
+         "TopicName": {"Fn::Sub": "${AWS::StackName}-GeneralTopic" },
+         "DisplayName": {"Fn::Sub" : "General Announcments For ${AWS::StackName} network"}
+       }
+     }
+
+   },
+   "Outputs": {
+     "Project" : {
+       "Description" : "The Project Name",
+       "Value" : {"Ref": "Project"}
+     },
+     "SNSTopic" : {
+       "Description" : "SNS Topic Created",
+       "Value" : {"Ref": "SNSTopic"},
+       "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-TopicArn"}}
+     },
+     "DomainName" : {
+       "Description" : "Domain Name to be used",
+       "Value" : {"Ref": "SNSTopic"},
+       "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-DomainName"}}
+     },
+     "API" : {
+       "Description" : "SNS Topic Created",
+       "Value" : {"Ref": "SNSTopic"},
+       "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-TopicArn"}}
+     }
+
+
+
+   },
+
+   "Metadata": {
+     "AWS::CloudFormation::Interface" : {
+       "ParameterGroups" : [
+           {
+             "Label" : { "default" : "Project Information"},
+             "Parameters" : [ "Project" ]
+           }
+         ],
+        "ParameterLabels" : {
+             "PublicSubnetCidrBlock3": { "default" : "Public Subnet 3" }
+        }
+      }
+    }
+
+
+
+
+}
