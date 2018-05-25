@@ -218,12 +218,16 @@
       "Value" : {"Ref": "SNSTopic"},
       "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-DomainName"}}
     },
-    "API" : {
-      "Description" : "SNS Topic Created",
-      "Value" : {"Ref": "SNSTopic"},
-      "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-TopicArn"}}
+    "ApiHostName" : {
+      "Description" : "Hostname for the API",
+      "Value" : {"Ref": "ApiHostName"},
+      "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-ApiHostName"}}
+    },
+    "WebHostName" : {
+      "Description" : "Hostname for the API",
+      "Value" : {"Ref": "WebHostName"},
+      "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-WebHostName"}}
     }
-
 
 
   },
@@ -234,10 +238,19 @@
         {
           "Label" : { "default" : "Project Information"},
           "Parameters" : [ "Project" ]
+        },
+        {
+          "Label" : { "default" : "Hostnames and DNS"},
+          "Parameters" : [ "DomainName", "WebHostName", "ApiHostName"]
+        },
+        {
+          "Label" : { "default" : "SSL Certificates (pre-created)"},
+          "Parameters" : [ "ApiACMArn", "WebACMArn"]
         }
       ],
       "ParameterLabels" : {
-        "PublicSubnetCidrBlock3": { "default" : "Public Subnet 3" }
+        "ApiHostName": { "default" : "Hostname (not include domain) for the API" },
+        "WebHostName": { "default" : "Hostname (not include domain) for the Web" }
       }
     }
   },
