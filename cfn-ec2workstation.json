@@ -133,6 +133,7 @@
                            "lambda:CreateFunction",
                            "cloudformation:List*",
                            "cloudformation:Get*",
+                           "cloudformation:DescribeStacks",
                            "cloudformation:CreateUploadBucket",
                            "cloudformation:PreviewStackUpdate",
                            "cloudformation:ValidateTemplate",
