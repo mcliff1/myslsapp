@@ -129,6 +129,7 @@
                            "route53:ChangeResourceRecordSets",
                            "route53:ListHostedZones",
                            "lambda:Get*",
+                           "ssm:GetParameter",
                            "lambda:List*",
                            "lambda:CreateFunction",
                            "cloudformation:List*",
