@@ -6,6 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 [Design Docs](https://github.com/mcliff1/myslsapp/tms/usecases/README.md)
 
+API design using [swagger.yml](https://github.com/mcliff1/myslsapp/tms/api/serverless.yml)
 
 ## Available Scripts
 
