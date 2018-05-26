@@ -30,7 +30,7 @@ class CustomerListDetail extends React.Component {
       info : props.info || blank_cust,
     }
 
-    this.openDetail = this.openDetail.bind(this);
+    //this.openDetail = this.openDetail.bind(this);
   }
 
   // this should open the customer detail for the selected user
@@ -50,7 +50,7 @@ class CustomerListDetail extends React.Component {
     return(
       <div className="card-deck mt4">
       <div className="card border border-info rounded"
-        onClick={ (evt) => this.openDetail(evt, info)}>
+        onClick={ (evt) => this.props.onClick(info)}>
         <div className="card-body">
         <h5 className="card-title">{ info.name }</h5>
         <p className="card-text">{ info.city }, {info.state }</p>
@@ -229,34 +229,45 @@ class CustomerAdd extends React.Component {
 
 
 
-class CustomerSummary extends React.Component {
-// expects a customer object  passed as info
+
+
+// Class represents a list and detail view of a customer
+class CustomerMain extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      info: this.props.info || blank_cust
+      info : null
     }
   }
 
-  render() {
+
+  // sets the state so that we know we are looking at a
+  // particular record
+  handleClick(info) {
+    this.setState({ info: info} );
+  }
+
+  renderDetail() {
+    var info = this.state.info;
     return(
-      <div>
-        <p> Name is {this.state.info.name}</p>
+      <div className="card-deck mt4">
+      <div className="card border border-info rounded">
+        <div className="card-body">
+          <h5 className="card-title">{ info.name }</h5>
+          <p className="card-text">{ info.city }, {info.state }</p>
+          <p className="card-text">phone: { info.phone } email: {info.email }</p>
+        </div>
       </div>
+      </div>
+
     )
   };
-}
 
-
-class CustomerList extends React.Component {
-
-
-  render() {
+  renderList() {
     return(
       <div>
         <div className="App-title">Customer List</div>
-
         <LoadContent url="https://tms-dev-api.mattcliff.net/">
         {
           ({ loading, error, data}) => {
@@ -268,7 +279,8 @@ class CustomerList extends React.Component {
                 data.map((item, idx) => {
                   return(
                   <div key={idx}>
-                    <CustomerListDetail info={item} key={idx} />
+                    <CustomerListDetail info={item} key={idx}
+                      onClick={(info) => this.handleClick(info)} />
                   </div>
                 );
                 })
@@ -281,25 +293,32 @@ class CustomerList extends React.Component {
 
 
       </div>
-    )
+    );
   };
+
+  render() {
+    const hasInfo = (this.state.info !== null);
+    return(
+      <div>
+        {hasInfo ? this.renderDetail() : this.renderList()}
+      </div>
+    );
+  }
 }
 
 
-
+// Primary Class to Route to at the App level
+//   for Customer UI
 class Customer extends React.Component {
 
   render() {
     return(
       <div>
       <Link to="/customer/add">Add</Link> &nbsp; - &nbsp;
-      <Link to="/customer/detail">Customer Detail</Link> &nbsp; - &nbsp;
       <Link to="/customer/">Customer List</Link>
 
       <Route exact path="/customer/add" component={CustomerAdd} />
-      <Route exact path="/customer/detail" component={CustomerSummary} />
-      <Route exact path="/customer/" component={CustomerList} />
-      <Route exact path="/customer/d2" render={(props) => <CustomerSummary {...props} />} />
+      <Route exact path="/customer/" component={CustomerMain} />
 
       </div>
     )
