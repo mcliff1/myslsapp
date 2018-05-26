@@ -109,7 +109,7 @@ def put_call(in_json):
     rc = 503
     jstr = None
     try:
-        if in_json is not None and 'Id' in_json.keys():
+        if in_json is not None and 'Id' in in_json.keys():
             itemKey = {
                 'Id' : in_json['Id'],
                 'CreatedAt' : in_json['CreatedAt']
