@@ -43,7 +43,7 @@ def decode_json(dct):
     wraps float with Decimal and general serialization to insert into dyanamo
     """
     for key, val in dct.items():
-        logging.info("1{%s, %s} type - %s", key, val, type(val))
+        "logging.info("1{%s, %s} type - %s", key, val, type(val))
         if isinstance(val, float):
             logging.info("setting %s to Decimal", key)
             dct[key] = Decimal(str(val))
@@ -54,10 +54,6 @@ def decode_json(dct):
             except:
                 dct[key] = val
 
-
-    # loop throught a second time
-    for key, val in dct.items():
-        logging.info("2{%s, %s} type - %s", key, val, type(val))
 
     return dct
 
@@ -104,7 +100,37 @@ def post_call(in_json):
     }
 
 
+def delete_call(in_json):
+    """
+    Performs delete on the item id
+    """
+    logging.info("delete_call(%s)" % (in_json,))
 
+    rc = 503
+    jstr = None
+    try:
+        if in_json is not None and 'Id' in in_json.keys():
+            #ddb_json = decode_json(in_json)
+            db_table.delete_item(Key{'Id':in_json['Id']});
+            rc = 200
+        else:
+            logging.error("we do not have id in the request")
+            jstr = { "err" : "missing Id in requrest" }
+
+
+    except Exception as db_exception:
+        logging.exception(db_exception)
+        jstr = { "err" : str(db_exception) }
+
+    logging.info("return string %s", jstr)
+    return {
+        "body": json.dumps(jstr, cls=DecimalEncoder),
+        "statusCode" : rc,
+        "headers": {
+            "Access-Control-Allow-Origin" : "*",
+            "Content-Type" : "application/json",
+        }
+    }
 
 
 
@@ -153,14 +179,8 @@ def get_call(jsonstr):
                 """
                 rslt = db_table.query(KeyConditionExpression=Key('Id').eq(bot_type + '-' + jsonstr['deviceid']))['Items']
 
-
-
             # this is a list of JSON objects,  do I just return them direct??
             logging.info(len(rslt))
-
-            # strip out the Id field
-            for element in rslt:
-                del element['Id']
 
             jstr = rslt
             rc = 200
@@ -173,13 +193,6 @@ def get_call(jsonstr):
 
             rslt = db_table.query(IndexName="BotTypeIndex", KeyConditionExpression=Key('bottype').eq(bot_type) & Key('CreatedAt').gte(jsonstr['startdate']))['Items']
 
-
-
-
-            # I think I need to loop through and do a bulk query on this list of keys
-            # strip out the Id field
-            for element in rslt:
-                del element['Id']
 
             jstr = rslt
             rc = 200
@@ -223,7 +236,8 @@ def handle(event, context):
 
     operations = {
         'POST' : lambda jsonstr: post_call(jsonstr),
-        'GET' : lambda jsonstr: get_call(jsonstr)
+        'GET' : lambda jsonstr: get_call(jsonstr),
+        'DELETE' : lambda jsonstr: delete_call(jsonstr)
     }
 
 

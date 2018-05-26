@@ -30,20 +30,8 @@ class CustomerListDetail extends React.Component {
       info : props.info || blank_cust,
     }
 
-    //this.openDetail = this.openDetail.bind(this);
   }
 
-  // this should open the customer detail for the selected user
-  openDetail(evt, info) {
-    //this.props.history.push('/customer/d2');
-    this.context.router.push('/customer/d2');
-    //return(
-    //  <Router>
-    //  <Route path="/" component={Customer} />
-    // </Router>
-    //)
-
-  }
 
   render() {
     var info = this.state.info;
@@ -71,165 +59,6 @@ CustomerListDetail.propTypes = {
 
 
 
-class CustomerAdd extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      name: '',
-      address1: '',
-      address2: '',
-      city: '',
-      state: '',
-      zip: '',
-      phone: '',
-      fax: '',
-      email: '',
-      website: ''
-    };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(event) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-
-    this.setState({ [name]: value});
-  }
-
-  handleSubmit(event) {
-    event.preventDefault();
-
-    const target = event.target;
-    //const value = target.type === 'checkbox' ? target.checked : target.value;
-
-    const name = target.name;
-
-
-    const formData = {};
-    for (const field in this.refs) {
-      formData[field] = this.refs[field].value;
-    }
-    console.log('-->', formData);
-
-    //alert('name was submitted: ' + event.name);
-
-    // see https://stackoverflow.com/questions/29775797/fetch-post-json-data?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
-    //  (Francisco Presnecia for better way)
-
-    //const data = new FormData(event.target);
-    fetch('https://tms-dev-api.mattcliff.net', {
-      method: 'POST',
-      headers: {
-        'Accept' : 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData),
-    })
-    .then(res => res.json())
-    .then((data) => console.log(data))
-    .catch((err) => console.log('error ==>', err));
-
-
-    //this.props.router.push('/customer/');
-    return(
-      <Link to="{Customer}" />
-    )
-  }
-
-
-  render() {
-    var info = this.state.info;
-    return(
-      <div>
-        <Form onSubmit={this.handleSubmit}>
-
-        <FormGroup row>
-          <Label for="custName" sm={2}>Name</Label>
-          <Col sm={10}>
-            <input type="text" value={this.state.name} ref="name" name="name" id="custName" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="custAddress1" sm={2}>Address</Label>
-          <Col sm={10}>
-            <input type="text" value={this.state.address1} ref="address1" name="address1" id="custAddress" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="custAddress2" sm={2}>Address2</Label>
-          <Col sm={10}>
-            <input type="text" value={this.state.address2} ref="address2" name="address2" id="custAddress2" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="custCity" sm={2}>City</Label>
-          <Col sm={10}>
-            <input type="text" value={this.state.city} ref="city" name="city" id="custCity" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="custState" sm={2}>State</Label>
-          <Col sm={10}>
-            <input type="text" value={this.state.state} ref="state" name="state" id="custState" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="custZip" sm={2}>Zip</Label>
-          <Col sm={10}>
-            <input type="text" value={this.state.zip} ref="zip" name="zip" id="custZip" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="custPhone" sm={2}>Phone</Label>
-          <Col sm={10}>
-            <input type="text" value={this.state.phone} ref="phone" name="phone" id="custPhone" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="custFax" sm={2}>Fax</Label>
-          <Col sm={10}>
-            <input type="text" value={this.state.fax} ref="fax" name="fax" id="custFax" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="custEmail" sm={2}>Email</Label>
-          <Col sm={10}>
-            <input type="text" value={this.state.email} ref="email" name="email" id="custEmail" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="custWebsite" sm={2}>Website</Label>
-          <Col sm={10}>
-            <input type="text" value={this.state.website} ref="website" name="website" id="custWebsite" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup>
-          <Button type="submit">Submit</Button>
-        </FormGroup>
-        </Form>
-      </div>
-
-    )
-  };
-}
-
-
-
-
 
 
 class CustomerPanel extends React.Component {
@@ -243,7 +72,7 @@ class CustomerPanel extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    //this.handleClose = this.handleClose.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleChange(event) {
@@ -252,6 +81,8 @@ class CustomerPanel extends React.Component {
     const name = target.name;
     const { info } = this.state;
 
+    // this addres the controlled input on the form
+    // these are immutable changes
     this.setState({
       info: {
         ...info,
@@ -259,13 +90,6 @@ class CustomerPanel extends React.Component {
       }
     });
   }
-
-  //handleClose(event) {
-    //this.setState({ info})
-//    return(
-  //    <Link to="{Customer}" />
-  //  )
-  //}
 
   handleSubmit(event) {
     event.preventDefault();
@@ -282,12 +106,6 @@ class CustomerPanel extends React.Component {
     }
     console.log('-->', formData);
 
-    //alert('name was submitted: ' + event.name);
-
-    // see https://stackoverflow.com/questions/29775797/fetch-post-json-data?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
-    //  (Francisco Presnecia for better way)
-
-    //const data = new FormData(event.target);
     fetch('https://tms-dev-api.mattcliff.net', {
       method: 'POST',
       headers: {
@@ -301,15 +119,33 @@ class CustomerPanel extends React.Component {
     .catch((err) => console.log('error ==>', err));
 
 
-    //this.props.router.push('/customer/');
-    return(
-      <Link to="{Customer}" />
-    )
+    this.props.handleClose();
+  }
+
+
+  handleDelete() {
+    const info = this.state.info;
+
+    fetch('https://tms-dev-api.mattcliff.net', {
+      method: 'DELETE',
+      headers: {
+        'Accept' : 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: {
+        'Id' : info.Id
+      }
+    })
+    .then(res => res.json())
+    .then((data) => console.log(data))
+    .catch((err) => console.log('error ==>', err));
+
+    this.props.handleClose();
   }
 
 
   render() {
-    var info = this.state.info;
+    const info = this.state.info;
     return(
       <div>
         <Form onSubmit={this.handleSubmit}>
@@ -387,7 +223,7 @@ class CustomerPanel extends React.Component {
         <FormGroup row>
           <Button type="submit">Submit</Button>
 
-          <Button onClick={this.props.handleDelete}>Delete</Button>
+          <Button onClick={this.handleDelete}>Delete</Button>
           <Button onClick={this.props.handleClose}>Close</Button>
         </FormGroup>
         </Form>
@@ -401,7 +237,7 @@ class CustomerPanel extends React.Component {
 
 
 // Class represents a list and detail view of a customer
-class CustomerMain extends React.Component {
+class Customer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -409,6 +245,7 @@ class CustomerMain extends React.Component {
       info : null
     }
     this.handleOpenList = this.handleOpenList.bind(this);
+    this.handleOpenAdd = this.handleOpenAdd.bind(this);
 
   }
 
@@ -423,36 +260,28 @@ class CustomerMain extends React.Component {
     this.setState({ info: null });
   }
 
+  handleOpenAdd() {
+    this.setState({ info: blank_cust });
+  }
+
 
   renderDetail() {
     return(
       <div>
-        <CustomerPanel info={this.state.info} handleClose={this.handleOpenList} />
+        <CustomerPanel info={this.state.info}
+                       handleClose={this.handleOpenList} />
       </div>
     );
   }
 
-  renderDetail2() {
-    var info = this.state.info;
-    return(
-      <div className="card-deck mt4">
-      <div className="card border border-info rounded"
-      onClick={(info) => this.handleOpenList(info)} >
-        <div className="card-body">
-          <h5 className="card-title">{ info.name }</h5>
-          <p className="card-text">{ info.city }, {info.state }</p>
-          <p className="card-text">phone: { info.phone } email: {info.email }</p>
-        </div>
-      </div>
-      </div>
-
-    )
-  };
 
   renderList() {
     return(
       <div>
-        <div className="App-title">Customer List</div>
+        <div className="App-title">Customer List &nbsp;&nbsp;
+        <Button onClick={this.handleOpenAdd}>Add</Button></div>
+
+
         <LoadContent url="https://tms-dev-api.mattcliff.net/">
         {
           ({ loading, error, data}) => {
@@ -489,26 +318,6 @@ class CustomerMain extends React.Component {
       </div>
     );
   }
-}
-
-
-// Primary Class to Route to at the App level
-//   for Customer UI
-class Customer extends React.Component {
-
-  render() {
-    return(
-      <div>
-      <Link to="/customer/add">Add</Link> &nbsp; - &nbsp;
-      <Link to="/customer/">Customer List</Link>
-
-      <Route exact path="/customer/add" component={CustomerPanel} />
-      <Route exact path="/customer/" component={CustomerMain} />
-
-      </div>
-    )
-  };
-
 }
 
 
