@@ -100,6 +100,46 @@ def post_call(in_json):
     }
 
 
+def put_call(in_json):
+    """
+    Performs an update on the item
+    """
+    logging.info("put_call(%s)" % (in_json,))
+
+    rc = 503
+    jstr = None
+    try:
+        if in_json is not None and 'Id' in_json.keys():
+            itemKey = {
+                'Id' : in_json['Id'],
+                'CreatedAt' : in_json['CreatedAt']
+            }
+            # first pull the existing
+            #olditem = db_table.get_item(Key = itemKey);
+            # lay the new stuff on top
+
+            ddb_json = decode_json(in_json)
+            ddb_json = {k:v for k,v in ddb_json.items() if v != ''}
+            db_table.put_item(Item=ddb_json)
+        rc = 200
+        #logging.info("class %s json - %s", type(ddb_json), ddb_json)
+        jstr = str(ddb_json)
+        #logging.info("commit complete")
+    except Exception as db_exception:
+        logging.exception(db_exception)
+        rc = 500
+        jstr = { "err" : json.loads(str(db_exception)) }
+
+    return {
+        "body": json.dumps(jstr),
+        "statusCode" : rc,
+        "headers": {
+            "Content-Type" : "application/json",
+            "Access-Control-Allow-Origin" : "*",
+
+        }
+    }
+
 def delete_call(in_json):
     """
     Performs delete on the item id
@@ -113,7 +153,7 @@ def delete_call(in_json):
             #ddb_json = decode_json(in_json)
             itemKey = {
                 'Id' : in_json['Id'],
-                'CreatedAt' : in_json['CreatedAd']
+                'CreatedAt' : in_json['CreatedAt']
             }
             db_table.delete_item(Key = itemKey);
             rc = 200
@@ -241,7 +281,8 @@ def handle(event, context):
     operations = {
         'POST' : lambda jsonstr: post_call(jsonstr),
         'GET' : lambda jsonstr: get_call(jsonstr),
-        'DELETE' : lambda jsonstr: delete_call(jsonstr)
+        'DELETE' : lambda jsonstr: delete_call(jsonstr),
+        'PUT' : lambda jsonstr: put_call(jsonstr)
     }
 
 

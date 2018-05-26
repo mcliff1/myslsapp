@@ -66,7 +66,7 @@ class CustomerPanel extends React.Component {
     super(props);
 
     this.state = {
-      isNewCustomer: true,
+      isNewCustomer: this.props.isNewCustomer,
       info: this.props.info || blank_cust
     };
 
@@ -218,7 +218,10 @@ class CustomerPanel extends React.Component {
         </FormGroup>
 
         <FormGroup row>
-          <Button type="submit">Submit</Button>
+          {this.state.isNewCustomer ?
+            <Button type="submit">Submit</Button> :
+            <Button type="submit">Update</Button>
+          }
 
           <Button onClick={this.handleDelete}>Delete</Button>
           <Button onClick={this.props.handleClose}>Close</Button>
@@ -239,6 +242,7 @@ class Customer extends React.Component {
     super(props);
 
     this.state = {
+      isNewCustomer: false,
       info : null
     }
     this.handleOpenList = this.handleOpenList.bind(this);
@@ -250,15 +254,24 @@ class Customer extends React.Component {
   // sets the state so that we know we are looking at a
   // particular record
   handleClick(info) {
-    this.setState({ info: info} );
+    this.setState({
+      isNewCustomer: false,
+      info: info
+    });
   }
 
   handleOpenList() {
-    this.setState({ info: null });
+    this.setState({
+      isNewCustomer: true,
+      info: null
+    });
   }
 
   handleOpenAdd() {
-    this.setState({ info: blank_cust });
+    this.setState({
+      isNewCustomer : true,
+      info: blank_cust
+    });
   }
 
 
@@ -266,6 +279,7 @@ class Customer extends React.Component {
     return(
       <div>
         <CustomerPanel info={this.state.info}
+                       isNewCustomer={this.state.isNewCustomer}
                        handleClose={this.handleOpenList} />
       </div>
     );
