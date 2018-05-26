@@ -82,6 +82,7 @@ def post_call(in_json):
         ddb_json = decode_json(in_json)
         ddb_json['CreatedAt'] = timestamp
         ddb_json['Id'] = str(uuid.uuid4())
+        ddb_json = {k:v for k,v in ddb_json.items() if v != ''}
         db_table.put_item(Item=ddb_json)
         rc = 200
         #logging.info("class %s json - %s", type(ddb_json), ddb_json)
