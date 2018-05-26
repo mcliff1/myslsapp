@@ -248,11 +248,17 @@ class CustomerMain extends React.Component {
     this.setState({ info: info} );
   }
 
+  handleOpenList() {
+    this.setState({ info: null });
+  }
+
+
   renderDetail() {
     var info = this.state.info;
     return(
       <div className="card-deck mt4">
-      <div className="card border border-info rounded">
+      <div className="card border border-info rounded"
+      onClick={(info) => this.handleOpenList(info)} >
         <div className="card-body">
           <h5 className="card-title">{ info.name }</h5>
           <p className="card-text">{ info.city }, {info.state }</p>
