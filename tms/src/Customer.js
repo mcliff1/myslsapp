@@ -125,16 +125,13 @@ class CustomerPanel extends React.Component {
 
   handleDelete() {
     const info = this.state.info;
-
+    console.log("going to delete customer id:", info.Id);
     fetch('https://tms-dev-api.mattcliff.net', {
       method: 'DELETE',
       headers: {
-        'Accept' : 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       },
-      body: {
-        'Id' : info.Id
-      }
+      body: JSON.stringify({'Id' : info.Id, 'CreatedAt' : info.CreatedAt })
     })
     .then(res => res.json())
     .then((data) => console.log(data))
@@ -284,20 +281,21 @@ class Customer extends React.Component {
 
         <LoadContent url="https://tms-dev-api.mattcliff.net/">
         {
-          ({ loading, error, data}) => {
+          ({loading, error, data}) => {
 
             if (loading) return <span>Loading...</span>
             return (
               <div>
               {
-                data.map((item, idx) => {
-                  return(
-                  <div key={idx}>
-                    <CustomerListDetail info={item} key={idx}
-                      onClick={(info) => this.handleClick(info)} />
-                  </div>
-                );
-                })
+                  data.map((item, idx) => {
+                    return(
+                      <div key={idx}>
+                        <CustomerListDetail info={item} key={idx}
+                          onClick={(info) => this.handleClick(info)} />
+                      </div>
+                    );
+                  })
+
               }
               </div>
             )

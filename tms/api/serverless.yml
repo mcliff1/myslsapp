@@ -37,6 +37,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:Scan
         - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
       Resource:
         "Fn::Join":
           - ""

@@ -43,7 +43,7 @@ def decode_json(dct):
     wraps float with Decimal and general serialization to insert into dyanamo
     """
     for key, val in dct.items():
-        "logging.info("1{%s, %s} type - %s", key, val, type(val))
+        #logging.info("1{%s, %s} type - %s", key, val, type(val))
         if isinstance(val, float):
             logging.info("setting %s to Decimal", key)
             dct[key] = Decimal(str(val))
@@ -111,7 +111,11 @@ def delete_call(in_json):
     try:
         if in_json is not None and 'Id' in in_json.keys():
             #ddb_json = decode_json(in_json)
-            db_table.delete_item(Key{'Id':in_json['Id']});
+            itemKey = {
+                'Id' : in_json['Id'],
+                'CreatedAt' : in_json['CreatedAd']
+            }
+            db_table.delete_item(Key = itemKey);
             rc = 200
         else:
             logging.error("we do not have id in the request")
