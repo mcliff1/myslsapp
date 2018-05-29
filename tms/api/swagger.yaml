@@ -1,20 +1,37 @@
 swagger: '2.0'
 info:
   description: >-
-    API Service for TMS (Transportation Management System)
-    This is being developed as a POC for serverless and hand-held devices
+    API Service for TMS (Transportation Management System) This is being
+    developed as a POC for serverless and hand-held devices
   version: 1.0.0
   title: TMS API
   contact:
     email: matt@denvercliffs.com
 host: tms-dev-api.mattcliff.net
-basePath: /  # should change to /v1
+basePath: /
 schemes:
   - https
 tags:
   - name: customer
 paths:
   /customer:
+    get:
+      summary: Gets all customer records in the system
+      tags:
+        - customer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Customer'
+        '405':
+          description: Invalid input
     post:
       tags:
         - customer
@@ -35,24 +52,11 @@ paths:
           description: success
         '405':
           description: Invalid input
-    get:
-      summary: Gets all customer records in the system
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: success
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Customer'
-        '405':
-          description: Invalid input
   '/customer/{customerId}':
     get:
       summary: Get a specific customer record in the system
+      tags:
+        - customer
       consumes:
         - application/json
       produces:
@@ -72,6 +76,48 @@ paths:
           description: invalid id supplied
         '404':
           description: Pet not found
+    put:
+      tags:
+        - customer
+      summary: Updates an existing customer record
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: customer object to add
+          required: true
+          schema:
+            $ref: '#/definitions/Customer'
+        - in: path
+          name: customerId
+          description: customer id to update
+          required: true
+          type: string
+      responses:
+        '200':
+          description: success
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - customer
+      summary: Removes a customer record
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: customerId
+          description: customer id to update
+          required: true
+          type: string
+      responses:
+        '200':
+          description: success
+        '405':
+          description: Invalid input
 definitions:
   Customer:
     type: object
@@ -106,4 +152,3 @@ definitions:
       website:
         type: string
         description: website
-      
