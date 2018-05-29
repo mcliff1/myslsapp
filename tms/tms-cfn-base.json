@@ -86,12 +86,14 @@
         "CorsConfiguration" : {
           "CorsRules" : [
             {
-              "AllowedHeaders" : [ "*" ],
               "AllowedMethods" : [ "GET" ],
               "AllowedOrigins" : [ "*" ],
-              "ExposedHeaders" : [ "Date" ],
-              "Id" : "corsRuleGet",
-              "MaxAge" : 3600
+              "Id" : "corsRuleGet"
+            },
+            {
+              "AllowedMethods" : [ "PUT", "POST", "DELETE" ],
+              "AllowedOrigins" : [ "*" ],
+              "Id" : "corsRuleModify"
             }
           ]
         },
@@ -145,16 +147,33 @@
             }
           ],
           "DefaultCacheBehavior" : {
-              "ViewerProtocolPolicy" : "allow-all",
-              "TargetOriginId" : "S3Origin",
-              "AllowedMethods" : [ "GET", "HEAD" ],
-              "Compress" : "true",
-              "DefaultTTL" : "30",
-              "MinTTL" : "10",
-              "ForwardedValues" : {
-                "QueryString" : "true"
-              }
+            "ViewerProtocolPolicy" : "allow-all",
+            "TargetOriginId" : "S3Origin",
+            "AllowedMethods" : [ "GET", "HEAD" ],
+            "Compress" : "true",
+            "DefaultTTL" : "30",
+            "MinTTL" : "10",
+            "ForwardedValues" : {
+              "QueryString" : "true",
+              "Headers" : [ 
+                "Access-Control-Request-Headers",
+                "Access-Control-Request-Method",
+                "Origin" 
+              ]
             }
+          },
+          "CustomErrorRepsonses" : [
+            {
+              "ErrorCode": 404,
+              "ResponseCode": 200,
+              "ResponsePagePath": "/index.html"
+            },
+            {
+              "ErrorCode": 403,
+              "ResponseCode": 200,
+              "ResponsePagePath": "/index.html"
+            }
+          ]
         }
       }
     },
@@ -177,7 +196,7 @@
         "Name" : { "Fn::Sub" : "/${AWS::StackName}/domainName"},
         "Description" : "Domain Name",
         "Type" : "String",
-        "Value" : { "Ref" : "DomainName" },
+        "Value" : { "Ref" : "DomainName" }
       }
     },
     "ssmApiHostName": {
@@ -186,7 +205,7 @@
         "Name" : { "Fn::Sub" : "/${AWS::StackName}/apiHostName"},
         "Description" : "API Host Name",
         "Type" : "String",
-        "Value" : { "Ref" : "ApiHostName" },
+        "Value" : { "Ref" : "ApiHostName" }
       }
     },
     "ssmApiAcmArn": {
@@ -195,7 +214,7 @@
         "Name" : { "Fn::Sub" : "/${AWS::StackName}/apiAcmArn"},
         "Description" : "ARN for the ACM (Certificate) for the API",
         "Type" : "String",
-        "Value" : { "Ref" : "ApiACMArn" },
+        "Value" : { "Ref" : "ApiACMArn" }
       }
     },
     "ssmCognitoUserPoolId": {
@@ -204,7 +223,7 @@
         "Name" : { "Fn::Sub" : "/${AWS::StackName}/cognitoUserPoolId"},
         "Description" : "User Pool from Cognito",
         "Value" : {"Ref": "UserPool"},
-        "Type" : "String",
+        "Type" : "String"
       }
     },
     "ssmCognitoClientId": {
@@ -214,6 +233,15 @@
         "Type" : "String",
         "Description" : "Client Id from Cognito",
         "Value" : {"Ref": "UserPoolClient"}
+      }
+    },
+    "ssmWebBucketName": {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "/${AWS::StackName}/webBucketName"},
+        "Type" : "String",
+        "Description" : "Name of the S3 Web Bucket",
+        "Value" : {"Ref": "WebBucket"}
       }
     }
 

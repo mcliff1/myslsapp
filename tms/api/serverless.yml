@@ -10,9 +10,11 @@ custom:
   stage: ${opt:stage, self:provider.stage}
   region: ${opt:region, self:provider.region}
   extra: ${file(serverless-${self:custom.stage}.json)}
+  basestackname: tmsbase
 
-  # todo - move this out to parameter
-  domainname: mattcliff.net
+  domainname: ${ssm:/${self:custom.basestackname}/domainName}
+  hostname: ${ssm:/${self:custom.basestackname}/apiHostName}
+  acmarn: ${ssm:/${self:custom.basestackname}/apiAcmArn}
 
   #customDomain:
   #    domainName: tms-${self:custom.stage}-api.${self:custom.domainname}
@@ -137,6 +139,31 @@ resources:
             Value: "TMS Customer Serverless DB"
         #ProvisionedThroughput: ${self:custom.extra.DynamoCapacity}
         ProvisionedThroughput: { "ReadCapacityUnits": "1", "WriteCapacityUnits": "1"}
+
+    ApiGatewayDomain:
+      Type: 'AWS::ApiGateway::DomainName'
+      Properties:
+        DomainName: ${self:custom.hostname}.${self:custom.domainname}
+        CertificateArn: ${self:custom.acmarn}
+
+    ApiGatewayMapping:
+      Type: 'AWS::ApiGateway::BasePathMapping'
+      DependsOn: ApiGatewayDomain
+      Properties:
+        DomainName: { "Ref" : ApiGatewayDomain }
+        RestApiId: { "Ref" : ApiGatewayRestApi }
+
+    MyDNSRecord:
+      Type: 'AWS::Route53::RecordSetGroup'
+      DependsOn: ApiGatewayDomain
+      Properties:
+        HostedZoneName: { "Fn::Sub" : "${self:custom.domainname}." }
+        RecordSets:
+          - Type: A
+            Name: ${self:custom.hostname}.${self:custom.domainname}
+            AliasTarget:
+              HostedZoneId: Z2FDTNDATAQYW2   # hardcoded for all cloudfront
+              DNSName: { "Fn::GetAtt" : ApiGatewayDomain.DistributionDomainName }
 
   Outputs:
     ExportServiceEndpoint:
