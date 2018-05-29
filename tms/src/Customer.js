@@ -18,6 +18,7 @@ const blank_cust =
   'website' : ''
 };
 
+const API_ENDPOINT = 'https://tms-api.mattcliff.net/dev';
 
 
 
@@ -106,7 +107,7 @@ class CustomerPanel extends React.Component {
     }
     console.log('-->', formData);
 
-    fetch('https://tms-dev-api.mattcliff.net', {
+    fetch(API_ENDPOINT, {
       method: 'POST',
       headers: {
         'Accept' : 'application/json, text/plain, */*',
@@ -126,7 +127,7 @@ class CustomerPanel extends React.Component {
   handleDelete() {
     const info = this.state.info;
     console.log("going to delete customer id:", info.Id);
-    fetch('https://tms-dev-api.mattcliff.net', {
+    fetch(API_ENDPOINT, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -293,11 +294,12 @@ class Customer extends React.Component {
         <Button onClick={this.handleOpenAdd}>Add</Button></div>
 
 
-        <LoadContent url="https://tms-dev-api.mattcliff.net/">
+        <LoadContent url={API_ENDPOINT}>
         {
           ({loading, error, data}) => {
 
             if (loading) return <span>Loading...</span>
+            if (!Array.isArray(data)) return <span></span>
             return (
               <div>
               {
