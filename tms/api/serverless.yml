@@ -153,6 +153,16 @@ resources:
         DomainName: { "Ref" : ApiGatewayDomain }
         RestApiId: { "Ref" : ApiGatewayRestApi }
 
+    ApiGatewayResponse:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      DependsOn: ApiGatewayDomain
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId: { "Ref" : ApiGatewayRestApi }
+
     MyDNSRecord:
       Type: 'AWS::Route53::RecordSetGroup'
       DependsOn: ApiGatewayDomain
