@@ -73,6 +73,7 @@ class CustomerPanel extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
 
@@ -100,15 +101,18 @@ class CustomerPanel extends React.Component {
 
     const name = target.name;
 
+    const method = this.state.isNewCustomer ? 'POST' : 'PUT';
+
 
     const formData = {};
     for (const field in this.refs) {
       formData[field] = this.refs[field].value;
     }
+    console.log('method-->', method);
     console.log('-->', formData);
 
     fetch(API_ENDPOINT, {
-      method: 'POST',
+      method: method,
       headers: {
         'Accept' : 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
