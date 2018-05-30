@@ -122,9 +122,16 @@ def put_call(in_json):
             ddb_json = decode_json(in_json)
             ddb_json = {k:v for k,v in ddb_json.items() if v != ''}
             db_table.put_item(Item=ddb_json)
-        rc = 200
-        #logging.info("class %s json - %s", type(ddb_json), ddb_json)
-        jstr = str(ddb_json)
+
+            rc = 200
+            jstr = str(ddb_json)
+
+
+        else:
+            rc = 500
+            jstr = { "err" : "no Id in inbound string " }
+
+
         #logging.info("commit complete")
     except Exception as db_exception:
         logging.exception(db_exception)

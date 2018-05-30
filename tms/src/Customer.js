@@ -106,12 +106,19 @@ class CustomerPanel extends React.Component {
     const method = this.state.isNewCustomer ? 'POST' : 'PUT';
 
 
+
     const formData = {};
     for (const field in this.refs) {
       formData[field] = this.refs[field].value;
     }
+
+    if (!this.state.isNewCustomer) {
+      formData['Id'] = this.state.info.Id;
+      formData['ObjectType'] = this.state.info.ObjectType;
+    }
     console.log('method-->', method);
     console.log('-->', formData);
+
 
     fetch(API_ENDPOINT, {
       method: method,
@@ -223,6 +230,10 @@ class CustomerPanel extends React.Component {
             <input type="text" value={info.website} ref="website" name="website" id="custWebsite" onChange={this.handleChange} />
           </Col>
         </FormGroup>
+
+        <input type="hidden" value={info.Id} ref="Id" name="Id" id="custId"  />
+        <input type="hidden" value={info.ObjectType} ref="ObjectType" name="ObjectType" id="custObjectType"  />
+
 
         <FormGroup row>
           {this.state.isNewCustomer ?
