@@ -2,26 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // from reduxjs.org/basics/usage-with-react
-const Link = ({active, children, onClick}) => {
-  if (active) {
-    return <span>{children}</span>
-  }
+const Link = ({active, children, onClick}) => (
+    <button
+      disabled={active}
+      style={{ marginLeft: '4px' }}
+      onClick = {onClick}
+    >
+      {children}
+    </button>
+);
 
-  return (
-    <a
-      href = ""
-      onClick = {e => {
-          e.preventDefault();
-          onClick();
-      }}
-      >
-        {children}
-    </a>
-  );
-}
 
 Link.propTypes = {
-  completed: PropTypes.bool.isRequired,
+  active: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func.isRequired,
 };

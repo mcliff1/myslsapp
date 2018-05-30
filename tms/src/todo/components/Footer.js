@@ -1,10 +1,10 @@
 import React from 'react';
-import FilterLink from '../containers/FilterLink';
+import FilterLink from '../containers/FilterLink.js';
 import { VisibilityFilters } from '../actions';
 
 // from reduxjs.org/basics/usage-with-react
-const Footer = () = (
-    <p>
+const Footer = () => (
+    <div>
       Show:
       {' '}
       <FilterLink filter={VisibilityFilters.SHOW_ALL}>
@@ -15,10 +15,10 @@ const Footer = () = (
         Active
       </FilterLink>
       {', '}
-      <FilterLink filter={VisibilityFilters.SHOW_COMPLTED}>
+      <FilterLink filter={VisibilityFilters.SHOW_COMPLETED}>
         Completed
       </FilterLink>
-</p>
-}
+</div>
+);
 
 export default Footer;
