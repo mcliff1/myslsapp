@@ -65,14 +65,16 @@ class AppNav1 extends React.Component {
 }
 
 
-
+// see auth0.com/blog/reactjs-authentication-tutorial/
+// see github isotoma/react-cognito-example
 class AppNav extends React.Component {
   constructor(props) {
     super(props);
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-      dropdownOpen: false
+      dropdownOpen: false,
+      loggedIn: false
     }
   }
 
@@ -81,6 +83,23 @@ class AppNav extends React.Component {
       dropdownOpen: !this.state.dropdownOpen
     })
   }
+
+
+
+  isLoggedIn() {
+    // const token = getIdToken*();
+    // !!idToken && !isTokenExpired(idToken);
+    return this.state.loggedIn;
+  }
+
+  login() {
+    this.setState({ loggedIn : true });
+  }
+
+  logout() {
+    this.setState({ loggedIn : false });
+  }
+
 
   render() {
     return(
@@ -111,8 +130,12 @@ class AppNav extends React.Component {
           </DropdownMenu>
         </Dropdown>
         <NavItem className="authenticated"><div>Hi Log me out</div></NavItem>
-        <NavItem className="dropdown anon-only">
-        <NavLink>Log In</NavLink>
+        <NavItem>
+        {
+          (this.isLoggedIn()) ?
+          (<button className="btn btn-danger log" onClick={() => this.logout()}>Log Out</button>) :
+          (<button className="btn btn-info log" onClick={() => this.login()}>Log In</button>)
+        }
         </NavItem>
       </Nav>
       </div>

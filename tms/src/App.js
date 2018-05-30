@@ -9,25 +9,19 @@ import AppNav from './AppNav.js';
 
 // https://react-bootstrap.github.io/components/label/
 
-
-
+//class App extends Component {
 const App = () => (
-      <Router>
-      <div className="App">
-        <AppNav />
-
+  <Router>
+    <div className="App">
+      <AppNav />
        <div className="container">
-       <Route exact path="/" component={Home} />
-       <Route path="/customer" component={Customer} />
-       <Route path="/load" component={Load} />
-       <Route path="/carrier" component={Carrier} />
+        <Route exact path="/" component={Home} />
+        <Route path="/customer" component={Customer} />
+        <Route path="/load" component={Load} />
+        <Route path="/carrier" component={Carrier} />
        </div>
-
-      </div>
-      </Router>
-    );
-
-
-
+    </div>
+  </Router>
+);
 
 export default App;
