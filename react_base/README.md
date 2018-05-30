@@ -4,7 +4,8 @@ This is built up from importing specific REACT npm packages (NOT leveraging a cr
 
 First time to download *NodeJS* Modules `npm install`
 
-To create a production build in the *build* directory `npm run build` 
+To create a production build in the *build* directory `npm run build`
 
 To enable a dev watcher `npm run dev`
 
+Use `ws` to run the node JS webserver on porty 8000.
