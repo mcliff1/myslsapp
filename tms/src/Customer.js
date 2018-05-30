@@ -93,6 +93,8 @@ class CustomerPanel extends React.Component {
     });
   }
 
+
+
   handleSubmit(event) {
     event.preventDefault();
 
@@ -136,7 +138,7 @@ class CustomerPanel extends React.Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({'Id' : info.Id, 'CreatedAt' : info.CreatedAt })
+      body: JSON.stringify({'Id' : info.Id, 'ObjectType' : info.ObjectType })
     })
     .then(res => res.json())
     .then((data) => console.log(data))

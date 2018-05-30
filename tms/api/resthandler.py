@@ -78,6 +78,7 @@ def post_call(in_json):
         ddb_json = decode_json(in_json)
         ddb_json['CreatedAt'] = timestamp
         ddb_json['Id'] = str(uuid.uuid4())
+        ddb_json['ObjectType'] = 'Customer'
         ddb_json = {k:v for k,v in ddb_json.items() if v != ''}
         db_table.put_item(Item=ddb_json)
         rc = 200
@@ -112,7 +113,7 @@ def put_call(in_json):
         if in_json is not None and 'Id' in in_json.keys():
             itemKey = {
                 'Id' : in_json['Id'],
-                'CreatedAt' : in_json['CreatedAt']
+                'ObjectType' : in_json['ObjectType']
             }
             # first pull the existing
             #olditem = db_table.get_item(Key = itemKey);
@@ -153,7 +154,7 @@ def delete_call(in_json):
             #ddb_json = decode_json(in_json)
             itemKey = {
                 'Id' : in_json['Id'],
-                'CreatedAt' : in_json['CreatedAt']
+                'ObjectType' : in_json['ObjectType']
             }
             db_table.delete_item(Key = itemKey);
             rc = 200
@@ -189,11 +190,6 @@ def get_call(jsonstr):
     try:
 
 
-        if jsonstr is not None and 'startdate' in jsonstr.keys():
-            fromdate = jsonstr['startdate']
-            logging.info("parse date '%s' as %s" % (fromdate, parse(fromdate)))
-
-
         if jsonstr is None:
             """
             No Parameters - Query most recent row in table matching this bot_type
@@ -205,38 +201,13 @@ def get_call(jsonstr):
 
         elif 'deviceid' in jsonstr.keys():
             """
-            Return data for this bot
+            Return data for this bot   TODO - change to ObjectType
             """
 
-
-            if 'startdate' in jsonstr.keys():
-                """
-                we also have to filter on the date
-                """
-
-                rslt = db_table.query(KeyConditionExpression=Key('Id').eq(bot_type + '-' + jsonstr['deviceid']) & Key('CreatedAt').gte(jsonstr['startdate']))['Items']
-
-
-            else:
-                """
-                return all data for this device
-                """
-                rslt = db_table.query(KeyConditionExpression=Key('Id').eq(bot_type + '-' + jsonstr['deviceid']))['Items']
+            rslt = db_table.query(KeyConditionExpression=Key('Id').eq(bot_type + '-' + jsonstr['deviceid']))['Items']
 
             # this is a list of JSON objects,  do I just return them direct??
             logging.info(len(rslt))
-
-            jstr = rslt
-            rc = 200
-        elif 'startdate' in jsonstr.keys():
-            """
-            Return ALL data for this type of bot since this date
-
-            NOT SUPPORTED
-            """
-
-            rslt = db_table.query(IndexName="BotTypeIndex", KeyConditionExpression=Key('bottype').eq(bot_type) & Key('CreatedAt').gte(jsonstr['startdate']))['Items']
-
 
             jstr = rslt
             rc = 200
@@ -266,9 +237,8 @@ def handle(event, context):
     """
     REST endpoint to DynamoDB table
 
-    Requires 'deviceid' to be present
-      primary key - combination of '{bot_type}-{deviceid}'
-      secondary key - new timestamp form at 'YYYY-MM-DD HH:mm:ss'
+      primary key - uuid generated at insert
+      secondary key - objectType - Customer, Load, Carrier, etc
     """
     logging.info("debug: event: %s", event)
 
