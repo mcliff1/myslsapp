@@ -63,7 +63,7 @@ class App extends Component {
       <Switch>
         <Route exact path="/" component={Home} props={childProps} />
         <UnauthenticatedRoute exact path="/login" component={Login} props={childProps} />
-        <Route exact path="/signUp" component={Signup} props={childProps}/>
+        <Route exact path="/signUp" component={Signup} props={childProps} userHasAuthenticated={this.userHasAuthenticated}/>
         <Route exact path="/customer" component={Customer} props={childProps}/>
         <AuthenticatedRoute exact path="/load" component={Load} props={childProps}/>
         <Route exact path="/mytodo" component={MyTodo} props={childProps}/>

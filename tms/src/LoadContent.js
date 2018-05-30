@@ -13,6 +13,7 @@ class LoadContent extends React.Component {
   }
 
   componentDidMount() {
+    this.setState({loading: true});
     fetch(this.props.url)
       // we should check status code here and throw on errors
       .then(res => res.json())

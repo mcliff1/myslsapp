@@ -266,6 +266,18 @@ class Customer extends React.Component {
       isNewCustomer: true,
       info: null
     });
+
+
+    fetch(API_ENDPOINT, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then((data) => console.log(data))
+    .catch((err) => console.log('error ==>', err));
+    this.props.history.push("/customer");
   }
 
   handleOpenAdd() {
@@ -335,4 +347,4 @@ class Customer extends React.Component {
 }
 
 
-export default Customer;
+export default withRouter(Customer);
