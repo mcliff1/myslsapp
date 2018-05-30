@@ -4,11 +4,15 @@
   "author": "Matt Cliff",
   "private": true,
   "dependencies": {
+    "amazon-cognito-identity-js": "^2.0.6",
+    "aws-amplify": "^0.4.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
+    "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.4",
-    "reactstrap": "^6.0.1"
+    "reactstrap": "^6.0.1",
+    "redux": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
