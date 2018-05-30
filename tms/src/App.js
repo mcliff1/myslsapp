@@ -10,8 +10,10 @@ import Carrier from './Carrier.js';
 import AppNav from './AppNav.js';
 import MyTodo from './todo/MyTodo.js';
 import Login from './containers/Login.js';
+import Signup from './containers/Signup.js';
 import NotFound from './containers/NotFound.js';
 import AuthenticatedRoute from './components/AuthenticatedRoute.js';
+import UnauthenticatedRoute from './components/UnauthenticatedRoute.js';
 
 
 // https://react-bootstrap.github.io/components/label/
@@ -45,26 +47,23 @@ class App extends Component {
     this.setState({ isAuthenticated: authenticated });
   }
 
-  handleLogout = async event => {
-    await Auth.signOut();
-    this.userHasAuthenticated(false);
-    //this.props.history.push("/login");
-  }
+
 
   render() {
     const childProps = {
-      isAuthenitcated: this.state.isAuthenticated,
-      userHasAuthenticated: this.userHasAuthenitcated
+      isAuthenticated: this.state.isAuthenticated,
+      userHasAuthenticated: this.userHasAuthenticated
     };
 
 
     return(
   <Router>
     <div className="App">
-      <AppNav />
+      <AppNav props={childProps} userHasAuthenticated={this.userHasAuthenticated} isAuthenticated={this.state.isAuthenticated}/>
       <Switch>
         <Route exact path="/" component={Home} props={childProps} />
-        <Route exact path="/login" component={Login} props={childProps}/>
+        <UnauthenticatedRoute exact path="/login" component={Login} props={childProps} />
+        <Route exact path="/signUp" component={Signup} props={childProps}/>
         <Route exact path="/customer" component={Customer} props={childProps}/>
         <AuthenticatedRoute exact path="/load" component={Load} props={childProps}/>
         <Route exact path="/mytodo" component={MyTodo} props={childProps}/>

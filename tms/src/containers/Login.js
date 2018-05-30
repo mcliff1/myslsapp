@@ -43,15 +43,15 @@ export default class Login extends Component {
       <Form onSubmit={this.handleSubmit}>
 
       <FormGroup row>
-        <Label for="custName" sm={2}>Email</Label>
-        <Col sm={10}>
+        <Label for="custName" sm={4}>Email</Label>
+        <Col sm={8}>
           <Input autoFocus id="email" onChange={this.handleChange} type="email" value={this.state.email}  />
         </Col>
       </FormGroup>
 
       <FormGroup row>
-        <Label for="custName" sm={2}>Password</Label>
-        <Col sm={10}>
+        <Label for="custName" sm={4}>Password</Label>
+        <Col sm={8}>
           <Input type="password" id="password" onChange={this.handleChange} value={this.state.password}  />
         </Col>
       </FormGroup>
