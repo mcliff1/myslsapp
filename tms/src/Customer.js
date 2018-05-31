@@ -98,7 +98,6 @@ class Customer extends Component {
         <Button onClick={this.handleAdd}>Add</Button>
         </div>
 
-
               <div>
               {
                   customerList.map((item, idx) => {
