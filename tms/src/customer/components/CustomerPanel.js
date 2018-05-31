@@ -19,20 +19,22 @@ const API_ENDPOINT = 'https://tms-api.mattcliff.net/dev';
 
 
 class CustomerPanel extends Component {
+
   constructor(props) {
     super(props);
 
     this.state = {
-      isNewCustomer: this.props.isNewCustomer,
       info: this.props.info || blank_cust
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    //this.handleUpdate = this.handleUpdate.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
 
+
+  // not sure if we should keep the 'controlled' UI pattern with redux
+  //
   handleChange(event) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -59,16 +61,14 @@ class CustomerPanel extends Component {
 
     //const name = target.name;
 
-    const method = this.state.isNewCustomer ? 'POST' : 'PUT';
-
-
+    const method = this.props.isNewCustomer ? 'POST' : 'PUT';
 
     const formData = {};
     for (const field in this.refs) {
       formData[field] = this.refs[field].value;
     }
 
-    if (!this.state.isNewCustomer) {
+    if (!this.props.isNewCustomer) {
       formData['Id'] = this.state.info.Id;
       formData['ObjectType'] = this.state.info.ObjectType;
     }
@@ -187,12 +187,8 @@ class CustomerPanel extends Component {
           </Col>
         </FormGroup>
 
-        <input type="hidden" value={info.Id} ref="Id" name="Id" id="custId"  />
-        <input type="hidden" value={info.ObjectType} ref="ObjectType" name="ObjectType" id="custObjectType"  />
-
-
         <FormGroup row>
-          {this.state.isNewCustomer ?
+          {this.props.isNewCustomer ?
             <Button type="submit">Submit</Button> :
             <Button type="submit">Update</Button>
           }
@@ -206,5 +202,6 @@ class CustomerPanel extends Component {
     )
   };
 }
+
 
 export default CustomerPanel;

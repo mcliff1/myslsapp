@@ -4,8 +4,7 @@ import { Button, Link } from 'reactstrap';
 import { connect } from 'react-redux';
 import CustomerPanel from './customer/components/CustomerPanel'
 import CustomerListDetail from './customer/components/CustomerListDetail'
-import { openNewCustomerPanel } from './actions/customerActions';
-import { openNewCustomerPanel2 } from './actions/customerActions';
+import { newCustomerPanel, closeCustomerPanel, openCustomerPanel, fetchCustomerList } from './actions/customerActions';
 
 
 
@@ -20,29 +19,35 @@ class Customer extends Component {
     //}
     this.handleOpenList = this.handleOpenList.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
+    this.handleClose = this.handleClose.bind(this);
 
   }
 
+  componentWillMount() {
+
+    console.log("componentWillMount");
+    this.props.dispatch((dispatch) => {
+      dispatch(fetchCustomerList());
+    });
+  }
 
   // sets the state so that we know we are looking at a
   // particular record
   handleClick(info) {
-    this.setState({
-      isNewCustomer: false,
-      info: info
-    });
+    this.props.dispatch(openCustomerPanel(info));
   }
 
   handleOpenList() {
-    console.log('open lixg');
-    this.props.dispatch(openNewCustomerPanel());
+    this.props.dispatch(newCustomerPanel());
 
-    this.props.history.push("/customer");
   }
 
   handleAdd() {
-    console.log('clicked on the add');
-    this.props.dispatch(openNewCustomerPanel2());
+    this.props.dispatch(newCustomerPanel());
+  }
+
+  handleClose() {
+    this.props.dispatch(closeCustomerPanel());
   }
 
 
@@ -53,7 +58,7 @@ class Customer extends Component {
       <div>
         <CustomerPanel info={info}
                        isNewCustomer={isNewCustomer}
-                       handleClose={this.handleOpenList} />
+                       handleClose={this.handleClose} />
       </div>
     );
   }
@@ -105,7 +110,8 @@ class Customer extends Component {
 const mapStoreToProps = (store, ownProps) => {
   return {
     info: store.customer.info,
-    customerList: store.customer.customerList
+    customerList: store.customer.customerList,
+    isNewCustomer: store.customer.isNewCustomer
   }
 }
 

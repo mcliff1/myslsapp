@@ -26,6 +26,26 @@ const customer = (state = defaultState, action) => {
         info: blank_cust,
         isNewCustomer: true
       };
+    case 'OPEN_CUSTOMER_PANEL':
+      return {
+        ...state,
+        info: action.info,
+        isNewCustomer: false
+      };
+    case 'CLOSE_CUSTOMER_PANEL':
+      return {
+        ...state,
+        info: null,
+        isNewCustomer: true
+      };
+    case 'GET_CUSTOMERS_FULFILLED':
+      return {
+        ...state,
+        info: null,
+        isNewCustomer: true,
+        customerList: action.payload
+      };
+
     default:
       return state;
   }
