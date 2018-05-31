@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router,  Route, Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Form, FormGroup, Label, Col, Input, Button, FormText } from 'reactstrap';
 import LoadContent from './LoadContent.js';
 
@@ -90,7 +90,7 @@ class LoadPanel extends Component {
     event.preventDefault();
 
     const target = event.target;
-    const name = target.name;
+    //const name = target.name;
 
     const method = this.state.isNewRecord ? 'POST' : 'PUT';
 

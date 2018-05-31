@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
-import { Provider } from 'react-redux';
 
-
-import store from './store'
 import './App.css';
 import Home from './Home.js';
 import Customer from './Customer.js';
@@ -60,7 +57,6 @@ class App extends Component {
 
 
     return(
-      <Provider store={store}>
   <Router>
     <div className="App">
       <AppNav props={childProps} userHasAuthenticated={this.userHasAuthenticated} isAuthenticated={this.state.isAuthenticated}/>
@@ -77,7 +73,6 @@ class App extends Component {
        </Switch>
     </div>
   </Router>
-  </Provider>
     )
   };
 }

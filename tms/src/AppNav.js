@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Nav, NavItem, NavLink, Dropdown, DropdownItem, DropdownToggle, DropdownMenu } from 'reactstrap';
-import { Link, Redirect, withRouter } from 'react-router-dom';
-import { Input } from 'reactstrap';
+import { Link, withRouter } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 
 

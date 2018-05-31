@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { toggleTodo, VisibilityFilters } from '../../actions';
+import { toggleTodo  } from '../../actions';
 import TodoList from '../components/TodoList.js';
 
 // from reduxjs.org/basics/usage-with-react

@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
+import store from './store'
+
 import Amplify from 'aws-amplify';
 //import { setupCognito, cognito } from 'react-cognito';
 import registerServiceWorker from './registerServiceWorker';
@@ -19,5 +20,9 @@ Amplify.configure({
   }
 });
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+  , document.getElementById('root'));
 registerServiceWorker();
