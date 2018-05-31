@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 
-class LoadContent extends React.Component {
+class LoadContent extends Component {
   constructor(props) {
     super(props);
 
@@ -12,9 +12,9 @@ class LoadContent extends React.Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.setState({loading: true});
-    fetch(this.props.url)
+    await fetch(this.props.url)
       // we should check status code here and throw on errors
       .then(res => res.json())
       .then((data) => this.setState({data, loading: false}))

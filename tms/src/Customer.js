@@ -278,14 +278,14 @@ class Customer extends React.Component {
     });
   }
 
-  handleOpenList() {
+  async handleOpenList() {
     this.setState({
       isNewCustomer: true,
       info: null
     });
 
-
-    fetch(API_ENDPOINT, {
+    console.log("fetching open list");
+    await fetch(API_ENDPOINT, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

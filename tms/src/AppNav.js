@@ -72,10 +72,11 @@ class AppNav extends Component {
           <NavLink href="/load">Load</NavLink>
         </NavItem>
         :
+        <NavItem />
+        }
         <NavItem>
           <NavLink href="/carrier">Carrier</NavLink>
         </NavItem>
-        }
         <Dropdown nav isOpen={this.state.dropdownOpen} toggle={this.toggle}>
           <DropdownToggle nav caret>
             Actions
