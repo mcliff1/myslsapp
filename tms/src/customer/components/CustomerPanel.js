@@ -22,7 +22,7 @@ class CustomerPanel extends Component {
     super(props);
 
     this.state = {
-      info: this.props.info || blank_cust
+      info: this.props.info
     };
 
     this.handleChange = this.handleChange.bind(this);

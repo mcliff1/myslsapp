@@ -50,6 +50,14 @@ const customer = (state = defaultState, action) => {
         isNewCustomer: true
       };
 
+    case 'UPDATE_CUSTOMER_FULFILLED':
+      return {
+        ...state,
+        info: null,
+        isNewCustomer: true
+      };
+
+
     default:
       return state;
   }
