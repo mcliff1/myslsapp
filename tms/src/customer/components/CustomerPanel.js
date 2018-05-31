@@ -15,8 +15,6 @@ const blank_cust =
   'website' : ''
 };
 
-const API_ENDPOINT = 'https://tms-api.mattcliff.net/dev';
-
 
 class CustomerPanel extends Component {
 
@@ -29,7 +27,7 @@ class CustomerPanel extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
+    //this.handleDelete = this.handleDelete.bind(this);
   }
 
 
@@ -75,40 +73,10 @@ class CustomerPanel extends Component {
     console.log('method-->', method);
     console.log('-->', formData);
 
-
-    fetch(API_ENDPOINT, {
-      method: method,
-      headers: {
-        'Accept' : 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData),
-    })
-    .then(res => res.json())
-    .then((data) => console.log(data))
-    .catch((err) => console.log('error ==>', err));
-
-
-    this.props.handleClose();
+    this.props.handleSubmit(method, formData);
   }
 
 
-  handleDelete() {
-    const info = this.state.info;
-    console.log("going to delete customer id:", info.Id);
-    fetch(API_ENDPOINT, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({'Id' : info.Id, 'ObjectType' : info.ObjectType })
-    })
-    .then(res => res.json())
-    .then((data) => console.log(data))
-    .catch((err) => console.log('error ==>', err));
-
-    this.props.handleClose();
-  }
 
 
   render() {
@@ -193,7 +161,7 @@ class CustomerPanel extends Component {
             <Button type="submit">Update</Button>
           }
 
-          <Button onClick={this.handleDelete}>Delete</Button>
+          <Button onClick={this.props.handleDelete}>Delete</Button>
           <Button onClick={this.props.handleClose}>Close</Button>
         </FormGroup>
         </Form>

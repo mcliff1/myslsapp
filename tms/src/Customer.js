@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Button, Link } from 'reactstrap';
+import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import CustomerPanel from './customer/components/CustomerPanel'
 import CustomerListDetail from './customer/components/CustomerListDetail'
-import { newCustomerPanel, closeCustomerPanel, openCustomerPanel, fetchCustomerList } from './actions/customerActions';
+import { updateCustomer, newCustomerPanel, deleteCustomer, closeCustomerPanel, openCustomerPanel, fetchCustomerList } from './actions/customerActions';
 
 
 
@@ -19,7 +19,9 @@ class Customer extends Component {
     //}
     this.handleOpenList = this.handleOpenList.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
 
   }
 
@@ -46,8 +48,29 @@ class Customer extends Component {
     this.props.dispatch(newCustomerPanel());
   }
 
+  handleDelete() {
+    this.props.dispatch((dispatch) => {
+      dispatch(deleteCustomer(this.props.info));
+      dispatch(fetchCustomerList());
+    });
+
+  }
+
   handleClose() {
-    this.props.dispatch(closeCustomerPanel());
+    this.props.dispatch((dispatch) => {
+      dispatch(closeCustomerPanel());
+      dispatch(fetchCustomerList());
+    });
+
+  }
+
+
+
+  handleSubmit(method, info) {
+    this.props.dispatch((dispatch) => {
+      dispatch(updateCustomer(method, info));
+      dispatch(fetchCustomerList());
+    });
   }
 
 
@@ -58,6 +81,8 @@ class Customer extends Component {
       <div>
         <CustomerPanel info={info}
                        isNewCustomer={isNewCustomer}
+                       handleSubmit={this.handleSubmit}
+                       handleDelete={this.handleDelete}
                        handleClose={this.handleClose} />
       </div>
     );
