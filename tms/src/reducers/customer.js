@@ -41,8 +41,6 @@ const customer = (state = defaultState, action) => {
     case 'GET_CUSTOMERS_FULFILLED':
       return {
         ...state,
-        info: null,
-        isNewCustomer: true,
         customerList: action.payload
       };
     case 'DELETE_CUSTOMER_FULFILLED':

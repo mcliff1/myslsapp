@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route,  Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 
 
 
-class Carrier extends React.Component {
+class Carrier extends Component {
 
   render() {
     return(

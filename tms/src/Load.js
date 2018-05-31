@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Form, FormGroup, Label, Col, Input, Button, FormText } from 'reactstrap';
+import { Form, FormGroup, Label, Col, Button } from 'reactstrap';
 import LoadContent from './LoadContent.js';
 
 
@@ -89,7 +89,7 @@ class LoadPanel extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    const target = event.target;
+    //const target = event.target;
     //const name = target.name;
 
     const method = this.state.isNewRecord ? 'POST' : 'PUT';
