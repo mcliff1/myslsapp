@@ -100,7 +100,6 @@ class Customer extends Component {
   }
 
 
-
   renderList() {
     const { customerList } = this.props;
     return(

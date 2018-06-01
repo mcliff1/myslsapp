@@ -62,7 +62,7 @@ functions:
 
     events:
       - http:
-          path: /
+          path: /{ObjectType}
           method: get
           cors:
             origin: '*'
@@ -76,7 +76,7 @@ functions:
             allowCredentials: false
 
       - http:
-          path: /
+          path: /{ObjectType}
           method: post
           cors:
             origin: '*'
@@ -89,7 +89,7 @@ functions:
               - Access-Control-Allow-Origin
             allowCredentials: false
       - http:
-          path: /
+          path: /{ObjectType}
           method: delete
           cors:
             origin: '*'
@@ -102,7 +102,7 @@ functions:
               - Access-Control-Allow-Origin
             allowCredentials: false
       - http:
-          path: /
+          path: /{ObjectType}
           method: put
           cors:
             origin: '*'

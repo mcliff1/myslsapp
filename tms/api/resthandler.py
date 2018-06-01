@@ -250,9 +250,13 @@ def handle(event, context):
     logging.info("debug: event: %s", event)
 
 
+
     operation = event['httpMethod']
     data = event['queryStringParameters'] if operation == 'GET' else json.loads(event['body'])
 
+    # inject the object Type to the data string
+    objectType = event['pathParameters']['ObjectType']
+    data['ObjectType'] = objectType;
     logging.debug("incoming data: %s", data)
 
     operations = {
