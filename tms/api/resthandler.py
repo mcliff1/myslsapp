@@ -78,7 +78,7 @@ def post_call(in_json):
         ddb_json = decode_json(in_json)
         ddb_json['CreatedAt'] = timestamp
         ddb_json['Id'] = str(uuid.uuid4())
-        ddb_json['ObjectType'] = 'Customer'
+        #ddb_json['ObjectType'] = 'Customer'  # TODO - check that this is defined
         ddb_json = {k:v for k,v in ddb_json.items() if v != ''}
         db_table.put_item(Item=ddb_json)
         rc = 200
@@ -195,13 +195,13 @@ def get_call(jsonstr):
     jstr = None
     rc = 503
     try:
+        objectType = jsonstr['ObjectType']
 
-
-        """
-        No Parameters - Query most recent row in table matching this bot_type
-        """
-
-        rslt = db_table.scan()
+        # working on this
+        pe = "ObjectType, name"
+        kce = Key('ObjectType').eq(objetType)
+        rslt = db_table.query(KeyConditionExpression=kce,
+                            ProjectionExpression=pe)
         jstr = rslt['Items']
         rc = 200
 

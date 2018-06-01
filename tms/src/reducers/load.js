@@ -3,7 +3,6 @@
  * Load Reducer (Redux)
  *
  */
-
 const defaultState = {
   info: null,
   isNewLoad: true,
@@ -84,4 +83,4 @@ const load = (state = defaultState, action) => {
   }
 }
 
-export default customer;
+export default load;

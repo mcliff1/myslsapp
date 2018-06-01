@@ -6,6 +6,9 @@ import React, { Component } from 'react';
 import { Form, FormGroup, Label, Col, Button } from 'reactstrap';
 
 
+/**
+ * expects handleSubmit function (isNew:boolean , data) to be passed
+ */
 class LoadPanel extends Component {
 
   constructor(props) {
@@ -23,12 +26,12 @@ class LoadPanel extends Component {
       formData[field] = this.refs[field].value;
     }
 
-    if (!this.props.isNewLoad) {
+    if (!this.props.isNew) {
       formData['Id'] = this.props.info.Id;
       //formData['ObjectType'] = this.props.info.ObjectType;
     }
     console.log('-->', formData);
-    this.props.handleSubmit(this.props.isNewLoad, formData);
+    this.props.handleSubmit(this.props.isNew, formData);
   }
 
 
@@ -41,50 +44,22 @@ class LoadPanel extends Component {
         <Form onSubmit={this.handleSubmit}>
 
         <FormGroup row>
-          <Label for="custName" sm={2}>Name</Label>
+          <Label for="status" sm={2}>Status</Label>
           <Col sm={10}>
-            <input type="text" value={info.name} ref="name" name="name" id="custName" onChange={this.handleChange} />
+            <input type="text" value={info.status} ref="status" name="status"   />
           </Col>
         </FormGroup>
 
         <FormGroup row>
-          <Label for="custAddress1" sm={2}>Address</Label>
+          <Label for="product" sm={2}>Product</Label>
           <Col sm={10}>
-            <input type="text" value={info.address1} ref="address1" name="address1" id="custAddress" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="custAddress2" sm={2}>Address2</Label>
-          <Col sm={10}>
-            <input type="text" value={info.address2} ref="address2" name="address2" id="custAddress2" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="custCity" sm={2}>City</Label>
-          <Col sm={10}>
-            <input type="text" value={info.city} ref="city" name="city" id="custCity" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="custState" sm={2}>State</Label>
-          <Col sm={10}>
-            <input type="text" value={info.state} ref="state" name="state" id="custState" onChange={this.handleChange} />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="custZip" sm={2}>Zip</Label>
-          <Col sm={10}>
-            <input type="text" value={info.zip} ref="zip" name="zip" id="custZip" onChange={this.handleChange} />
+            <input type="text" value={info.product} ref="product" name="product"  />
           </Col>
         </FormGroup>
 
 
         <FormGroup row>
-          {this.props.isNewLoad ?
+          {this.props.isNew ?
             <Button type="submit">Submit</Button> :
             <Button type="submit">Update</Button>
           }
