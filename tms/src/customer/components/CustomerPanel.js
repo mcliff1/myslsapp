@@ -1,19 +1,10 @@
+/**
+ * @file CustomerPanel.js
+ * 'dumb' REACT component for detail customer CustomerPanel
+ */
 import React, { Component } from 'react';
 import { Form, FormGroup, Label, Col, Button } from 'reactstrap';
 
-const blank_cust =
-{
-  'name': '',
-  'address1': '',
-  'address2': '',
-  'city': '',
-  'state': '',
-  'zip' : '',
-  'phone' : '',
-  'fax' : '',
-  'email' : '',
-  'website' : ''
-};
 
 
 class CustomerPanel extends Component {
@@ -160,8 +151,9 @@ class CustomerPanel extends Component {
             <Button type="submit">Submit</Button> :
             <Button type="submit">Update</Button>
           }
-
+          {  }
           <Button onClick={this.props.handleDelete}>Delete</Button>
+          {  }
           <Button onClick={this.props.handleClose}>Close</Button>
         </FormGroup>
         </Form>

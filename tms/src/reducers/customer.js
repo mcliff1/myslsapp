@@ -1,7 +1,14 @@
+/**
+ * @file customer.js
+ * Customer Reducer (Redux)
+ *
+ */
+
 const defaultState = {
   info: null,
   isNewCustomer: true,
-  customerList: []
+  customerList: [],
+  needListUpdate: true
 }
 
 const blank_cust =
@@ -41,21 +48,33 @@ const customer = (state = defaultState, action) => {
     case 'GET_CUSTOMERS_FULFILLED':
       return {
         ...state,
-        customerList: action.payload
+        customerList: action.payload,
+        needListUpdate: false
       };
     case 'DELETE_CUSTOMER_FULFILLED':
       return {
         ...state,
         info: null,
-        isNewCustomer: true
+        isNewCustomer: true,
+        needListUpdate: true
       };
 
     case 'UPDATE_CUSTOMER_FULFILLED':
       return {
         ...state,
         info: null,
-        isNewCustomer: true
+        isNewCustomer: true,
+        needListUpdate: true
       };
+
+    case 'ADD_CUSTOMER_FULFILLED':
+      return {
+        ...state,
+        info: null,
+        isNewCustomer: true,
+        needListUpdate: true
+      };
+
 
 
     default:
