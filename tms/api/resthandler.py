@@ -197,31 +197,14 @@ def get_call(jsonstr):
     try:
 
 
-        if jsonstr is None:
-            """
-            No Parameters - Query most recent row in table matching this bot_type
-            """
+        """
+        No Parameters - Query most recent row in table matching this bot_type
+        """
 
-            rslt = db_table.scan()
-            jstr = rslt['Items']
-            rc = 200
+        rslt = db_table.scan()
+        jstr = rslt['Items']
+        rc = 200
 
-        elif 'deviceid' in jsonstr.keys():
-            """
-            Return data for this bot   TODO - change to ObjectType
-            """
-
-            rslt = db_table.query(KeyConditionExpression=Key('Id').eq(bot_type + '-' + jsonstr['deviceid']))['Items']
-
-            # this is a list of JSON objects,  do I just return them direct??
-            logging.info(len(rslt))
-
-            jstr = rslt
-            rc = 200
-        else:
-            jstr = {"msg" : "invalid request parameters",
-                    "data" : jsonstr}
-            rc = 400
 
     except Exception as db_exception:
         logging.exception(db_exception)
@@ -253,10 +236,12 @@ def handle(event, context):
 
     operation = event['httpMethod']
     data = event['queryStringParameters'] if operation == 'GET' else json.loads(event['body'])
+    if data is None:
+        data = {}
 
     # inject the object Type to the data string
     objectType = event['pathParameters']['ObjectType']
-    data['ObjectType'] = objectType;
+    data['ObjectType'] = objectType
     logging.debug("incoming data: %s", data)
 
     operations = {

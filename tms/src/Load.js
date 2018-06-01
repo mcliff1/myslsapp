@@ -12,32 +12,10 @@ import LoadList from './load/LoadList'
 import { updateLoad, newLoadPanel, deleteLoad, closeLoadPanel, openLoadPanel, fetchLoadList } from './actions/loadActions';
 
 
-const blank_load =
-{
-  'status': '',
-  'product': '',
-  'salesRep': '',
-  'quantity': '',
-  'equipment': '',
-  'carrier' : '',
-  'pickupDate' : '',
-  'deliveryDate' : '',
-  'destinationLocation' : '',
-  'pickupLocation' : ''
-};
-
-
 
 
 //  this needs to be moved form the submit Method
 //const method = this.props.isNewCustomer ? 'POST' : 'PUT';
-
-
-
-
-
-
-
 
 
 
@@ -50,7 +28,7 @@ class Load extends Component {
       info : null
     }
     this.handleOpenList = this.handleOpenList.bind(this);
-    this.handleOpenAdd = this.handleOpenAdd.bind(this);
+    //this.handleOpenAdd = this.handleOpenAdd.bind(this);
 
   }
 
@@ -65,12 +43,6 @@ class Load extends Component {
     }
 
 
-    handleOpenAdd() {
-      this.setState({
-        isNewRecord : true,
-        info: blank_load
-      });
-    }
 
 
     renderDetail() {
