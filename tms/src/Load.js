@@ -19,7 +19,7 @@ const blank_load =
   'pickupLocation' : ''
 };
 
-const API_ENDPOINT = 'https://tms-api.mattcliff.net/dev';
+const API_ENDPOINT = 'https://tms-api.mattcliff.net/dev/load';
 
 
 class LoadListDetail extends Component {

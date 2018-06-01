@@ -1,4 +1,4 @@
-const API_ENDPOINT = 'https://tms-api.mattcliff.net/dev';
+const API_ENDPOINT = 'https://tms-api.mattcliff.net/dev/customer';
 
 
 export const newCustomerPanel = () => ({
