@@ -14,7 +14,7 @@ export const openCustomerPanel = (info) => ({
   info
 });
 
-
+// does both PUT and POST (update and create)
 export const updateCustomer = (method, info) => ({
   type: 'UPDATE_CUSTOMER',
   payload: fetch(API_ENDPOINT, {

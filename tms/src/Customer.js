@@ -28,7 +28,6 @@ class Customer extends Component {
     //  isNewCustomer: false,
     //  info : null
     //}
-    this.handleOpenList = this.handleOpenList.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -42,11 +41,6 @@ class Customer extends Component {
   // particular record
   handleClick(info) {
     this.props.dispatch(openCustomerPanel(info));
-  }
-
-  handleOpenList() {
-    this.props.dispatch(newCustomerPanel());
-
   }
 
   handleAdd() {
@@ -140,19 +134,6 @@ const mapStoreToProps = (store, ownProps) => {
   }
 }
 
-// when our section changes in the store these
-//  are the dispatchs
-//const mapDispatchToProps = (dispatch, ownProps) => {
-//  return {
-//      triggerUpdateList: () => {
-//      dispatch(setVisibilityFilter(ownProps.filter))
-//    }
-//  }
-//}
-// which properties do we want here?
-//const FilterLink = connect(
-//  mapStateToProps,
-//  mapDispatchToProps
-//)(Link)
+
 
 export default withRouter(connect(mapStoreToProps)(Customer));
