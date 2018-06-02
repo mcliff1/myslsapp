@@ -129,9 +129,9 @@ resources:
             AttributeType: S
         KeySchema:
           - AttributeName: Id
-            KeyType: HASH
-          - AttributeName: ObjectType
             KeyType: RANGE
+          - AttributeName: ObjectType
+            KeyType: HASH
         Tags:
           - Key: "Created"
             Value: "part of TMS API SLS stack"
