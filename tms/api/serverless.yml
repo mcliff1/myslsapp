@@ -54,7 +54,7 @@ provider:
 
 
 functions:
-  customer:
+  mainapi:
     handler: resthandler.handle
     tags:
       created: serverless for Customer REST API
@@ -123,15 +123,15 @@ resources:
       #DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
-          - AttributeName: Id
-            AttributeType: S
           - AttributeName: ObjectType
+            AttributeType: S
+          - AttributeName: Id
             AttributeType: S
         KeySchema:
-          - AttributeName: Id
-            KeyType: RANGE
           - AttributeName: ObjectType
             KeyType: HASH
+          - AttributeName: Id
+            KeyType: RANGE
         Tags:
           - Key: "Created"
             Value: "part of TMS API SLS stack"
