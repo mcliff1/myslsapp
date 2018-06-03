@@ -79,6 +79,7 @@ const load = (state = defaultState, action) => {
 
 
     default:
+      console.log('Unhandled Action', action)
       return state;
   }
 }

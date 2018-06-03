@@ -198,10 +198,10 @@ def get_call(jsonstr):
         objectType = jsonstr['ObjectType']
 
         # working on this
-        pe = "ObjectType"
+        #pe = "ObjectType"
         kce = Key('ObjectType').eq(objectType)
-        rslt = db_table.query(KeyConditionExpression=kce,
-                            ProjectionExpression=pe)
+        rslt = db_table.query(KeyConditionExpression=kce)
+        #                    ProjectionExpression=pe)
         jstr = rslt['Items']
         rc = 200
 

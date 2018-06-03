@@ -19,6 +19,7 @@ class LoadPanel extends Component {
 
 
   handleSubmit(event) {
+    console.log('handle submit from LoadPanel');
     event.preventDefault();
 
     const formData = {};
@@ -31,6 +32,7 @@ class LoadPanel extends Component {
       //formData['ObjectType'] = this.props.info.ObjectType;
     }
     console.log('-->', formData);
+    console.log('isNew -->', this.props.isNew);
     this.props.handleSubmit(this.props.isNew, formData);
   }
 
@@ -46,14 +48,14 @@ class LoadPanel extends Component {
         <FormGroup row>
           <Label for="status" sm={2}>Status</Label>
           <Col sm={10}>
-            <input type="text" value={info.status} ref="status" name="status"   />
+            <input type="text" defaultValue={info.status} ref="status" name="status"   />
           </Col>
         </FormGroup>
 
         <FormGroup row>
           <Label for="product" sm={2}>Product</Label>
           <Col sm={10}>
-            <input type="text" value={info.product} ref="product" name="product"  />
+            <input type="text" defaultValue={info.product} ref="product" name="product"  />
           </Col>
         </FormGroup>
 

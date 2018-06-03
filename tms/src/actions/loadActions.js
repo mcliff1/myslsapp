@@ -15,10 +15,12 @@ export const openLoadPanel = (info) => ({
 });
 
 // does both PUT and POST (update and create)
-export const submitLoad = (method, info) => ({
+export const submitLoad = (isNew, info) => {
+
+  return({
   type: 'SUBMIT_LOAD',
   payload: fetch(API_ENDPOINT, {
-    method: method,
+    method: isNew ? 'POST' : 'PUT',
     headers: {
       'Content-Type': 'application/json',
       'Accept' : 'application/json, text/plain, */*'
@@ -26,6 +28,7 @@ export const submitLoad = (method, info) => ({
     body: JSON.stringify(info)
   }).then(res => res.json())
 });
+}
 
 export const deleteLoad = (info) => {
 
