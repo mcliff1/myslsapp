@@ -13,12 +13,6 @@ import { newLoadPanel, deleteLoad, closeLoadPanel, openLoadPanel, fetchLoadList,
 
 
 
-
-//  this needs to be moved form the submit Method
-//const method = this.props.isNewCustomer ? 'POST' : 'PUT';
-
-
-
 class Load extends Component {
   constructor(props) {
     super(props);

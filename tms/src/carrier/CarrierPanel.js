@@ -1,5 +1,5 @@
 /**
- * @file LoadPanel.js
+ * @file CarrierPanel.js
  * 'dumb' REACT component for detail load information
  */
 import React, { Component } from 'react';
@@ -9,7 +9,7 @@ import { Form, FormGroup, Label, Col, Button } from 'reactstrap';
 /**
  * expects handleSubmit function (isNew:boolean , data) to be passed
  */
-class LoadPanel extends Component {
+class CarrierPanel extends Component {
 
   constructor(props) {
     super(props);
@@ -19,7 +19,6 @@ class LoadPanel extends Component {
 
 
   handleSubmit(event) {
-    console.log('handle submit from LoadPanel');
     event.preventDefault();
 
     const formData = {};
@@ -46,25 +45,26 @@ class LoadPanel extends Component {
         <Form onSubmit={this.handleSubmit}>
 
         <FormGroup row>
-          <Label for="status" sm={2}>Status</Label>
+          <Label for="name" sm={2}>Name</Label>
           <Col sm={10}>
-            <input type="text" defaultValue={info.status} ref="status" name="status"   />
+            <input type="text" defaultValue={info.name} ref="name" name="name"   />
           </Col>
         </FormGroup>
 
         <FormGroup row>
-          <Label for="product" sm={2}>Product</Label>
+          <Label for="city" sm={2}>City</Label>
           <Col sm={10}>
-            <input type="text" defaultValue={info.product} ref="product" name="product"  />
+            <input type="text" defaultValue={info.city} ref="city" name="city"  />
           </Col>
         </FormGroup>
 
         <FormGroup row>
-          <Label for="destination" sm={2}>Destination</Label>
+          <Label for="state" sm={2}>State</Label>
           <Col sm={10}>
-            <input type="text" defaultValue={info.destination} ref="destination" name="destination"  />
+            <input type="text" defaultValue={info.state} ref="state" name="state"  />
           </Col>
         </FormGroup>
+
 
         <FormGroup row>
           {this.props.isNew ?
@@ -84,4 +84,4 @@ class LoadPanel extends Component {
 }
 
 
-export default LoadPanel;
+export default CarrierPanel;

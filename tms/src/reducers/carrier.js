@@ -1,58 +1,54 @@
 /**
- * @file load.js
- * Load Reducer (Redux)
+ * @file carrier.js
+ * Carrier Reducer (Redux)
  *
  */
 const defaultState = {
   info: null,
   isNew: true,
-  loadList: [],
+  carrierList: [],
   needListUpdate: true
 }
 
 
-const blank_load =
+const blank_carrier =
 {
-  'status': '',
-  'product': '',
-  'salesRep': '',
-  'quantity': '',
-  'equipment': '',
-  'carrier' : '',
-  'pickupDate' : '',
-  'deliveryDate' : '',
-  'destination' : '',
-  'pickupLocation' : ''
+  'name': '',
+  'city': '',
+  'state': ''
 };
 
 
-const load = (state = defaultState, action) => {
+/**
+ * Main reducer functions
+ */
+const carrier = (state = defaultState, action) => {
   switch (action.type) {
-    case 'NEW_LOAD_PANEL':
+    case 'NEW_CARRIER_PANEL':
       return {
         ...state,
-        info: blank_load,
+        info: blank_carrier,
         isNew: true
       };
-    case 'OPEN_LOAD_PANEL':
+    case 'OPEN_CARRIER_PANEL':
       return {
         ...state,
         info: action.info,
         isNew: false
       };
-    case 'CLOSE_LOAD_PANEL':
+    case 'CLOSE_CARRIER_PANEL':
       return {
         ...state,
         info: null,
         isNew: true
       };
-    case 'GET_LOADS_FULFILLED':
+    case 'GET_CARRIERS_FULFILLED':
       return {
         ...state,
-        loadList: action.payload,
+        carrierList: action.payload,
         needListUpdate: false
       };
-    case 'DELETE_LOAD_FULFILLED':
+    case 'DELETE_CARRIER_FULFILLED':
       return {
         ...state,
         info: null,
@@ -60,7 +56,7 @@ const load = (state = defaultState, action) => {
         needListUpdate: true
       };
 
-    case 'SUBMIT_LOAD_FULFILLED':
+    case 'SUBMIT_CARRIER_FULFILLED':
       return {
         ...state,
         info: null,
@@ -68,7 +64,7 @@ const load = (state = defaultState, action) => {
         needListUpdate: true
       };
 
-    case 'ADD_LOAD_FULFILLED':
+    case 'ADD_CARRIER_FULFILLED':
       return {
         ...state,
         info: null,
@@ -84,4 +80,4 @@ const load = (state = defaultState, action) => {
   }
 }
 
-export default load;
+export default carrier;
