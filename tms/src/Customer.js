@@ -7,8 +7,8 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import CustomerPanel from './customer/components/CustomerPanel'
-import CustomerList from './customer/components/CustomerList'
+import CustomerPanel from './customer/CustomerPanel'
+import CustomerList from './customer/CustomerList'
 import { updateCustomer, newCustomerPanel, deleteCustomer, closeCustomerPanel, openCustomerPanel, fetchCustomerList } from './actions/customerActions';
 
 
@@ -85,7 +85,7 @@ class Customer extends Component {
     return(
       <div>
         <CustomerPanel info={info}
-                       isNewCustomer={isNewCustomer}
+                       isNew={isNewCustomer}
                        handleSubmit={this.handleSubmit}
                        handleDelete={this.handleDelete}
                        handleClose={this.handleClose} />

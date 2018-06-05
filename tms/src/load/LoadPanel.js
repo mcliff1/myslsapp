@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import { FormGroup, Label, Col, Button } from 'reactstrap';
 import { withFormik, Formik, Form, Field } from 'formik';
+import PropTypes from 'prop-types';
 
 
 /**

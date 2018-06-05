@@ -15,10 +15,10 @@ export const openCustomerPanel = (info) => ({
 });
 
 // does both PUT and POST (update and create)
-export const updateCustomer = (method, info) => ({
-  type: 'UPDATE_CUSTOMER',
+export const updateCustomer = (isNew, info) => ({
+  type: 'SUBMIT_CUSTOMER',
   payload: fetch(API_ENDPOINT, {
-    method: method,
+    method: isNew ? 'POST' : 'PUT',
     headers: {
       'Content-Type': 'application/json',
       'Accept' : 'application/json, text/plain, */*'

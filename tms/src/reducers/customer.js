@@ -6,7 +6,7 @@
 
 const defaultState = {
   info: null,
-  isNewCustomer: true,
+  isNew: true,
   customerList: [],
   needListUpdate: true
 }
@@ -31,19 +31,19 @@ const customer = (state = defaultState, action) => {
       return {
         ...state,
         info: blank_cust,
-        isNewCustomer: true
+        isNew: true
       };
     case 'OPEN_CUSTOMER_PANEL':
       return {
         ...state,
         info: action.info,
-        isNewCustomer: false
+        isNew: false
       };
     case 'CLOSE_CUSTOMER_PANEL':
       return {
         ...state,
         info: null,
-        isNewCustomer: true
+        isNew: true
       };
     case 'GET_CUSTOMERS_FULFILLED':
       return {
@@ -55,15 +55,15 @@ const customer = (state = defaultState, action) => {
       return {
         ...state,
         info: null,
-        isNewCustomer: true,
+        isNew: true,
         needListUpdate: true
       };
 
-    case 'UPDATE_CUSTOMER_FULFILLED':
+    case 'SUBMIT_CUSTOMER_FULFILLED':
       return {
         ...state,
         info: null,
-        isNewCustomer: true,
+        isNew: true,
         needListUpdate: true
       };
 
@@ -71,7 +71,7 @@ const customer = (state = defaultState, action) => {
       return {
         ...state,
         info: null,
-        isNewCustomer: true,
+        isNew: true,
         needListUpdate: true
       };
 
