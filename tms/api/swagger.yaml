@@ -7,8 +7,8 @@ info:
   title: TMS API
   contact:
     email: matt@denvercliffs.com
-host: tms-dev-api.mattcliff.net
-basePath: /
+host: tms-api.mattcliff.net
+basePath: /dev
 schemes:
   - https
 tags:
@@ -152,3 +152,15 @@ definitions:
       website:
         type: string
         description: website
+  Carrier:
+    type: object
+    properties:
+      name:
+        type: string
+        description: name of the carrier
+  Load:
+    type: object
+    properties:
+      name:
+        type: string
+        description: name of the customer
