@@ -80,12 +80,12 @@ class Customer extends Component {
 
 
   renderDetail() {
-    const { info, isNewCustomer } = this.props;
+    const { info, isNew } = this.props;
 
     return(
       <div>
         <CustomerPanel info={info}
-                       isNew={isNewCustomer}
+                       isNew={isNew}
                        handleSubmit={this.handleSubmit}
                        handleDelete={this.handleDelete}
                        handleClose={this.handleClose} />
@@ -129,7 +129,7 @@ const mapStoreToProps = (store, ownProps) => {
   return {
     info: store.customer.info,
     customerList: store.customer.customerList,
-    isNewCustomer: store.customer.isNewCustomer,
+    isNew: store.customer.isNew,
     needListUpdate: store.customer.needListUpdate
   }
 }

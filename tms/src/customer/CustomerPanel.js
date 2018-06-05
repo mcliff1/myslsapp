@@ -35,7 +35,7 @@ const InnerCustomerPanel = ({ isNew, errors, handleClose, handleDelete }) => (
         </FormGroup>
 
         <FormGroup row>
-          <Label for="city" sm={2}>City</Label>
+          <Label sm={2}>City</Label>
           <Col sm={10}>
             <Field type="text" name="city" />
           </Col>
@@ -103,8 +103,15 @@ const CustomerPanel = withFormik({
   mapPropsToValues( { info } )  {
     return {
       name: (info && info.name) || 'default name',
+      address1: (info && info.address1) || '',
+      address2: (info && info.address2) || '',
       city: (info && info.city) || 'default city',
-      state: (info && info.state) || 'default state'
+      state: (info && info.state) || 'default state',
+      zip: (info && info.zip) || '',
+      phone: (info && info.phone) || '',
+      fax: (info && info.fax) || '',
+      email: (info && info.email) || '',
+      website: (info && info.website) || '',
     }
   },
   handleSubmit(values, formikBag) {

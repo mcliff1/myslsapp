@@ -15,7 +15,8 @@ const blank_carrier =
 {
   'name': '',
   'city': '',
-  'state': ''
+  'state': '',
+  'phone': ''
 };
 
 

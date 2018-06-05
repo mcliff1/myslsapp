@@ -3,9 +3,10 @@
  * 'dumb' REACT component for detail load information
  */
 import React, { Component } from 'react';
-import { FormGroup, Label, Col } from 'reactstrap';
+import { FormGroup, Label, Col, Button } from 'reactstrap';
 import { withFormik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
+import * as Yup from 'yup';
 
 
 
@@ -14,30 +15,51 @@ import PropTypes from 'prop-types';
  * expects handleSubmit function (isNew:boolean , data) to be passed
  */
 //class rawCarrierPanel extends Component {
-const InnerCarrierPanel = ({ isNew, errors }) =>
+const InnerCarrierPanel = ({ isNew, touched, errors, handleClose, handleDelete }) =>
 (
       <div>
         <Form>
-          {errors.name && <div>{errors.name}</div>}
-          <label>Name
-            <Field type="text" name="name" />
-          </label><br />
-          <label>City
-            <Field type="text" name="city" />
-          </label><br />
-          <label>State
-            <Field type="text" name="state" />
-          </label><br />
+          <FormGroup row>
+            <Label sm={2}>Name</Label>
+            <Col sm={10}>
+              <Field type="text" name="name" />
+              {touched.name && errors.name && <div>{errors.name}</div>}
+            </Col>
+          </FormGroup>
+
+          <FormGroup row>
+            <Label sm={2}>Phone</Label>
+            <Col sm={10}>
+              <Field type="text" name="phone" />
+              {touched.phone && errors.phone && <div>{errors.phone}</div>}
+            </Col>
+          </FormGroup>
+
+          <FormGroup row>
+            <Label sm={2}>City</Label>
+            <Col sm={10}>
+              <Field type="text" name="city" />
+              {touched.city && errors.city && <div>{errors.city}</div>}
+            </Col>
+          </FormGroup>
+
+            <FormGroup row>
+              <Label sm={2}>State</Label>
+              <Col sm={10}>
+                <Field type="text" name="state" />
+                {touched.state && errors.state && <div>{errors.state}</div>}
+              </Col>
+            </FormGroup>
 
 
           {isNew ?
-            <button>Submit</button> :
-            <button>Update</button>
+            <Button>Submit</Button> :
+            <Button>Update</Button>
           }
           {  }
-          { /* <Button onClick={this.props.handleDelete}>Delete</Button> */ }
+          <Button onClick={handleDelete}>Delete</Button>
           {  }
-          { /* <Button onClick={this.props.handleClose}>Close</Button> */ }
+          <Button onClick={handleClose}>Close</Button>
         </Form>
       </div>
 )
@@ -45,28 +67,30 @@ const InnerCarrierPanel = ({ isNew, errors }) =>
 
 
 const CarrierPanel = withFormik({
-  mapPropsToValues( { info } )  {
-    return {
+  mapPropsToValues: ( { info } )  => ({
       name: (info && info.name) || 'default name',
       city: (info && info.city) || 'default city',
-      state: (info && info.state) || 'default state'
-    }
+      state: (info && info.state) || 'default state',
+      phone: (info && info.phone) || '',
+  }),
+  handleSubmit: (values, formikBag) => {
+    formikBag.props.handleSubmit(formikBag.props.isNew, values);
   },
-  handleSubmit(values, formikBag) {
-    console.log(values);
-    console.log(formikBag);
-    this.props.myHandleSubmit(this.props.isNew, values);
-  },
+  validationSchema: Yup.object().shape({
+    phone: Yup.string()
+            .min(7, 'min 7 digits')
+            .max(11, 'max 11 digits')
+            .required('phone is required')
+  }),
   displayName: 'CarrierPanel', // helps with React DevTools
-  handleSpecial: () => {
-    return this.props.myHandleSubmit(this.props.isNew)
-  }
 })(InnerCarrierPanel)
 
 
 CarrierPanel.propTypes = {
   info: PropTypes.object.isRequired,
-  myHandleSubmit: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
   isNew: PropTypes.bool.isRequired
 };
 

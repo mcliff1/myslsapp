@@ -66,9 +66,9 @@ class Carrier extends Component {
       <div>
       <CarrierPanel info={this.props.info}
         isNew={this.props.isNew}
-        myHandleSubmit={this.handleSubmit}
-        myHandleDelete={this.handleDelete}
-        myHandleClose={this.handleOpenList} />
+        handleSubmit={this.handleSubmit}
+        handleDelete={this.handleDelete}
+        handleClose={this.handleClose} />
       </div>
     );
   }
