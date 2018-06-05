@@ -15,7 +15,7 @@ const Home = () => {
   return(
       <div>
       <h2>Home</h2>
-      Welcome to the Transportation Management Tool
+      Welcome to the Transportation Management System
       </div>
   );
 }

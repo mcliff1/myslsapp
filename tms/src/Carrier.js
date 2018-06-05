@@ -53,9 +53,11 @@ class Carrier extends Component {
   }
 
 
-
-  handleSubmit(method, info) {
-    this.props.dispatch(submitCarrier(method, info));
+  /**
+   * Will call POST or PUT as appropriate
+   */
+  handleSubmit(isNew, info) {
+    this.props.dispatch(submitCarrier(isNew, info));
   }
 
 
@@ -64,9 +66,9 @@ class Carrier extends Component {
       <div>
       <CarrierPanel info={this.props.info}
         isNew={this.props.isNew}
-        handleSubmit={this.handleSubmit}
-        handleDelete={this.handleDelete}
-        handleClose={this.handleOpenList} />
+        myHandleSubmit={this.handleSubmit}
+        myHandleDelete={this.handleDelete}
+        myHandleClose={this.handleOpenList} />
       </div>
     );
   }

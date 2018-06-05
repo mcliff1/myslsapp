@@ -3,85 +3,67 @@
  * 'dumb' REACT component for detail load information
  */
 import React, { Component } from 'react';
-import { Form, FormGroup, Label, Col, Button } from 'reactstrap';
+import { FormGroup, Label, Col } from 'reactstrap';
+import { withFormik, Form, Field } from 'formik';
+import PropTypes from 'prop-types';
+
+
 
 
 /**
  * expects handleSubmit function (isNew:boolean , data) to be passed
  */
-class CarrierPanel extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-
-  handleSubmit(event) {
-    event.preventDefault();
-
-    const formData = {};
-    for (const field in this.refs) {
-      formData[field] = this.refs[field].value;
-    }
-
-    if (!this.props.isNew) {
-      formData['Id'] = this.props.info.Id;
-      //formData['ObjectType'] = this.props.info.ObjectType;
-    }
-    console.log('-->', formData);
-    console.log('isNew -->', this.props.isNew);
-    this.props.handleSubmit(this.props.isNew, formData);
-  }
-
-
-
-
-  render() {
-    const info = this.props.info;
-    return(
+//class rawCarrierPanel extends Component {
+const InnerCarrierPanel = ({ isNew, errors }) =>
+(
       <div>
-        <Form onSubmit={this.handleSubmit}>
-
-        <FormGroup row>
-          <Label for="name" sm={2}>Name</Label>
-          <Col sm={10}>
-            <input type="text" defaultValue={info.name} ref="name" name="name"   />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="city" sm={2}>City</Label>
-          <Col sm={10}>
-            <input type="text" defaultValue={info.city} ref="city" name="city"  />
-          </Col>
-        </FormGroup>
-
-        <FormGroup row>
-          <Label for="state" sm={2}>State</Label>
-          <Col sm={10}>
-            <input type="text" defaultValue={info.state} ref="state" name="state"  />
-          </Col>
-        </FormGroup>
+        <Form>
+          {errors.name && <div>{errors.name}</div>}
+          <label>Name
+            <Field type="text" name="name" />
+          </label><br />
+          <label>City
+            <Field type="text" name="city" />
+          </label><br />
+          <label>State
+            <Field type="text" name="state" />
+          </label><br />
 
 
-        <FormGroup row>
-          {this.props.isNew ?
-            <Button type="submit">Submit</Button> :
-            <Button type="submit">Update</Button>
+          {isNew ?
+            <button>Submit</button> :
+            <button>Update</button>
           }
           {  }
-          <Button onClick={this.props.handleDelete}>Delete</Button>
+          { /* <Button onClick={this.props.handleDelete}>Delete</Button> */ }
           {  }
-          <Button onClick={this.props.handleClose}>Close</Button>
-        </FormGroup>
+          { /* <Button onClick={this.props.handleClose}>Close</Button> */ }
         </Form>
       </div>
+)
 
-    )
-  };
-}
 
+
+const CarrierPanel = withFormik({
+  mapPropsToValues( { info } )  {
+    return {
+      name: (info && info.name) || 'default name',
+      city: (info && info.city) || 'default city',
+      state: (info && info.state) || 'default state'
+    }
+  },
+  handleSubmit(values, formikBag) {
+    console.log(values);
+    console.log(formikBag);
+    this.props.myHandleSubmit(this.props.isNew, values);
+  }
+})(InnerCarrierPanel)
+
+
+CarrierPanel.propTypes = {
+  info: PropTypes.object.isRequired,
+  myHandleSubmit: PropTypes.func.isRequired,
+  isNew: PropTypes.bool.isRequired
+};
 
 export default CarrierPanel;
