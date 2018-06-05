@@ -52,8 +52,8 @@ class Load extends Component {
 
 
 
-  handleSubmit(method, info) {
-    this.props.dispatch(submitLoad(method, info));
+  handleSubmit(isNew, info) {
+    this.props.dispatch(submitLoad(isNew, info));
   }
 
 

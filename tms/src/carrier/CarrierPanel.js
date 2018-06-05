@@ -56,6 +56,10 @@ const CarrierPanel = withFormik({
     console.log(values);
     console.log(formikBag);
     this.props.myHandleSubmit(this.props.isNew, values);
+  },
+  displayName: 'CarrierPanel', // helps with React DevTools
+  handleSpecial: () => {
+    return this.props.myHandleSubmit(this.props.isNew)
   }
 })(InnerCarrierPanel)
 
