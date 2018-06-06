@@ -11,11 +11,6 @@ import CarrierPanel from './carrier/CarrierPanel'
 import CarrierList from './carrier/CarrierList'
 import { newCarrierPanel, deleteCarrier, closeCarrierPanel, openCarrierPanel, fetchCarrierList, submitCarrier } from './actions/carrierActions';
 
-
-
-
-
-
 class Carrier extends Component {
   constructor(props) {
     super(props);

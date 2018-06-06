@@ -12,7 +12,7 @@ API design using [swagger.yml](https://github.com/mcliff1/myslsapp/tms/api/serve
 
 ## REACT/Redux
 
-This UI framework is using REACT with Redux for state management; at the top level of the src, the comonents represents the react components that are not redux-aware (dumb components), and the containers (smart components) connect the redux state to react properties.  It is a balance to have more dumb components for isolation and better unit testing, the trade off is passing more properties down which must be minimized as well.
+This UI framework is using REACT with Redux for state management; at the top level of the src, the comonents represents the react components that are not redux-aware (dumb components), and the containers (smart components) connect the redux state to react properties.  It is a balance to have more dumb components for isolation and better unit testing, the trade off is passing more properties down which must be minimized as well.  Fromik is being used for the Form implementation.
 
 
 
