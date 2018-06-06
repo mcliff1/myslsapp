@@ -13,109 +13,49 @@ import { updateCustomer, newCustomerPanel, deleteCustomer, closeCustomerPanel, o
 
 
 
-// props
-//   (dispatch)
-//   info (customer object)
-//   customerList (list of customer objects)
-//   isNewCustomer (boolean)
+const DetailView = ({ info, isNew, handleDelete, handleClose, handleSubmit }) => {
+  return(
+    <div>
+      <CustomerPanel info={info}
+                     isNew={isNew}
+                     handleSubmit={handleSubmit}
+                     handleDelete={handleDelete}
+                     handleClose={handleClose} />
+    </div>
+  );
+};
+
+const SummaryView = ({ customerList, handleAdd, handleRefresh, handleClick }) => {
+  return(
+    <div>
+      <div className="App-title">Customer List {  }
+      <Button onClick={handleAdd}>Add</Button>{ }
+      <Button onClick={handleRefresh}>Refresh</Button>{ }
+      </div>
+
+      <CustomerList customerList={customerList}
+                    freshList={() => handleRefresh()}
+                    handleClick={(info) => handleClick(info)} />
+
+    </div>
+  );
+};
+
 
 // Class represents a list and detail view of a customer
 class Customer extends Component {
-  constructor(props) {
-    super(props);
 
-    //this.handleAdd = this.handleAdd.bind(this);
-    //this.handleSubmit = this.handleSubmit.bind(this);
-    //this.handleClose = this.handleClose.bind(this);
-    //this.handleDelete = this.handleDelete.bind(this);
-    //this.handleRefresh = this.handleRefresh.bind(this);
-
-  }
-
-
-  // sets the state so that we know we are looking at a
-  // particular record
-  handleClick(info) {
-    this.props.dispatch(openCustomerPanel(info));
-  }
-
-  handleAdd() {
-    this.props.dispatch(newCustomerPanel());
-  }
-
-  handleRefresh() {
-    if (this.props.needListUpdate) {
-      this.props.dispatch(fetchCustomerList());
-    }
-  }
-
-  handleDelete() {
-    this.props.dispatch((dispatch) => {
-      dispatch(deleteCustomer(this.props.info));
-      //dispatch(fetchCustomerList());
-    });
-
-  }
-
-  handleClose() {
-    this.props.dispatch((dispatch) => {
-      dispatch(closeCustomerPanel());
-      //dispatch(fetchCustomerList());
-    });
-
-  }
-
-
-
-  handleSubmit(method, info) {
-    this.props.dispatch((dispatch) => {
-      dispatch(updateCustomer(method, info));
-      //dispatch(fetchCustomerList());
-    });
-  }
-
-
-  renderDetail() {
-    const { info, isNew, handleSubmit, handleDelete, handleClose } = this.props;
-
-    return(
-      <div>
-        <CustomerPanel info={info}
-                       isNew={isNew}
-                       handleSubmit={handleSubmit}
-                       handleDelete={handleDelete}
-                       handleClose={handleClose} />
-      </div>
-    );
-  }
-
-
-  renderList() {
-    const { customerList, handleAdd, handleRefresh, handleClick } = this.props;
-    return(
-      <div>
-        <div className="App-title">Customer List {  }
-        <Button onClick={handleAdd}>Add</Button>{ }
-        <Button onClick={handleRefresh}>Refresh</Button>{ }
-        </div>
-          <CustomerList customerList={customerList}
-                        freshList={() => handleRefresh()}
-                        handleClick={(info) => handleClick(info)} />
-
-      </div>
-    );
-  };
 
   render() {
     const hasInfo = (this.props.info !== null);
+
     return(
       <div>
-        {hasInfo ? this.renderDetail() : this.renderList()}
+        {hasInfo ? <DetailView {...this.props} /> : <SummaryView {...this.props} />}
       </div>
     );
   }
 }
-
 
 
 

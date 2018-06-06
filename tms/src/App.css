@@ -15,3 +15,7 @@
 .nav>.authenticated {
   display: none;
 }
+
+Button {
+  margin: 0px 4px 0px 4px;
+}

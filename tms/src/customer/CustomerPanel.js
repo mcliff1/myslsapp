@@ -2,9 +2,9 @@
  * @file CustomerPanel.js
  * 'dumb' REACT component for detail customer CustomerPanel
  */
-import React, { Component } from 'react';
+import React from 'react';
 import { FormGroup, Label, Col, Button } from 'reactstrap';
-import { withFormik, Formik, Form, Field } from 'formik';
+import { withFormik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
 
 
@@ -85,11 +85,13 @@ const InnerCustomerPanel = ({ isNew, errors, handleClose, handleDelete }) => (
 
         <FormGroup row>
           {isNew ?
-            <Button type="submit">Submit</Button> :
-            <Button type="submit">Update</Button>
+            <Button type="submit">Submit</Button>
+             :
+             <div>
+             <Button type="submit">Update</Button>
+             <Button onClick={(info) => handleDelete(info)}>Delete</Button>
+            </div>
           }
-          {  }
-          <Button onClick={handleDelete}>Delete</Button>
           {  }
           <Button onClick={handleClose}>Close</Button>
         </FormGroup>

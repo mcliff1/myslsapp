@@ -2,14 +2,8 @@ import React, { Component } from 'react';
 import CustomerListDetail from './CustomerListDetail'
 
 
-class CustomerList extends Component {
 
-  componentWillMount() {
-    this.props.freshList();
-  }
-
-  render() {
-    const { customerList, handleClick } = this.props;
+const CustomerList = ({ customerList, handleClick }) => {
     return(
       <div>
       {
@@ -24,7 +18,6 @@ class CustomerList extends Component {
       }
       </div>
     );
-  }
 }
 
 export default CustomerList;

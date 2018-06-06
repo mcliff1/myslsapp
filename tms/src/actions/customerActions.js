@@ -28,7 +28,7 @@ export const updateCustomer = (isNew, info) => ({
 });
 
 export const deleteCustomer = (info) => {
-
+  console.log('deleteing customer uuid', info.Id);
   return({
     type: 'DELETE_CUSTOMER',
     payload: fetch(API_ENDPOINT, {
