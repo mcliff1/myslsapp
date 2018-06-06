@@ -11,19 +11,6 @@ const defaultState = {
 }
 
 
-const blank_load =
-{
-  'status': '',
-  'product': '',
-  'salesRep': '',
-  'quantity': '',
-  'equipment': '',
-  'carrier' : '',
-  'pickupDate' : '',
-  'deliveryDate' : '',
-  'destination' : '',
-  'pickupLocation' : ''
-};
 
 
 const load = (state = defaultState, action) => {
@@ -31,7 +18,7 @@ const load = (state = defaultState, action) => {
     case 'NEW_LOAD_PANEL':
       return {
         ...state,
-        info: blank_load,
+        info: {},
         isNew: true
       };
     case 'OPEN_LOAD_PANEL':
