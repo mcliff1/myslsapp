@@ -14,7 +14,6 @@ import PropTypes from 'prop-types';
  *
  * <render prop accepts inner form componentn
  */
-//class LoadPanel extends Component {
 const InnerLoadPanel = ({ info, isNew, errors, handleClose, handleDelete }) => (
     <div>
       <Form>
@@ -69,13 +68,18 @@ const LoadPanel = withFormik({
     }
   },
   handleSubmit: (values, formikBag) => {
-    console.log(values);
-    console.log(formikBag);
     formikBag.props.handleSubmit(formikBag.props.isNew, values);
   },
   displayName: 'LoadPanel', // helps with React DevTools
 })(InnerLoadPanel)
 
+LoadPanel.propTypes = {
+  info: PropTypes.object.isRequired,
+  isNew: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired
+};
 
 
 export default LoadPanel;
