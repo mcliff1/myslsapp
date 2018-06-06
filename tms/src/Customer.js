@@ -9,7 +9,7 @@ import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import CustomerPanel from './customer/CustomerPanel'
 import CustomerList from './customer/CustomerList'
-import { updateCustomer, newCustomerPanel, deleteCustomer, closeCustomerPanel, openCustomerPanel, fetchCustomerList } from './actions/customerActions';
+import { submitCustomer, newCustomerPanel, deleteCustomer, closeCustomerPanel, openCustomerPanel, fetchCustomerList } from './actions/customerActions';
 
 
 
@@ -45,10 +45,8 @@ const SummaryView = ({ customerList, handleAdd, handleRefresh, handleClick }) =>
 // Class represents a list and detail view of a customer
 class Customer extends Component {
 
-
   render() {
     const hasInfo = (this.props.info !== null);
-
     return(
       <div>
         {hasInfo ? <DetailView {...this.props} /> : <SummaryView {...this.props} />}
