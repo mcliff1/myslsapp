@@ -30,7 +30,7 @@ export const submitLoad = (isNew, info) => {
 });
 }
 
-export const deleteLoad = (info) => {
+export const deleteLoad = (id) => {
 
   return({
     type: 'DELETE_LOAD',
@@ -39,7 +39,7 @@ export const deleteLoad = (info) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({'Id' : info.Id, 'ObjectType' : info.ObjectType })
+      body: JSON.stringify({'Id' : id, 'ObjectType' : 'load' })
     }).then(res => res.json())
   });
 }

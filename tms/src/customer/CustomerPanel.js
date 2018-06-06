@@ -8,7 +8,7 @@ import { withFormik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
 
 
-const InnerCustomerPanel = ({ isNew, errors, handleClose, handleDelete }) => (
+const InnerCustomerPanel = ({ info, isNew, errors, handleClose, handleDelete }) => (
 
       <div>
         <Form>
@@ -89,7 +89,7 @@ const InnerCustomerPanel = ({ isNew, errors, handleClose, handleDelete }) => (
              :
              <div>
              <Button type="submit">Update</Button>
-             <Button onClick={(info) => handleDelete(info)}>Delete</Button>
+             <Button onClick={() => handleDelete(info.Id)}>Delete</Button>
             </div>
           }
           {  }

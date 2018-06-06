@@ -28,8 +28,8 @@ export const submitCarrier = (isNew, info) => ({
   }).then(res => res.json())
 });
 
-
-export const deleteCarrier = (info) => {
+// input is the customer uuid
+export const deleteCarrier = (id) => {
 
   return({
     type: 'DELETE_CARRIER',
@@ -38,7 +38,7 @@ export const deleteCarrier = (info) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({'Id' : info.Id, 'ObjectType' : info.ObjectType })
+      body: JSON.stringify({'Id' : id, 'ObjectType' : 'carrier' })
     }).then(res => res.json())
   });
 }

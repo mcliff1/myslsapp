@@ -27,8 +27,7 @@ export const updateCustomer = (isNew, info) => ({
   }).then(res => res.json())
 });
 
-export const deleteCustomer = (info) => {
-  console.log('deleteing customer uuid', info.Id);
+export const deleteCustomer = (id) => {
   return({
     type: 'DELETE_CUSTOMER',
     payload: fetch(API_ENDPOINT, {
@@ -36,7 +35,7 @@ export const deleteCustomer = (info) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({'Id' : info.Id, 'ObjectType' : info.ObjectType })
+      body: JSON.stringify({'Id' : id, 'ObjectType' : 'customer' })
     }).then(res => res.json())
   });
 }

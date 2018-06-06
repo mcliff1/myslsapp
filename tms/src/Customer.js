@@ -74,7 +74,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     handleAdd: () => { dispatch(newCustomerPanel()) },
     handleRefresh: () => dispatch(fetchCustomerList()),
-    handleDelete: (info) => dispatch(deleteCustomer(info)),
+    handleDelete: (id) => dispatch(deleteCustomer(id)) ,
     handleSubmit: (method, info) => dispatch(updateCustomer(method, info)),
     handleClick: (info) => dispatch(openCustomerPanel(info)),
     handleClose: () => dispatch(closeCustomerPanel())
