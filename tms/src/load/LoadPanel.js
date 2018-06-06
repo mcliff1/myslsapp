@@ -2,9 +2,9 @@
  * @file LoadPanel.js
  * 'dumb' REACT component for detail load information
  */
-import React, { Component } from 'react';
+import React from 'react';
 import { FormGroup, Label, Col, Button } from 'reactstrap';
-import { withFormik, Formik, Form, Field } from 'formik';
+import { withFormik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
 
 
