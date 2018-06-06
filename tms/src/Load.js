@@ -13,85 +13,42 @@ import { newLoadPanel, deleteLoad, closeLoadPanel, openLoadPanel, fetchLoadList,
 
 
 
-class Load extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleAdd = this.handleAdd.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleRefresh = this.handleRefresh.bind(this);
-
-  }
-
-
-  // sets the state so that we know we are looking at a
-  // particular record
-  handleClick(info) {
-    this.props.dispatch(openLoadPanel(info));
-  }
-
-  handleAdd() {
-    this.props.dispatch(newLoadPanel());
-  }
-
-  handleRefresh() {
-    if (this.props.needListUpdate) {
-      this.props.dispatch(fetchLoadList());
-    }
-  }
-
-  handleDelete() {
-    this.props.dispatch(deleteLoad(this.props.info));
-  }
-
-  handleClose() {
-    this.props.dispatch(closeLoadPanel());
-  }
+const DetailView = ({ info, isNew, handleDelete, handleClose, handleSubmit }) => {
+  return(
+    <div>
+      <LoadPanel info={info}
+                 isNew={isNew}
+                 handleSubmit={handleSubmit}
+                 handleDelete={handleDelete}
+                 handleClose={handleClose} />
+    </div>
+  );
+};
 
 
-
-  handleSubmit(isNew, info) {
-    this.props.dispatch(submitLoad(isNew, info));
-  }
-
-
-  renderDetail() {
-      return(
-        <div>
-          <LoadPanel info={this.props.info}
-                     isNew={this.props.isNew}
-                     handleSubmit={this.handleSubmit}
-                     handleDelete={this.handleDelete}
-                     handleClose={this.handleOpenList} />
-        </div>
-      );
-    }
-
-  renderList() {
-    return(
-      <div>
-        <div className="App-title">Load List &nbsp;&nbsp;
-        <Button onClick={this.handleAdd}>Add</Button>
-        <Button onClick={this.handleRefresh}>Refresh</Button>{ }
-        </div>
-
-          <LoadList loadList={this.props.loadList}
-                        freshList={() => this.handleRefresh()}
-                        handleClick={(info) => this.handleClick(info)} />
-
-
+const SummaryView = ({ loadList, handleAdd, handleRefresh, handleClick }) => {
+  return(
+    <div>
+      <div className="App-title">Load List &nbsp;&nbsp;
+        <Button onClick={handleAdd}>Add</Button>
+        <Button onClick={handleRefresh}>Refresh</Button>{ }
       </div>
-    );
-  };
 
+      <LoadList loadList={loadList}
+              freshList={() => handleRefresh()}
+                  handleClick={(info) => handleClick(info)} />
+    </div>
+  );
+}
+
+
+class Load extends Component {
 
   render() {
     const hasInfo = (this.props.info !== null);
     return(
       <div>
-        {hasInfo ? this.renderDetail() : this.renderList()}
+        {hasInfo ? <DetailView {...this.props} /> : <SummaryView {...this.props} />}
       </div>
     );
   }
@@ -109,6 +66,16 @@ const mapStoreToProps = (store, ownProps) => {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleAdd: () => { dispatch(newLoadPanel()) },
+    handleRefresh: () => dispatch(fetchLoadList()),
+    handleDelete: (id) => dispatch(deleteLoad(id)) ,
+    handleSubmit: (method, info) => dispatch(submitLoad(method, info)),
+    handleClick: (info) => dispatch(openLoadPanel(info)),
+    handleClose: () => dispatch(closeLoadPanel())
+  }
+}
 
 
-export default withRouter(connect(mapStoreToProps)(Load));
+export default withRouter(connect(mapStoreToProps, mapDispatchToProps)(Load));

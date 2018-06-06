@@ -1,15 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import LoadListDetail from './LoadListDetail'
 
 
-class LoadList extends Component {
-
-  componentWillMount() {
-    this.props.freshList();
-  }
-
-  render() {
-    const { loadList, handleClick } = this.props;
+const LoadList = ({loadList, handleClick}) => {
     return(
       <div>
       {
@@ -24,7 +17,6 @@ class LoadList extends Component {
       }
       </div>
     );
-  }
 }
 
 export default LoadList;

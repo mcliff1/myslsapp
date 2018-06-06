@@ -24,7 +24,7 @@ class LoadListDetail extends Component {
   };
 }
 LoadListDetail.propTypes = {
-  info: PropTypes.object,
+  info: PropTypes.object.isRequired,
 };
 
 export default LoadListDetail;

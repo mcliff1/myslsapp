@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
  * <render prop accepts inner form componentn
  */
 //class LoadPanel extends Component {
-const InnerLoadPanel = ({ isNew, errors, handleClose, handleDelete }) => (
+const InnerLoadPanel = ({ info, isNew, errors, handleClose, handleDelete }) => (
     <div>
       <Form>
 
@@ -43,10 +43,11 @@ const InnerLoadPanel = ({ isNew, errors, handleClose, handleDelete }) => (
         <FormGroup row>
           {isNew ?
             <Button>Submit</Button> :
+            <div>
             <Button>Update</Button>
+            <Button onClick={() => handleDelete(info.Id)}>Delete</Button>
+            </div>
           }
-          {  }
-          <Button onClick={handleDelete}>Delete</Button>
           {  }
           <Button onClick={handleClose}>Close</Button>
         </FormGroup>
