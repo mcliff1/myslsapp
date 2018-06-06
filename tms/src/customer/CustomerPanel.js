@@ -114,6 +114,7 @@ const CustomerPanel = withFormik({
       fax: (info && info.fax) || '',
       email: (info && info.email) || '',
       website: (info && info.website) || '',
+      Id: (info && info.Id) || null
     }
   },
   handleSubmit(values, formikBag) {

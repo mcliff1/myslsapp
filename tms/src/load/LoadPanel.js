@@ -64,7 +64,8 @@ const LoadPanel = withFormik({
     return {
       status: (info && info.status) || 'default status',
       product: (info && info.product) || 'default product',
-      destination: (info && info.destination) || 'default destination'
+      destination: (info && info.destination) || 'default destination',
+      Id: (info && info.Id) || null
     }
   },
   handleSubmit: (values, formikBag) => {
@@ -77,8 +78,7 @@ LoadPanel.propTypes = {
   info: PropTypes.object.isRequired,
   isNew: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-  onClick: PropTypes.func.isRequired
+  handleDelete: PropTypes.func.isRequired
 };
 
 

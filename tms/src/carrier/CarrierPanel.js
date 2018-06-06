@@ -70,6 +70,7 @@ const CarrierPanel = withFormik({
       city: (info && info.city) || 'default city',
       state: (info && info.state) || 'default state',
       phone: (info && info.phone) || '',
+      Id: (info && info.Id) || null
   }),
   handleSubmit: (values, formikBag) => {
     formikBag.props.handleSubmit(formikBag.props.isNew, values);
