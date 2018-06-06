@@ -3,6 +3,13 @@
 
 The repository is a collection of resouces to support a serverless application on **AWS Cloud** using the **REACT** framework.
 
+Folder | Summary
+---|---
+MyDemo  |  ...
+react_base  | base react, this project was pieced together to get a better understanding of the REACT environment
+static_congito  |  simple static content leveraging AWS Cognito
+tms  | *Transportation Management System* template site for logistics company management
+
 This app will have login capability, a list of customers, a list of items, and orders.
 
 ## Setup
