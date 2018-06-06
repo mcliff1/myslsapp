@@ -11,26 +11,13 @@ const defaultState = {
   needListUpdate: true
 }
 
-const blank_cust =
-{
-  'name': '',
-  'address1': '',
-  'address2': '',
-  'city': '',
-  'state': '',
-  'zip' : '',
-  'phone' : '',
-  'fax' : '',
-  'email' : '',
-  'website' : ''
-};
 
 const customer = (state = defaultState, action) => {
   switch (action.type) {
     case 'NEW_CUSTOMER_PANEL':
       return {
         ...state,
-        info: blank_cust,
+        info: {},
         isNew: true
       };
     case 'OPEN_CUSTOMER_PANEL':
@@ -74,8 +61,6 @@ const customer = (state = defaultState, action) => {
         isNew: true,
         needListUpdate: true
       };
-
-
 
     default:
       return state;

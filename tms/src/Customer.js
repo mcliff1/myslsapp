@@ -24,15 +24,11 @@ class Customer extends Component {
   constructor(props) {
     super(props);
 
-    //this.state = {
-    //  isNewCustomer: false,
-    //  info : null
-    //}
-    this.handleAdd = this.handleAdd.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleRefresh = this.handleRefresh.bind(this);
+    //this.handleAdd = this.handleAdd.bind(this);
+    //this.handleSubmit = this.handleSubmit.bind(this);
+    //this.handleClose = this.handleClose.bind(this);
+    //this.handleDelete = this.handleDelete.bind(this);
+    //this.handleRefresh = this.handleRefresh.bind(this);
 
   }
 
@@ -80,31 +76,31 @@ class Customer extends Component {
 
 
   renderDetail() {
-    const { info, isNew } = this.props;
+    const { info, isNew, handleSubmit, handleDelete, handleClose } = this.props;
 
     return(
       <div>
         <CustomerPanel info={info}
                        isNew={isNew}
-                       handleSubmit={this.handleSubmit}
-                       handleDelete={this.handleDelete}
-                       handleClose={this.handleClose} />
+                       handleSubmit={handleSubmit}
+                       handleDelete={handleDelete}
+                       handleClose={handleClose} />
       </div>
     );
   }
 
 
   renderList() {
-    const { customerList } = this.props;
+    const { customerList, handleAdd, handleRefresh, handleClick } = this.props;
     return(
       <div>
         <div className="App-title">Customer List {  }
-        <Button onClick={this.handleAdd}>Add</Button>{ }
-        <Button onClick={this.handleRefresh}>Refresh</Button>{ }
+        <Button onClick={handleAdd}>Add</Button>{ }
+        <Button onClick={handleRefresh}>Refresh</Button>{ }
         </div>
           <CustomerList customerList={customerList}
-                        freshList={() => this.handleRefresh()}
-                        handleClick={(info) => this.handleClick(info)} />
+                        freshList={() => handleRefresh()}
+                        handleClick={(info) => handleClick(info)} />
 
       </div>
     );
@@ -134,6 +130,16 @@ const mapStoreToProps = (store, ownProps) => {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleAdd: () => { dispatch(newCustomerPanel()) },
+    handleRefresh: () => dispatch(fetchCustomerList()),
+    handleDelete: (info) => dispatch(deleteCustomer(info)),
+    handleSubmit: (method, info) => dispatch(updateCustomer(method, info)),
+    handleClick: (info) => dispatch(openCustomerPanel(info)),
+    handleClose: () => dispatch(closeCustomerPanel())
+  }
+}
 
 
-export default withRouter(connect(mapStoreToProps)(Customer));
+export default withRouter(connect(mapStoreToProps, mapDispatchToProps)(Customer));
