@@ -43,6 +43,9 @@ const SummaryView = ({ loadList, handleAdd, handleRefresh, handleClick }) => {
 
 
 class Load extends Component {
+  componentWillMount() {
+    this.props.handleRefresh();
+  }
 
   render() {
     const hasInfo = (this.props.info !== null);

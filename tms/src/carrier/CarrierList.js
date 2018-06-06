@@ -1,16 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import CarrierListDetail from './CarrierListDetail'
 
-class CarrierList extends Component {
-
-  componentWillMount() {
-    this.props.freshList();
-  }
-
-  render() {
-    const { carrierList, handleClick } = this.props;
-    return(
-      <div>
+const CarrierList = ({ carrierList, handleClick }) => {
+  return(
+    <div>
       {
         carrierList.map((item, idx) => {
           return(
@@ -21,9 +14,8 @@ class CarrierList extends Component {
           );
         })
       }
-      </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default CarrierList;

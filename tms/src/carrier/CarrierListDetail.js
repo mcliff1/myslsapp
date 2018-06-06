@@ -5,23 +5,20 @@ import PropTypes from 'prop-types';
 /**
  * Expects property info, and function onClick(info)
  */
-class CarrierListDetail extends Component {
-
-  render() {
-    const info = this.props.info;
+const CarrierListDetail = ({info, onClick}) => {
     return(
       <div className="card-deck mt4">
         <div className="card border border-info rounded"
-             onClick={ (evt) => this.props.onClick(info)}>
+             onClick={ () => onClick(info)}>
           <div className="card-body">
-            <h5 className="card-title">{ info.name }</h5>
-            <p className="card-text">{ info.city }, {info.state }</p>
+            <h5 className="card-title">{info.name}</h5>
+            <p className="card-text">{info.city}, {info.state}</p>
           </div>
         </div>
       </div>
-    )
-  };
+  );
 }
+
 CarrierListDetail.propTypes = {
   info: PropTypes.object,
 };

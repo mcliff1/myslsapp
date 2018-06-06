@@ -11,84 +11,55 @@ import CarrierPanel from './carrier/CarrierPanel'
 import CarrierList from './carrier/CarrierList'
 import { newCarrierPanel, deleteCarrier, closeCarrierPanel, openCarrierPanel, fetchCarrierList, submitCarrier } from './actions/carrierActions';
 
+
+
+
+
+
+
+
+
+const DetailView = ({ info, isNew, handleDelete, handleClose, handleSubmit }) => {
+  return(
+    <div>
+    <CarrierPanel info={info}
+      isNew={isNew}
+      handleSubmit={handleSubmit}
+      handleDelete={handleDelete}
+      handleClose={handleClose} />
+    </div>
+
+  );
+};
+
+
+const SummaryView = ({ carrierList, handleAdd, handleRefresh, handleClick }) => {
+  return(
+    <div>
+    <div className="App-title">Carrier List &nbsp;&nbsp;
+    <Button onClick={handleAdd}>Add</Button>
+    <Button onClick={handleRefresh}>Refresh</Button>{ }
+    </div>
+
+    <CarrierList carrierList={carrierList}
+      freshList={() => handleRefresh()}
+      handleClick={(info) => handleClick(info)} />
+    </div>
+  );
+}
+
+
 class Carrier extends Component {
-  constructor(props) {
-    super(props);
 
-    this.handleAdd = this.handleAdd.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleRefresh = this.handleRefresh.bind(this);
+  componentWillMount() {
+    this.props.handleRefresh();
   }
-
-
-  // sets the state so that we know we are looking at a
-  // particular record
-  handleClick(info) {
-    this.props.dispatch(openCarrierPanel(info));
-  }
-
-  handleAdd() {
-    this.props.dispatch(newCarrierPanel());
-  }
-
-  handleRefresh() {
-    if (this.props.needListUpdate) {
-      this.props.dispatch(fetchCarrierList());
-    }
-  }
-
-  handleDelete() {
-    this.props.dispatch(deleteCarrier(this.props.info));
-  }
-
-  handleClose() {
-    this.props.dispatch(closeCarrierPanel());
-  }
-
-
-  /**
-   * Will call POST or PUT as appropriate
-   */
-  handleSubmit(isNew, info) {
-    this.props.dispatch(submitCarrier(isNew, info));
-  }
-
-
-  renderDetail() {
-    return(
-      <div>
-      <CarrierPanel info={this.props.info}
-        isNew={this.props.isNew}
-        handleSubmit={this.handleSubmit}
-        handleDelete={this.handleDelete}
-        handleClose={this.handleClose} />
-      </div>
-    );
-  }
-
-  renderList() {
-    return(
-      <div>
-      <div className="App-title">Carrier List &nbsp;&nbsp;
-      <Button onClick={this.handleAdd}>Add</Button>
-      <Button onClick={this.handleRefresh}>Refresh</Button>{ }
-      </div>
-
-      <CarrierList carrierList={this.props.carrierList}
-        freshList={() => this.handleRefresh()}
-        handleClick={(info) => this.handleClick(info)} />
-      </div>
-    );
-  };
-
 
   render() {
     const hasInfo = (this.props.info !== null);
     return(
       <div>
-      {hasInfo ? this.renderDetail() : this.renderList()}
+        {hasInfo ? <DetailView {...this.props} /> : <SummaryView {...this.props} />}
       </div>
     );
   }
@@ -104,5 +75,15 @@ const mapStoreToProps = (store, ownProps) => {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleAdd: () => { dispatch(newCarrierPanel()) },
+    handleRefresh: () => dispatch(fetchCarrierList()),
+    handleDelete: (id) => dispatch(deleteCarrier(id)) ,
+    handleSubmit: (method, info) => dispatch(submitCarrier(method, info)),
+    handleClick: (info) => dispatch(openCarrierPanel(info)),
+    handleClose: () => dispatch(closeCarrierPanel())
+  }
+}
 
-export default withRouter(connect(mapStoreToProps)(Carrier));
+export default withRouter(connect(mapStoreToProps, mapDispatchToProps)(Carrier));

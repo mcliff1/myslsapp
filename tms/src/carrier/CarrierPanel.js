@@ -9,13 +9,7 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 
 
-
-
-/**
- * expects handleSubmit function (isNew:boolean , data) to be passed
- */
-//class rawCarrierPanel extends Component {
-const InnerCarrierPanel = ({ isNew, touched, errors, handleClose, handleDelete }) =>
+const InnerCarrierPanel = ({ info, isNew, touched, errors, handleClose, handleDelete }) =>
 (
       <div>
         <Form>
@@ -53,13 +47,17 @@ const InnerCarrierPanel = ({ isNew, touched, errors, handleClose, handleDelete }
 
 
           {isNew ?
-            <Button>Submit</Button> :
+          <div>
+            <Button>Submit</Button>
+            <Button onClick={handleClose}>Close</Button>
+          </div>
+          :
+          <div>
             <Button>Update</Button>
+            <Button onClick={() => handleDelete(info.Id)}>Delete</Button>
+            <Button onClick={handleClose}>Close</Button>
+          </div>
           }
-          {  }
-          <Button onClick={handleDelete}>Delete</Button>
-          {  }
-          <Button onClick={handleClose}>Close</Button>
         </Form>
       </div>
 )

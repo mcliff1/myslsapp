@@ -44,6 +44,9 @@ const SummaryView = ({ customerList, handleAdd, handleRefresh, handleClick }) =>
 
 // Class represents a list and detail view of a customer
 class Customer extends Component {
+  componentWillMount() {
+    this.props.handleRefresh();
+  }
 
   render() {
     const hasInfo = (this.props.info !== null);
