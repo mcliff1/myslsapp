@@ -9,7 +9,7 @@ import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import OrderPanel from './order/OrderPanel'
 import OrderList from './order/OrderList'
-import { newOrderPanel, deleteOrder, closeOrderPanel, openOrderPanel, fetchOrderList, submitOrder } from './actions/orderActions';
+import { deleteOrder, closeOrderPanel, openOrderPanel, fetchOrderList, submitOrder } from './actions/orderActions';
 
 
 

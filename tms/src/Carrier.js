@@ -9,7 +9,7 @@ import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import CarrierPanel from './carrier/CarrierPanel'
 import CarrierList from './carrier/CarrierList'
-import { newCarrierPanel, deleteCarrier, closeCarrierPanel, openCarrierPanel, fetchCarrierList, submitCarrier } from './actions/carrierActions';
+import { deleteCarrier, closeCarrierPanel, openCarrierPanel, fetchCarrierList, submitCarrier } from './actions/carrierActions';
 
 
 const DetailView = ({ info, isNew, handleDelete, handleClose, handleSubmit }) => {
