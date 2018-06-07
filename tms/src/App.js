@@ -66,7 +66,7 @@ class App extends Component {
     //this.props.userHasAuthenticated(false);
     //this.props.userHasAuthenticated(true);
     this.userHasAuthenticated(false);
-    this.props.setUser(null);
+    this.props.setUserAction(null);
     this.props.history.push("/login");
   }
 

@@ -1,12 +1,25 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-const Home = () => {
+const Home = ({user}) => {
   return(
-      <div>
+    <div>
       <h2>Home</h2>
       Welcome to the Transportation Management System
-      </div>
+
+      <p></p>
+      {user ?
+        <div>Logged in with email {user.attributes.email}</div>
+        :
+        <div>Please Login</div>
+      }
+    </div>
   );
 }
 
-export default Home;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.cognito.user,
+  }
+}
+export default connect(mapStateToProps)(Home);
