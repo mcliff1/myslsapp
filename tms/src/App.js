@@ -4,6 +4,7 @@ import { Auth } from 'aws-amplify';
 
 import './App.css';
 import Home from './Home';
+import { connect } from 'react-redux';
 import Customer from './Customer';
 import Load from './Load';
 import Carrier from './Carrier';
@@ -13,6 +14,7 @@ import MyTodo from './todo/MyTodo';
 import Login from './containers/Login';
 import Signup from './containers/Signup';
 import NotFound from './containers/NotFound';
+import { setUser } from './actions';
 import AuthenticatedRoute from './components/AuthenticatedRoute';
 import UnauthenticatedRoute from './components/UnauthenticatedRoute';
 
@@ -22,18 +24,25 @@ import UnauthenticatedRoute from './components/UnauthenticatedRoute';
 
 class App extends Component {
 //const App = () => (
-  constructor(props) {
-    super(props);
-    this.state = {
+//const App = () => {
+  //constructor(props) {
+  //  super(props);
+    state = {
       isAuthenticated: false,
       isAuthenticating: true
     };
-  }
+  //}
 
   async componentDidMount() {
     try {
       if (await Auth.currentSession()) {
         this.userHasAuthenticated(true);
+
+        const user = await Auth.currentAuthenticatedUser();
+        this.props.setUserAction(user);
+
+      } else {
+        this.props.setUserAction(null);
       }
     }
     catch (e) {
@@ -45,8 +54,23 @@ class App extends Component {
   }
 
   userHasAuthenticated = authenticated => {
+    console.log('userHasAuthenticated()');
     this.setState({ isAuthenticated: authenticated });
   }
+
+
+
+
+  handleLogout = async event => {
+    await Auth.signOut();
+    //this.props.userHasAuthenticated(false);
+    //this.props.userHasAuthenticated(true);
+    this.userHasAuthenticated(false);
+    this.props.setUser(null);
+    this.props.history.push("/login");
+  }
+
+
 
 
 
@@ -60,7 +84,7 @@ class App extends Component {
     return(
   <Router>
     <div className="App">
-      <AppNav props={childProps} userHasAuthenticated={this.userHasAuthenticated} isAuthenticated={this.state.isAuthenticated}/>
+      <AppNav handleLogout={this.handleLogout} userHasAuthenticated={this.userHasAuthenticated} isAuthenticated={this.state.isAuthenticated}/>
       <Switch>
         <Route exact path="/" component={Home} props={childProps} />
         <UnauthenticatedRoute exact path="/login" component={Login} props={childProps} />
@@ -79,4 +103,15 @@ class App extends Component {
   };
 }
 
-export default App;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.cognito.user,
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    setUserAction: (user) => dispatch(setUser(user)),
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(App);

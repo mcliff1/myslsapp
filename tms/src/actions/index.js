@@ -20,3 +20,8 @@ export const VisibilityFilters = {
   SHOW_COMPLETED: 'SHOW_COMPLETED',
   SHOW_ACTIVE: 'SHOW_ACTIVE'
 }
+
+export const setUser = user => ({
+  type: 'SET_USER',
+  user
+})

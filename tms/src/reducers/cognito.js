@@ -29,6 +29,11 @@ const cognito = (state = defaultState, action) => {
         ...state,
         isAuthenticated: action.isAuthenticated
       };
+    case 'SET_USER':
+      return {
+        ...state,
+        user: action.user
+      }
     default:
       return state;
   }

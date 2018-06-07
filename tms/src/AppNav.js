@@ -48,7 +48,7 @@ class AppNav extends Component {
     }
 
 
-  handleLogout = async event => {
+  handleLogout2 = async event => {
     await Auth.signOut();
     this.props.userHasAuthenticated(false);
     //this.props.userHasAuthenticated(true);
@@ -97,7 +97,7 @@ class AppNav extends Component {
         {
           (!this.props.isAuthenticated) ?
           (<button className="btn btn-info log" onClick={(evt) => this.login(evt)}>Log In</button>) :
-          (<button className="btn btn-danger log" onClick={() => this.handleLogout()}>Log Out</button>)
+          (<button className="btn btn-danger log" onClick={() => this.props.handleLogout()}>Log Out</button>)
         }
         </NavItem>
       </Nav>
