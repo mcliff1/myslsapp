@@ -11,26 +11,12 @@ const defaultState = {
 }
 
 
-const blank_carrier =
-{
-  'name': '',
-  'city': '',
-  'state': '',
-  'phone': ''
-};
-
 
 /**
  * Main reducer functions
  */
 const carrier = (state = defaultState, action) => {
   switch (action.type) {
-    case 'NEW_CARRIER_PANEL':
-      return {
-        ...state,
-        info: blank_carrier,
-        isNew: true
-      };
     case 'OPEN_CARRIER_PANEL':
       return {
         ...state,

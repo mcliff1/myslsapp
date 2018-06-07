@@ -1,17 +1,13 @@
 const API_ENDPOINT = 'https://tms-api.mattcliff.net/dev/carrier';
 
 
-export const newCarrierPanel = () => ({
-  type: 'NEW_CARRIER_PANEL'
-});
-
 export const closeCarrierPanel = () => ({
   type: 'CLOSE_CARRIER_PANEL'
 });
 
 export const openCarrierPanel = (info) => ({
   type: 'OPEN_CARRIER_PANEL',
-  isNew: (info === null),
+  isNew: !(!!info.Id),
   info
 });
 

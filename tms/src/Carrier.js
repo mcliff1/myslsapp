@@ -12,13 +12,6 @@ import CarrierList from './carrier/CarrierList'
 import { newCarrierPanel, deleteCarrier, closeCarrierPanel, openCarrierPanel, fetchCarrierList, submitCarrier } from './actions/carrierActions';
 
 
-
-
-
-
-
-
-
 const DetailView = ({ info, isNew, handleDelete, handleClose, handleSubmit }) => {
   return(
     <div>
