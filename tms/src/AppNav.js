@@ -66,6 +66,9 @@ class AppNav extends Component {
         <NavItem>
           <NavLink href="/customer">Customer</NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink href="/order">Order</NavLink>
+        </NavItem>
         { this.props.isAuthenticated ?
         <NavItem>
           <NavLink href="/load">Load</NavLink>

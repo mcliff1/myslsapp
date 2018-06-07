@@ -3,17 +3,18 @@ import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 
 import './App.css';
-import Home from './Home.js';
-import Customer from './Customer.js';
-import Load from './Load.js';
-import Carrier from './Carrier.js';
-import AppNav from './AppNav.js';
-import MyTodo from './todo/MyTodo.js';
-import Login from './containers/Login.js';
-import Signup from './containers/Signup.js';
-import NotFound from './containers/NotFound.js';
-import AuthenticatedRoute from './components/AuthenticatedRoute.js';
-import UnauthenticatedRoute from './components/UnauthenticatedRoute.js';
+import Home from './Home';
+import Customer from './Customer';
+import Load from './Load';
+import Carrier from './Carrier';
+import Order from './Order';
+import AppNav from './AppNav';
+import MyTodo from './todo/MyTodo';
+import Login from './containers/Login';
+import Signup from './containers/Signup';
+import NotFound from './containers/NotFound';
+import AuthenticatedRoute from './components/AuthenticatedRoute';
+import UnauthenticatedRoute from './components/UnauthenticatedRoute';
 
 
 // https://react-bootstrap.github.io/components/label/
@@ -65,6 +66,7 @@ class App extends Component {
         <UnauthenticatedRoute exact path="/login" component={Login} props={childProps} />
         <Route exact path="/signUp" component={Signup} props={childProps} userHasAuthenticated={this.userHasAuthenticated}/>
         <Route exact path="/customer" component={Customer} props={childProps}/>
+        <Route exact path="/order" component={Order} props={childProps}/>
         <AuthenticatedRoute exact path="/load" component={Load} props={childProps}/>
         <Route exact path="/mytodo" component={MyTodo} props={childProps}/>
         <Route exact path="/carrier" component={Carrier} props={childProps}/>
