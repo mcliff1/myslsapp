@@ -9,7 +9,7 @@ import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import LoadPanel from './load/LoadPanel'
 import LoadList from './load/LoadList'
-import { newLoadPanel, deleteLoad, closeLoadPanel, openLoadPanel, fetchLoadList, submitLoad } from './actions/loadActions';
+import { deleteLoad, closeLoadPanel, openLoadPanel, fetchLoadList, submitLoad } from './actions/loadActions';
 
 
 
@@ -26,17 +26,17 @@ const DetailView = ({ info, isNew, handleDelete, handleClose, handleSubmit }) =>
 };
 
 
-const SummaryView = ({ loadList, handleAdd, handleRefresh, handleClick }) => {
+const SummaryView = ({ loadList, handleRefresh, handleOpen }) => {
   return(
     <div>
       <div className="App-title">Load List &nbsp;&nbsp;
-        <Button onClick={handleAdd}>Add</Button>
+        <Button onClick={() => handleOpen({})}>Add</Button>
         <Button onClick={handleRefresh}>Refresh</Button>{ }
       </div>
 
       <LoadList loadList={loadList}
               freshList={() => handleRefresh()}
-                  handleClick={(info) => handleClick(info)} />
+                  handleClick={(info) => handleOpen(info)} />
     </div>
   );
 }
@@ -71,11 +71,10 @@ const mapStoreToProps = (store, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleAdd: () => { dispatch(newLoadPanel()) },
     handleRefresh: () => dispatch(fetchLoadList()),
     handleDelete: (id) => dispatch(deleteLoad(id)) ,
     handleSubmit: (method, info) => dispatch(submitLoad(method, info)),
-    handleClick: (info) => dispatch(openLoadPanel(info)),
+    handleOpen: (info) => dispatch(openLoadPanel(info)),
     handleClose: () => dispatch(closeLoadPanel())
   }
 }

@@ -14,17 +14,11 @@ const defaultState = {
 
 const customer = (state = defaultState, action) => {
   switch (action.type) {
-    case 'NEW_CUSTOMER_PANEL':
-      return {
-        ...state,
-        info: {},
-        isNew: true
-      };
     case 'OPEN_CUSTOMER_PANEL':
       return {
         ...state,
         info: action.info,
-        isNew: false
+        isNew: action.isNew
       };
     case 'CLOSE_CUSTOMER_PANEL':
       return {

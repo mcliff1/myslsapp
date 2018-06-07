@@ -1,16 +1,13 @@
 const API_ENDPOINT = 'https://tms-api.mattcliff.net/dev/load';
 
 
-export const newLoadPanel = () => ({
-  type: 'NEW_LOAD_PANEL'
-});
-
 export const closeLoadPanel = () => ({
   type: 'CLOSE_LOAD_PANEL'
 });
 
 export const openLoadPanel = (info) => ({
   type: 'OPEN_LOAD_PANEL',
+  isNew: !(!!info.Id),
   info
 });
 

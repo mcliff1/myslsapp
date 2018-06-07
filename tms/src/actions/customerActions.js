@@ -1,16 +1,12 @@
 const API_ENDPOINT = 'https://tms-api.mattcliff.net/dev/customer';
 
-
-export const newCustomerPanel = () => ({
-  type: 'NEW_CUSTOMER_PANEL'
-});
-
 export const closeCustomerPanel = () => ({
   type: 'CLOSE_CUSTOMER_PANEL'
 });
 
 export const openCustomerPanel = (info) => ({
   type: 'OPEN_CUSTOMER_PANEL',
+  isNew: !(!!info.Id),
   info
 });
 

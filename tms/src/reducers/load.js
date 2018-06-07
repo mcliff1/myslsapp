@@ -12,20 +12,13 @@ const defaultState = {
 
 
 
-
 const load = (state = defaultState, action) => {
   switch (action.type) {
-    case 'NEW_LOAD_PANEL':
-      return {
-        ...state,
-        info: {},
-        isNew: true
-      };
     case 'OPEN_LOAD_PANEL':
       return {
         ...state,
         info: action.info,
-        isNew: false
+        isNew: action.isNew
       };
     case 'CLOSE_LOAD_PANEL':
       return {

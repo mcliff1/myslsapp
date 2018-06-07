@@ -9,7 +9,7 @@ import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import CustomerPanel from './customer/CustomerPanel'
 import CustomerList from './customer/CustomerList'
-import { submitCustomer, newCustomerPanel, deleteCustomer, closeCustomerPanel, openCustomerPanel, fetchCustomerList } from './actions/customerActions';
+import { submitCustomer, deleteCustomer, closeCustomerPanel, openCustomerPanel, fetchCustomerList } from './actions/customerActions';
 
 
 
@@ -25,17 +25,17 @@ const DetailView = ({ info, isNew, handleDelete, handleClose, handleSubmit }) =>
   );
 };
 
-const SummaryView = ({ customerList, handleAdd, handleRefresh, handleClick }) => {
+const SummaryView = ({ customerList, handleRefresh, handleOpen }) => {
   return(
     <div>
       <div className="App-title">Customer List {  }
-      <Button onClick={handleAdd}>Add</Button>{ }
+      <Button onClick={() => handleOpen({})}>Add</Button>{ }
       <Button onClick={handleRefresh}>Refresh</Button>{ }
       </div>
 
       <CustomerList customerList={customerList}
                     freshList={() => handleRefresh()}
-                    handleClick={(info) => handleClick(info)} />
+                    handleClick={(info) => handleOpen(info)} />
 
     </div>
   );
@@ -73,11 +73,10 @@ const mapStoreToProps = (store, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleAdd: () => { dispatch(newCustomerPanel()) },
     handleRefresh: () => dispatch(fetchCustomerList()),
     handleDelete: (id) => dispatch(deleteCustomer(id)) ,
     handleSubmit: (method, info) => dispatch(submitCustomer(method, info)),
-    handleClick: (info) => dispatch(openCustomerPanel(info)),
+    handleOpen: (info) => dispatch(openCustomerPanel(info)),
     handleClose: () => dispatch(closeCustomerPanel())
   }
 }
