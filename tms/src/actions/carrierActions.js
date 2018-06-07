@@ -11,6 +11,7 @@ export const closeCarrierPanel = () => ({
 
 export const openCarrierPanel = (info) => ({
   type: 'OPEN_CARRIER_PANEL',
+  isNew: (info === null),
   info
 });
 

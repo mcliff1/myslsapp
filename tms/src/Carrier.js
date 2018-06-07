@@ -33,17 +33,17 @@ const DetailView = ({ info, isNew, handleDelete, handleClose, handleSubmit }) =>
 };
 
 
-const SummaryView = ({ carrierList, handleAdd, handleRefresh, handleClick }) => {
+const SummaryView = ({ carrierList, handleAdd, handleRefresh, handleOpen }) => {
   return(
     <div>
     <div className="App-title">Carrier List &nbsp;&nbsp;
-    <Button onClick={handleAdd}>Add</Button>
+    <Button onClick={() => handleOpen({})}>Add</Button>
     <Button onClick={handleRefresh}>Refresh</Button>{ }
     </div>
 
     <CarrierList carrierList={carrierList}
       freshList={() => handleRefresh()}
-      handleClick={(info) => handleClick(info)} />
+      handleClick={(info) => handleOpen(info)} />
     </div>
   );
 }
@@ -77,11 +77,10 @@ const mapStoreToProps = (store, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleAdd: () => { dispatch(newCarrierPanel()) },
     handleRefresh: () => dispatch(fetchCarrierList()),
     handleDelete: (id) => dispatch(deleteCarrier(id)) ,
     handleSubmit: (method, info) => dispatch(submitCarrier(method, info)),
-    handleClick: (info) => dispatch(openCarrierPanel(info)),
+    handleOpen: (info) => dispatch(openCarrierPanel(info)),
     handleClose: () => dispatch(closeCarrierPanel())
   }
 }

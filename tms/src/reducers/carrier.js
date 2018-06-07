@@ -35,7 +35,7 @@ const carrier = (state = defaultState, action) => {
       return {
         ...state,
         info: action.info,
-        isNew: false
+        isNew: action.isNew
       };
     case 'CLOSE_CARRIER_PANEL':
       return {
