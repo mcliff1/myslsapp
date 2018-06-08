@@ -1,17 +1,22 @@
 #!/bin/bash
+# ensure the cognito config is present
+# pull S3 value from AWS Paramter Store  /tmsbase/webHostName
 
-# this would come from AWS Paramter Store  /tmsbase/webHostName
-#  (or cloudformation output  tms-)
-#  make AWS call to get it...
+
+__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+
+# first make sure the config.json file is there
+$__dir/gen-cognito-config.sh
+
+
 REGION=us-west-2
 BUCKET_NAME=`aws ssm get-parameter --name "/tmsbase/webBucketName" --region ${REGION} | jq -r .Parameter.Value`
 
 TARGET_BUCKET=s3://${BUCKET_NAME}
 
-# source variables
-__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
-
+echo "made it"
+exit 2
 cd $__dir
 npm install
 npm run build
