@@ -46,6 +46,13 @@
         "DisplayName": {"Fn::Sub" : "General Announcments For ${AWS::StackName} network"}
       }
     },
+    "SNSNewPostsTopic" : {
+      "Type" : "AWS::SNS::Topic",
+      "Properties" : {
+        "TopicName": {"Fn::Sub": "${AWS::StackName}-NewPostsTopic" },
+        "DisplayName": {"Fn::Sub" : "New Posts (Lambda to Lambda connection) ${AWS::StackName}"}
+      }
+    },
     "BuildBucket" : {
       "Type" : "AWS::S3::Bucket",
       "Properties" : {
@@ -244,7 +251,26 @@
         "Description" : "Name of the S3 Audio Bucket",
         "Value" : {"Ref": "AudioBucket"}
       }
+    },
+    "ssmSNSNewPostsTopic": {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "/${AWS::StackName}/newPostsTopic"},
+        "Type" : "String",
+        "Description" : "SNS Topic to use to pipe new posts to conversion",
+        "Value" : {"Ref": "SNSNewPostsTopic"}
+      }
+    },
+    "ssmPollyDB": {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "/${AWS::StackName}/pollyDB"},
+        "Type" : "String",
+        "Description" : "DynamoDB for MetaData",
+        "Value" : {"Ref": "PollyDB"}
+      }
     }
+
   },
   "Outputs": {
     "Project" : {
@@ -270,6 +296,11 @@
       "Description" : "Hostname for the API",
       "Value" : {"Ref": "WebHostName"},
       "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-WebHostName"}}
+    },
+    "PollyDBName" : {
+      "Description" : "DynamoDB created",
+      "Value" : {"Ref": "PollyDB"},
+      "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-PollyDB"}}
     }
 
 
