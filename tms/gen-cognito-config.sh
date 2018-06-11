@@ -17,18 +17,15 @@ OUTFILE=$__dir/src/config.json
 
 if [ -e $OUTFILE ]
 then
-  echo "Target file already exists, exiting."
+  echo "Target $OUTFILE exists, done."
   exit 1
 fi
 
-
 echo "Pull attributes from SSM to generate: $OUTFILE"
-
 
 # pull from SSM (assumes user in role)
 CLIENT_ID=`aws ssm get-parameter --name "/${BASESTACK}/cognitoClientId" --region ${REGION} | jq -r .Parameter.Value`
 USER_POOL=`aws ssm get-parameter --name "/${BASESTACK}/cognitoUserPoolId" --region ${REGION} | jq -r .Parameter.Value`
-
 
 
 cat > $__dir/src/config.json << EOM
