@@ -47,13 +47,6 @@ const voiceList = [
 ]
 
 
-
-
-const handleTextKeyup = (e) => {
-  const len = document.getElementById("textToConvert").value.length;
-  document.getElementById("charCounter").textContent="Characters: " + len;
-}
-
 const TextToAudioControl = () => {
   return(
     <div>
@@ -68,10 +61,7 @@ const TextToAudioControl = () => {
       <button>Generate</button>
       </div>
       <br/>
-      <div>
-        <textarea id="textToConvert" onKeyUp={handleTextKeyup}></textarea>
-        <span id="charCounter">Characters: 0</span>
-      </div>
+
     </div>
   );
 }

@@ -28,11 +28,11 @@ def handle_get(event):
         )
 
     return {
-        "body": items["Items"], 
+        "body": items["Items"],
         "statusCode" : 400,
         "headers": {
             "Content-Type" : "application/json",
-        },
+        }
 
     #return items["Items"]
 
