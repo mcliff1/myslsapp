@@ -10,7 +10,7 @@ const handleDeviceIdChange = (e) => {
 }
 
 const handleTextKeyup = (e) => {
-  const len = document.getElementById("textToConvert").textContent.length;
+  const len = document.getElementById("textToConvert").value.length;
   document.getElementById("charCounter").textContent="Characters: " + len;
 }
 

@@ -10,7 +10,7 @@ const AudioList = () => {
       <br></br>
   Provide post ID which you want to retrieve:
    <input type="text" id="postId" />
-   <input type="submit" class="buttons" value="Search" id="searchButton" />
+   <input type="submit" className="buttons" value="Search" id="searchButton" />
   <br/>
 
 
