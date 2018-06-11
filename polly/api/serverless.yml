@@ -33,6 +33,7 @@ provider:
         - dynamodb:GetItem
         - dynamodb:PutItem
         - dynamodb:UpdateItem
+        - dynamodb:Scan
       Resource:
         "Fn::Join":
           - ""
@@ -78,7 +79,7 @@ provider:
   environment:
     STAGE: ${self:custom.stage}
     DB_TABLE_NAME: ${self:custom.pollydb}
-    SNS_TOPIC: ${self:custom.pollydb}
+    SNS_TOPIC: ${self:custom.newpoststopic}
 
 # you can add packaging information here
 #package:

@@ -1,8 +1,12 @@
 import boto3
 import os
 import uuid
+import logging
 import json
 from boto3.dynamodb.conditions import Key, Attr
+
+LOGGER = logging.getLogger()
+LOGGER.setLevel(logging.INFO)
 
 """
 expects to have  string object 'postId' passed in as data
@@ -13,7 +17,8 @@ def handle_get(event):
 
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(os.environ['DB_TABLE_NAME'])
-    postId = event['postId']
+    data = event['queryStringParameters']
+    postId = data['postId']
 
     if postId=="*":
         items = table.scan()
@@ -22,7 +27,14 @@ def handle_get(event):
             KeyConditionExpression=Key('id').eq(postId)
         )
 
-    return items["Items"]
+    return {
+        "body": items["Items"], 
+        "statusCode" : 400,
+        "headers": {
+            "Content-Type" : "application/json",
+        },
+
+    #return items["Items"]
 
 
 """
@@ -60,8 +72,8 @@ def apihandler(event, context):
 
     operation = event['httpMethod']
     operations = {
-        'POST' : lambda data: post_call(data),
-        'GET' : lambda data: get_call(data)
+        'POST' : lambda data: handle_post(data),
+        'GET' : lambda data: handle_get(data)
     }
 
     # see if we can delegate the call
