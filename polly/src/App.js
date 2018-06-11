@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import TextToAudioComponent from './TextToAudioComponent';
+import AudioList from './AudioList';
 
 class App extends Component {
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Welcome to Polly</h1>
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div><p>
+        This page will accept text, when submitted gets converted to MP3.
+        The conversion happens via a Lambda function triggered via API Gateway,
+        this results in the actual MP3 file being stored on a S3 bucket.
+        A 2nd API call is available to pull the meta data for the audio clips
+        </p></div>
+        <TextToAudioComponent />
+        <AudioList />
       </div>
     );
   }
