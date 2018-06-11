@@ -1,0 +1,353 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description": "Creates framework necessary for SLS services, including ACM certs, S3 buckets and cognito identity pool",
+  "Parameters" : {
+    "Project" : {
+      "Description" : "Enter Project Name",
+      "Type" : "String",
+      "Default" : "Polly Serverless Base"
+    },
+    "DomainName" : {
+      "Description" : "Enter Domain Name to Use (must be HostedZone)",
+      "Type" : "String",
+      "Default" : "mydomain.com"
+    },
+    "WebHostName" : {
+      "Description" : "Enter Host Name for the Website",
+      "Type" : "String",
+      "Default" : "polly"
+    },
+    "ApiHostName" : {
+      "Description" : "Enter Host Name for API",
+      "Type" : "String",
+      "Default" : "polly-api"
+    },
+    "TopicName" : {
+      "Description" : "Enter SNS Topic Name",
+      "Type" : "String",
+      "Default" : "polly-sns"
+    },
+    "ApiACMArn" : {
+      "Description" : "ARN for the API ACM (must be created in us-east-1)",
+      "Type" : "String",
+      "Default" : ""
+    },
+    "WebACMArn" : {
+      "Description" : "ARN for the Web ACM (must be created in us-east-1)",
+      "Type" : "String",
+      "Default" : ""
+    }
+  },
+  "Resources": {
+    "SNSTopic" : {
+      "Type" : "AWS::SNS::Topic",
+      "Properties" : {
+        "TopicName": {"Fn::Sub": "${AWS::StackName}-GeneralTopic" },
+        "DisplayName": {"Fn::Sub" : "General Announcments For ${AWS::StackName} network"}
+      }
+    },
+    "BuildBucket" : {
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "Tags" : [
+          { "Key" : "Name", "Value" : {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-BuildBucket"]]}},
+          { "Key" : "Project", "Value" : {"Ref": "Project"} }
+        ]
+      }
+    },
+    "WebBucket" : {
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "CorsConfiguration" : {
+          "CorsRules" : [
+            {
+              "AllowedMethods" : [ "GET" ],
+              "AllowedOrigins" : [ "*" ],
+              "Id" : "corsRuleGet"
+            },
+            {
+              "AllowedMethods" : [ "PUT", "POST", "DELETE" ],
+              "AllowedOrigins" : [ "*" ],
+              "Id" : "corsRuleModify"
+            }
+          ]
+        },
+        "WebsiteConfiguration" : {
+          "IndexDocument" : "index.html",
+          "ErrorDocument" : "indexhtml"
+        },
+        "Tags" : [
+          { "Key" : "Name", "Value" : {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-WebBucket"]]}},
+          { "Key" : "Project", "Value" : {"Ref": "Project"} }
+        ]
+      }
+    },
+    "WebBucketPolicy" : {
+      "Type" : "AWS::S3::BucketPolicy",
+      "Properties" : {
+        "Bucket" : { "Ref" : "WebBucket" },
+        "PolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement" : {
+            "Action" : "S3:GetObject",
+            "Resource" : { "Fn::Join" : [ "", ["arn:aws:s3:::", { "Ref" : "WebBucket"}, "/*"]] },
+            "Principal" : "*",
+            "Effect" : "Allow"
+          }
+        }
+      }
+    },
+    "AudioBucket" : {
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "Tags" : [
+          { "Key" : "Name", "Value" : {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-AudioBucket"]]}},
+          { "Key" : "Project", "Value" : {"Ref": "Project"} }
+        ]
+      }
+    },
+    "WebCDN" : {
+      "Type" : "AWS::CloudFront::Distribution",
+      "Properties" : {
+        "DistributionConfig" : {
+          "ViewerCertificate" : {
+            "AcmCertificateArn" : { "Ref" : "WebACMArn" },
+            "SslSupportMethod" : "sni-only"
+          },
+          "Enabled" : "true",
+          "HttpVersion" : "http2",
+          "Aliases" : [ {"Fn::Join": [".", [ {"Ref": "WebHostName"}, {"Ref": "DomainName"}]]} ],
+          "DefaultRootObject" : "index.html",
+          "Origins" : [
+            {
+              "DomainName" : { "Fn::Join" : [ "." ,
+                [ { "Ref" : "WebBucket"}, {"Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region"}, "websiteendpoint"] }]]},
+              "Id" : "S3Origin",
+              "CustomOriginConfig" : {
+                "HTTPPort" : "80",
+                "HTTPSPort" : "443",
+                "OriginProtocolPolicy" : "http-only"
+              }
+            }
+          ],
+          "DefaultCacheBehavior" : {
+            "ViewerProtocolPolicy" : "allow-all",
+            "TargetOriginId" : "S3Origin",
+            "AllowedMethods" : [ "GET", "HEAD" ],
+            "Compress" : "true",
+            "DefaultTTL" : "30",
+            "MinTTL" : "10",
+            "ForwardedValues" : {
+              "QueryString" : "true",
+              "Headers" : [
+                "Access-Control-Request-Headers",
+                "Access-Control-Request-Method",
+                "Origin"
+              ]
+            }
+          },
+          "CustomErrorResponses" : [
+            {
+              "ErrorCode": 404,
+              "ResponseCode": 200,
+              "ResponsePagePath": "/index.html"
+            },
+            {
+              "ErrorCode": 403,
+              "ResponseCode": 200,
+              "ResponsePagePath": "/index.html"
+            }
+          ]
+        }
+      }
+    },
+    "WebDNS" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "Comment": "SSL URL for Project",
+        "Type" : "A",
+        "HostedZoneName" : { "Fn::Join" : [ "", [ {"Ref" : "DomainName"}, "."]]},
+        "Name": { "Fn::Join" : [ "", [ {"Ref" :"WebHostName"}, ".", {"Ref" : "DomainName"}, "."]]},
+        "AliasTarget" : {
+          "HostedZoneId" : "Z2FDTNDATAQYW2",
+          "DNSName" : { "Fn::GetAtt" : [ "WebCDN" , "DomainName"]}
+        }
+      }
+    },
+    "PollyDB": {
+      "Type" : "AWS::DynamoDB::Table",
+      "Properties" : {
+        "AttributeDefinitions" : [
+          {
+            "AttributeName" : "id",
+            "AttributeType" : "S"
+          }
+        ],
+        "KeySchema" : [
+          {
+            "AttributeName" : "id",
+            "KeyType" : "HASH"
+          }
+        ],
+        "Tags" : [
+          { "Key" : "Name", "Value" : {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-PollyDynamoDB"]]}},
+          { "Key" : "Project", "Value" : {"Ref": "Project"} }
+        ],
+        "ProvisionedThroughput" :
+        {
+          "ReadCapacityUnits" : 1,
+          "WriteCapacityUnits" : 1
+        }
+      }
+    },
+    "ssmDomainName": {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "/${AWS::StackName}/domainName"},
+        "Description" : "Domain Name",
+        "Type" : "String",
+        "Value" : { "Ref" : "DomainName" }
+      }
+    },
+    "ssmApiHostName": {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "/${AWS::StackName}/apiHostName"},
+        "Description" : "API Host Name",
+        "Type" : "String",
+        "Value" : { "Ref" : "ApiHostName" }
+      }
+    },
+    "ssmApiAcmArn": {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "/${AWS::StackName}/apiAcmArn"},
+        "Description" : "ARN for the ACM (Certificate) for the API",
+        "Type" : "String",
+        "Value" : { "Ref" : "ApiACMArn" }
+      }
+    },
+    "ssmWebBucketName": {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "/${AWS::StackName}/webBucketName"},
+        "Type" : "String",
+        "Description" : "Name of the S3 Web Bucket",
+        "Value" : {"Ref": "WebBucket"}
+      }
+    },
+    "ssmAudioBucketName": {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "/${AWS::StackName}/audioBucketName"},
+        "Type" : "String",
+        "Description" : "Name of the S3 Audio Bucket",
+        "Value" : {"Ref": "AudioBucket"}
+      }
+    }
+  },
+  "Outputs": {
+    "Project" : {
+      "Description" : "The Project Name",
+      "Value" : {"Ref": "Project"}
+    },
+    "SNSTopic" : {
+      "Description" : "SNS Topic Created",
+      "Value" : {"Ref": "SNSTopic"},
+      "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-TopicArn"}}
+    },
+    "DomainName" : {
+      "Description" : "Domain Name to be used",
+      "Value" : {"Ref": "SNSTopic"},
+      "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-DomainName"}}
+    },
+    "ApiHostName" : {
+      "Description" : "Hostname for the API",
+      "Value" : {"Ref": "ApiHostName"},
+      "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-ApiHostName"}}
+    },
+    "WebHostName" : {
+      "Description" : "Hostname for the API",
+      "Value" : {"Ref": "WebHostName"},
+      "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-WebHostName"}}
+    }
+
+
+  },
+
+  "Metadata": {
+    "AWS::CloudFormation::Interface" : {
+      "ParameterGroups" : [
+        {
+          "Label" : { "default" : "Project Information"},
+          "Parameters" : [ "Project" ]
+        },
+        {
+          "Label" : { "default" : "Hostnames and DNS"},
+          "Parameters" : [ "DomainName", "WebHostName", "ApiHostName"]
+        },
+        {
+          "Label" : { "default" : "SSL Certificates (pre-created)"},
+          "Parameters" : [ "ApiACMArn", "WebACMArn"]
+        }
+      ],
+      "ParameterLabels" : {
+        "ApiHostName": { "default" : "Hostname (not include domain) for the API" },
+        "WebHostName": { "default" : "Hostname (not include domain) for the Web" }
+      }
+    }
+  },
+
+  "Mappings" : {
+    "RegionMap": {
+      "ap-northeast-1": {
+        "S3hostedzoneID": "Z2M4EHUR26P7ZW",
+        "websiteendpoint": "s3-website-ap-northeast-1.amazonaws.com"
+      },
+      "ap-northeast-2": {
+        "S3hostedzoneID": "Z3W03O7B5YMIYP",
+        "websiteendpoint": "s3-website-ap-northeast-2.amazonaws.com"
+      },
+      "ap-south-1": {
+        "S3hostedzoneID": "Z11RGJOFQNVJUP",
+        "websiteendpoint": "s3-website-ap-south-1.amazonaws.com"
+      },
+      "ap-southeast-1": {
+        "S3hostedzoneID": "Z3O0J2DXBE1FTB",
+        "websiteendpoint": "s3-website-ap-southeast-1.amazonaws.com"
+      },
+      "ap-southeast-2": {
+        "S3hostedzoneID": "Z1WCIGYICN2BYD",
+        "websiteendpoint": "s3-website-ap-southeast-2.amazonaws.com"
+      },
+      "eu-central-1": {
+        "S3hostedzoneID": "Z21DNDUVLTQW6Q",
+        "websiteendpoint": "s3-website-eu-central-1.amazonaws.com"
+      },
+      "eu-west-1": {
+        "S3hostedzoneID": "Z1BKCTXD74EZPE",
+        "websiteendpoint": "s3-website-eu-west-1.amazonaws.com"
+      },
+      "sa-east-1": {
+        "S3hostedzoneID": "Z7KQH4QJS55SO",
+        "websiteendpoint": "s3-website-sa-east-1.amazonaws.com"
+      },
+      "us-east-1": {
+        "S3hostedzoneID": "Z3AQBSTGFYJSTF",
+        "websiteendpoint": "s3-website-us-east-1.amazonaws.com"
+      },
+      "us-east-2": {
+        "S3hostedzoneID": "Z2O1EMRO9K5GLX",
+        "websiteendpoint": "s3-website-us-east-2.amazonaws.com"
+      },
+      "us-west-1": {
+        "S3hostedzoneID": "Z2F56UZL2M1ACD",
+        "websiteendpoint": "s3-website-us-west-1.amazonaws.com"
+      },
+      "us-west-2": {
+        "S3hostedzoneID": "Z3BJ6K6RIION7M",
+        "websiteendpoint": "s3-website-us-west-2.amazonaws.com"
+      }
+    }
+  }
+}
