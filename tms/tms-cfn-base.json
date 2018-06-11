@@ -155,14 +155,14 @@
             "MinTTL" : "10",
             "ForwardedValues" : {
               "QueryString" : "true",
-              "Headers" : [ 
+              "Headers" : [
                 "Access-Control-Request-Headers",
                 "Access-Control-Request-Method",
-                "Origin" 
+                "Origin"
               ]
             }
           },
-          "CustomErrorRepsonses" : [
+          "CustomErrorResponses" : [
             {
               "ErrorCode": 404,
               "ResponseCode": 200,
