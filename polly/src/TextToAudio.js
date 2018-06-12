@@ -10,7 +10,7 @@ const TextToAudio = ({text, selectedVoice, lastGenerated, handleTextChange, hand
   return(
     <div>
       <TextToAudioControl
-          handleGenerate={handleGenerate}
+          handleGenerate={(voice) => handleGenerate(voice, text)}
           selectedVoice={selectedVoice}
           handleVoice={handleVoice} />
       <TextToAudioView
@@ -34,7 +34,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleVoice: (selectedVoice) => dispatch(selectVoice(selectedVoice)),
-    handleGenerate: (selectedVoice) => dispatch(generateAudio(selectedVoice)),
+    handleGenerate: (voice, text) => dispatch(generateAudio(voice, text)),
     handleTextChange: (text) => dispatch(updateText(text))
   }
 }
