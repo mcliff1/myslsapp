@@ -4,7 +4,7 @@
  *
  */
 const defaultState = {
-  text: null,
+  text: '',
   audioList: [],
 }
 
@@ -15,9 +15,10 @@ const defaultState = {
  */
 const audio = (state = defaultState, action) => {
   switch (action.type) {
-    case 'SAY_IT':
+    case 'UPDATE_TEXT':
       return {
         ...state,
+        text: action.text
       };
     case 'REFRESH_LIST_FULFILLED':
       return {
