@@ -31,8 +31,9 @@ def handle_get(event):
         "body": json.dumps(items["Items"]),
         "statusCode" : 400,
         "headers": {
-            "Content-Type" : "application/json",
+            "Content-Type" : "application/json"
         }
+    }
 
     #return items["Items"]
 
