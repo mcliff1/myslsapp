@@ -5,15 +5,7 @@ import TextToAudioView from './TextToAudioView';
 import TextToAudioControl from './TextToAudioControl';
 import { updateText, generateAudio, selectVoice } from './actions'
 
-const getState = (dispatch) => new Promise((resolve) => {
-  dispatch((dispatch, getState) => { resolve(getState())})
-})
-
-
 const TextToAudio = ({text, selectedVoice, lastGenerated, handleTextChange, handleGenerate, handleVoice}) => {
-
-  //const innerUpdateText = () => updateText(text);
-
 
   return(
     <div>

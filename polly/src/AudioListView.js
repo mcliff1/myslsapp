@@ -1,7 +1,8 @@
 import React from 'react';
+import AudioListViewDetail from './AudioListViewDetail';
 
 
-const AudioListView = () => {
+const AudioListView = ({list}) => {
   return(
     <div>
 
@@ -23,6 +24,19 @@ const AudioListView = () => {
         <th>Status</th>
         <th>Player</th>
       </tr>
+
+      {
+        list ?
+        list.map((item, idx) => {
+          return(
+            <AudioListViewDetail item={item} key={idx} />
+          );
+        })
+        :
+        <tr><td colSpan="5">No data</td></tr>
+      }
+
+
     </tbody>
   </table>
 

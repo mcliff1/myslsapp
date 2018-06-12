@@ -18,6 +18,7 @@ class App extends Component {
         A 2nd API call is available to pull the meta data for the audio clips
         </p></div>
         <TextToAudio />
+        <p>To work the filter, use &quot;*&quot; to show all</p>
         <AudioList />
       </div>
     );

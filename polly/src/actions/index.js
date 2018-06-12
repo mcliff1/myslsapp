@@ -20,6 +20,12 @@ export const selectVoice = (selectedVoice) => ({
   payload: selectedVoice
 });
 
+export const updateFilter = (filter) => ({
+  type: 'UPDATE_FILTER',
+  payload: filter
+});
+
+
 
 export const generateAudio = (voice, text) => ({
   type: 'GENERATE_AUDIO',

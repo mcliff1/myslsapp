@@ -3,13 +3,16 @@ import { connect } from 'react-redux';
 
 import AudioListControl from './AudioListControl';
 import AudioListView from './AudioListView';
-import { updateList } from './actions'
+import { updateList, updateFilter } from './actions'
 
-const AudioList = ({handleSearch}) => {
+const AudioList = ({searchFilter, audioList, handleSearch, handleFilterChange}) => {
   return(
     <div>
-      <AudioListControl handleSearch={handleSearch}/>
-      <AudioListView />
+      <AudioListControl
+          handleFilterChange={handleFilterChange}
+          searchFilter={searchFilter}
+          handleSearch={handleSearch} />
+      <AudioListView list={audioList} />
     </div>
   );
 }
@@ -17,12 +20,15 @@ const AudioList = ({handleSearch}) => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    audioList: state.audio.audioList,
+    searchFilter: state.audio.searchFilter
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleSearch: (selectedVoice) => dispatch(updateList(selectedVoice))
+    handleSearch: (selectedVoice) => dispatch(updateList(selectedVoice)),
+    handleFilterChange: (filter) => dispatch(updateFilter(filter))
   }
 }
 

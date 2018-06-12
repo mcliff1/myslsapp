@@ -5,9 +5,10 @@
  */
 const defaultState = {
   text: '',
-  audioList: [],
+  audioList: '',
   selectedVoice: 'Joanna',
-  lastGenerated: null
+  lastGenerated: null,
+  searchFilter: '*'
 }
 
 
@@ -22,6 +23,12 @@ const audio = (state = defaultState, action) => {
         ...state,
         text: action.text
       };
+    case 'UPDATE_FILTER':
+      return {
+        ...state,
+        searchFilter: action.payload
+      };
+
     case 'SELECT_VOICE':
       return {
         ...state,
@@ -30,7 +37,8 @@ const audio = (state = defaultState, action) => {
     case 'GENERATE_AUDIO_FULFILLED':
       return {
         ...state,
-        lastGenerated: action.payload['recordId']
+        lastGenerated: action.payload['recordId'],
+        searchFilter:  action.payload['recordId']
       };
     case 'UPDATE_LIST_FULFILLED':
       return {
