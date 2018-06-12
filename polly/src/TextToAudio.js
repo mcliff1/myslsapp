@@ -10,7 +10,7 @@ const getState = (dispatch) => new Promise((resolve) => {
 })
 
 
-const TextToAudioComponent = ({text, selectedVoice, handleTextChange, handleGenerate, handleVoice}) => {
+const TextToAudio = ({text, selectedVoice, lastGenerated, handleTextChange, handleGenerate, handleVoice}) => {
 
   //const innerUpdateText = () => updateText(text);
 
@@ -23,6 +23,7 @@ const TextToAudioComponent = ({text, selectedVoice, handleTextChange, handleGene
           handleVoice={handleVoice} />
       <TextToAudioView
           text={text}
+          lastGenerated={lastGenerated}
           handleTextChange={handleTextChange} />
     </div>
   );
@@ -33,7 +34,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     text: state.audio.text,
     selectedVoice: state.audio.selectedVoice,
-    needListUpdate: state.audio.needListUpdate
+    needListUpdate: state.audio.needListUpdate,
+    lastGenerated: state.audio.lastGenerated
   }
 }
 
@@ -45,4 +47,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TextToAudioComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(TextToAudio);

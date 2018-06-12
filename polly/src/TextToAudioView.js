@@ -9,13 +9,19 @@ const handleTextKeyup = (e) => {
 }
 
 
-const TextToAudioView = ({text, handleTextChange}) => {
+const TextToAudioView = ({text, handleTextChange, lastGenerated}) => {
   return(
     <div>
       <textarea id="textToConvert" value={text}
               onChange={(evt) => handleTextChange(evt.target.value)}
               onKeyUp={handleTextKeyup}></textarea>
       <span id="charCounter">Characters: 0</span>
+      {
+        lastGenerated ?
+        <div>Generated Id: {lastGenerated}</div>
+        :
+        <div></div>
+      }
     </div>
   );
 }

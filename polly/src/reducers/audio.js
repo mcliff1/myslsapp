@@ -6,7 +6,8 @@
 const defaultState = {
   text: '',
   audioList: [],
-  selectedVoice: 'Joanna'
+  selectedVoice: 'Joanna',
+  lastGenerated: null
 }
 
 
@@ -26,11 +27,16 @@ const audio = (state = defaultState, action) => {
         ...state,
         selectedVoice: action.payload,
       };
-    case 'GENERATE_AUDIO':
+    case 'GENERATE_AUDIO_FULFILLED':
       return {
         ...state,
+        lastGenerated: action.payload['recordId']
       };
-
+    case 'UPDATE_LIST_FULFILLED':
+      return {
+        ...state,
+        audioList: action.payload,
+      }
     default:
       return state;
   }

@@ -1,16 +1,29 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import AudioListControl from './AudioListControl';
 import AudioListView from './AudioListView';
+import { updateList } from './actions'
 
-const AudioList = () => {
+const AudioList = ({handleSearch}) => {
   return(
     <div>
-
-      <AudioListControl />
+      <AudioListControl handleSearch={handleSearch}/>
       <AudioListView />
-
     </div>
   );
 }
 
-export default AudioList;
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleSearch: (selectedVoice) => dispatch(updateList(selectedVoice))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AudioList);

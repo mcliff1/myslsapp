@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 
-const AudioListControl = () => {
+const AudioListControl = ({handleSearch}) => {
   return(
     <div>
       Audio List
@@ -10,9 +11,12 @@ const AudioListControl = () => {
       <br></br>
   Provide post ID which you want to retrieve:
    <input type="text" id="postId" />
-   <input type="submit" className="buttons" value="Search" id="searchButton" />
+   <input type="submit" onClick={() => handleSearch(document.getElementById("postId").value)} className="buttons" value="Search" id="searchButton" />
     </div>
   );
 }
 
+AudioListControl.propTypes = {
+  handleSearch: PropTypes.func.isRequired,
+}
 export default AudioListControl;

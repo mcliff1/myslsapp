@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import TextToAudioComponent from './TextToAudioComponent';
+import TextToAudio from './TextToAudio';
 import AudioList from './AudioList';
 
 class App extends Component {
@@ -17,7 +17,7 @@ class App extends Component {
         this results in the actual MP3 file being stored on a S3 bucket.
         A 2nd API call is available to pull the meta data for the audio clips
         </p></div>
-        <TextToAudioComponent />
+        <TextToAudio />
         <AudioList />
       </div>
     );
