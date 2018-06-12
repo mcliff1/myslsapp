@@ -6,6 +6,7 @@
 const defaultState = {
   text: '',
   audioList: [],
+  selectedVoice: 'Joanna'
 }
 
 
@@ -20,12 +21,12 @@ const audio = (state = defaultState, action) => {
         ...state,
         text: action.text
       };
-    case 'REFRESH_LIST_FULFILLED':
+    case 'SELECT_VOICE':
       return {
         ...state,
-        carrierList: action.payload,
+        selectedVoice: action.payload,
       };
-    case 'DELETE_AUDIO_FULFILLED':
+    case 'GENERATE_AUDIO':
       return {
         ...state,
       };

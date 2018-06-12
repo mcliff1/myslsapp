@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const voiceList = [
   { id: "Ivy", label: 'Ivy [English - American]' },
@@ -47,18 +48,19 @@ const voiceList = [
 ]
 
 
-const TextToAudioControl = () => {
+const TextToAudioControl = ({handleVoice, handleGenerate, selectedVoice}) => {
   return(
     <div>
       Text to Audio Control
       a drop down to select voice and generate
       <div>
-      <select id='selectVoice' >
+      <select id='selectVoice'
+          onChange={(event) => handleVoice(event.target.value)}>
         {voiceList.map((voiceItem, index) =>
           <option key={index} value={voiceItem.id}>{voiceItem.label}</option>,
         )}
       </select>
-      <button>Generate</button>
+      <button onClick={handleGenerate}>Generate</button>
       </div>
       <br/>
 
@@ -66,4 +68,9 @@ const TextToAudioControl = () => {
   );
 }
 
+TextToAudioControl.propTypes = {
+  handleGenerate: PropTypes.func.isRequired,
+  selectedVoice: PropTypes.string.isRequired,
+  handleVoice: PropTypes.func.isRequired,
+}
 export default TextToAudioControl;

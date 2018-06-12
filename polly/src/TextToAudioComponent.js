@@ -3,18 +3,23 @@ import { connect } from 'react-redux';
 
 import TextToAudioView from './TextToAudioView';
 import TextToAudioControl from './TextToAudioControl';
-import { updateText } from './actions'
+import { updateText, generateAudio, selectVoice } from './actions'
 
 
-const TextToAudioComponent = ({text, handleTextChange}) => {
+const TextToAudioComponent = ({text, selectedVoice, handleTextChange, handleGenerate, handleVoice}) => {
 
   //const innerUpdateText = () => updateText(text);
 
 
   return(
     <div>
-      <TextToAudioControl />
-      <TextToAudioView text={text} handleTextChange={handleTextChange} />
+      <TextToAudioControl
+          handleGenerate={handleGenerate}
+          selectedVoice={selectedVoice}
+          handleVoice={handleVoice} />
+      <TextToAudioView
+          text={text}
+          handleTextChange={handleTextChange} />
     </div>
   );
 }
@@ -23,13 +28,16 @@ const TextToAudioComponent = ({text, handleTextChange}) => {
 const mapStateToProps = (state, ownProps) => {
   return {
     text: state.audio.text,
+    selectedVoice: state.audio.selectedVoice,
     needListUpdate: state.audio.needListUpdate
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleTextChange: (e) => dispatch(updateText(e))
+    handleVoice: (selectedVoice) => dispatch(selectVoice(selectedVoice)),
+    handleGenerate: () => dispatch(generateAudio()),
+    handleTextChange: (text) => dispatch(updateText(text))
   }
 }
 
