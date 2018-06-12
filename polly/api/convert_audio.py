@@ -11,7 +11,7 @@ def lambda_handler(event, context):
 
     postId = event["Records"][0]["Sns"]["Message"]
 
-    print "Text to Speech function. Post ID in DynamoDB: " + postId
+    print("Text to Speech function. Post ID in DynamoDB: " + postId)
 
     #Retrieving information about the post from DynamoDB table
     dynamodb = boto3.resource('dynamodb')
@@ -57,7 +57,7 @@ def lambda_handler(event, context):
         if "AudioStream" in response:
             with closing(response["AudioStream"]) as stream:
                 output = os.path.join("/tmp/", postId)
-                with open(output, "a") as file:
+                with open(output, "ab") as file:
                     file.write(stream.read())
 
 
@@ -95,4 +95,4 @@ def lambda_handler(event, context):
           {'#statusAtt': 'status', '#urlAtt': 'url'},
     )
 
-    return();
+    return()

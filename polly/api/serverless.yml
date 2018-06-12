@@ -59,18 +59,8 @@ provider:
             - "*"
     - Effect: Allow
       Action:
-        - sns:Publish
-      Resource:
-        "Fn::Join":
-          - ""
-          -
-            - "arn:aws:sns:"
-            - Ref: "AWS::Region"
-            - ":"
-            - Ref: "AWS::AccountId"
-            - ":"
-            - ${self:custom.newpoststopic}
-            - "*"
+        - SNS:Publish
+      Resource: "${self:custom.newpoststopic}"
     - Effect: Allow
       Action:
         - polly:SynthesizeSpeech
@@ -132,6 +122,9 @@ functions:
       Name: Lambda function to convert text to audio
     events:
       - sns: ${self:custom.newpoststopic}
+    environment:
+      BUCKET_NAME: ${self:custom.audiobucket}
+
 
 
 resources:

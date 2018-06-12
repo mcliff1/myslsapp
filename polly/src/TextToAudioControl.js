@@ -60,7 +60,7 @@ const TextToAudioControl = ({handleVoice, handleGenerate, selectedVoice}) => {
           <option key={index} value={voiceItem.id}>{voiceItem.label}</option>,
         )}
       </select>
-      <button onClick={handleGenerate}>Generate</button>
+      <button onClick={() => handleGenerate(selectedVoice)}>Generate</button>
       </div>
       <br/>
 

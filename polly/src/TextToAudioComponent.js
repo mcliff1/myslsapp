@@ -5,6 +5,10 @@ import TextToAudioView from './TextToAudioView';
 import TextToAudioControl from './TextToAudioControl';
 import { updateText, generateAudio, selectVoice } from './actions'
 
+const getState = (dispatch) => new Promise((resolve) => {
+  dispatch((dispatch, getState) => { resolve(getState())})
+})
+
 
 const TextToAudioComponent = ({text, selectedVoice, handleTextChange, handleGenerate, handleVoice}) => {
 
@@ -36,7 +40,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleVoice: (selectedVoice) => dispatch(selectVoice(selectedVoice)),
-    handleGenerate: () => dispatch(generateAudio()),
+    handleGenerate: (selectedVoice) => dispatch(generateAudio(selectedVoice)),
     handleTextChange: (text) => dispatch(updateText(text))
   }
 }

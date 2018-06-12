@@ -29,6 +29,6 @@ export const generateAudio = (voice, text) => ({
       'Accept' : 'application/json, text/plain, */*'
       },
 
-      body: JSON.stringify("{ 'voice' : voice, 'text' : text }")
+      body: '{ "voice" : "' + voice + '", "text" : "' + text + '" }'
     }).then(res => res.json())
 });

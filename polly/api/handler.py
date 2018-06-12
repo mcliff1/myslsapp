@@ -28,7 +28,7 @@ def handle_get(event):
         )
 
     return {
-        "body": items["Items"],
+        "body": json.dumps(items["Items"]),
         "statusCode" : 400,
         "headers": {
             "Content-Type" : "application/json",
@@ -42,10 +42,10 @@ event should have parameters voice and text that
    represent the string objects to pass into polly
 """
 def handle_post(event):
-
+    data = json.loads(event['body'])
     recordId = str(uuid.uuid4())
-    voice = event["voice"]
-    text = event["text"]
+    voice = data["voice"]
+    text = data["text"]
     #Creating new record in DynamoDB table
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(os.environ['DB_TABLE_NAME'])
@@ -65,7 +65,13 @@ def handle_post(event):
         Message = recordId
     )
 
-    return recordId
+    #return recordId
+    return {
+        "body": '{"recordId" : "' + recordId + '"}',
+        "statusCode" : 200,
+        "headers": {
+            "Content-Type" : "application/json"
+    }}
 
 
 def apihandler(event, context):
