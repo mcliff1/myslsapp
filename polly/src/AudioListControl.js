@@ -11,14 +11,19 @@ const AudioListControl = ({handleSearch, handleFilterChange, searchFilter}) => {
       <br></br>
       Provide post ID which you want to retrieve:
       <br/>
-      <input type="text" id="postId" defaultValue={searchFilter} onChange={(evt) => handleFilterChange(evt.target.value)} />
-      <input type="submit" onClick={() => handleSearch(document.getElementById("postId").value)} className="buttons" value="Search" id="searchButton" />
+      <input type="text" id="postId"
+        value={searchFilter}
+        onChange={(evt) => handleFilterChange(evt.target.value)} />
+      <input type="submit"
+          onClick={() => handleSearch(document.getElementById("postId").value)}
+            className="buttons" value="Search" id="searchButton" />
     </div>
   );
 }
 
 AudioListControl.propTypes = {
   handleSearch: PropTypes.func.isRequired,
+  searchFilter: PropTypes.string.isRequired,
   handleFilterChange: PropTypes.func.isRequired,
 }
 export default AudioListControl;

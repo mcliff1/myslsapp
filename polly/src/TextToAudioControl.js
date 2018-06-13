@@ -9,11 +9,13 @@ const voiceList = [
   { id: "Kendra", label: 'Kendra [English - American]' },
   { id: "Kimberly", label: 'Kimberly [English - American]' },
   { id: "Salli", label: 'Salli [English - American]' },
+  { id: "Matthew", label: 'Salli [English - American]' },
   { id: "Nicole", label: 'Nicole [English - Australian]' },
   { id: "Russell", label: 'Russell [English - Australian]' },
   { id: "Emma", label: 'Emma [English - British]' },
   { id: "Brian", label: 'Brian [English - British]' },
   { id: "Amy", label: 'Amy [English - British]' },
+  { id: "Aditi", label: 'Raveena [English - Indian]' },
   { id: "Raveena", label: 'Raveena [English - Indian]' },
   { id: "Geraint", label: 'Geraint [English - Welsh]' },
   { id: "Ricardo", label: 'Ricardo [Brazilian Portuguese]' },
@@ -22,17 +24,25 @@ const voiceList = [
   { id: "Ruben", label: 'Ruben [Dutch]' },
   { id: "Mathieu", label: 'Mathieu [French]' },
   { id: "Céline", label: 'Céline [French]' },
+  { id: "Léa", label: 'Léa [French]' },
   { id: "Chantal", label: 'Chantal [Canadian French]' },
   { id: "Marlene", label: 'Marlene [German]' },
+  { id: "Hans", label: 'Hans [German]' },
+  { id: "Vicki", label: 'Vicki [German]' },
   { id: "Dóra", label: 'Dóra [Icelandic]' },
   { id: "Karl", label: 'Karl [Icelandic]' },
   { id: "Carla", label: 'Carla [Italian]' },
   { id: "Giorgio", label: 'Giorgio [Italian]' },
   { id: "Mizuki", label: 'Mizuki [Japanese]' },
+  { id: "Takumi", label: 'Takumi [Japanese]' },
+  { id: "Seoyeon", label: 'Seoyeon [Korean]' },
   { id: "Liv", label: 'Liv [Norwegian]' },
   { id: "Maja", label: 'Maja [Polish]' },
+  { id: "Jacek", label: 'Jacek [Polish]' },
   { id: "Jan", label: 'Jan [Polish]' },
   { id: "Ewa", label: 'Ewa [Polish]' },
+  { id: "Ricardo", label: 'Ricardo [Portuquese - Brazilian]' },
+  { id: "Victoria", label: 'Victoria [Portuquese - Brazilian]' },
   { id: "Cristiano", label: 'Cristiano [Portuquese]' },
   { id: "Inês", label: 'Inês [Portuquese]' },
   { id: "Carmen", label: 'Carmen [Romanian]' },
@@ -40,7 +50,7 @@ const voiceList = [
   { id: "Tatyana", label: 'Tatyana [Russian]' },
   { id: "Enrique", label: 'Enrique [Spanish]' },
   { id: "Penélope", label: 'Penélope [US Spanish]' },
-  { id: "Enrique", label: 'Miguel [US Spanish]' },
+  { id: "Miguel", label: 'Miguel [US Spanish]' },
   { id: "Conchita", label: 'Conchita [Castilian Spanish]' },
   { id: "Astrid", label: 'Astrid [Swedish]' },
   { id: "Filiz", label: 'Filiz [Turkish]' },
@@ -55,7 +65,8 @@ const TextToAudioControl = ({handleVoice, handleGenerate, selectedVoice}) => {
       a drop down to select voice and generate
       <div>
       <select id='selectVoice'
-          onChange={(event) => handleVoice(event.target.value)}>
+          onChange={(event) => handleVoice(event.target.value)}
+          defaultValue={selectedVoice}>
         {voiceList.map((voiceItem, index) =>
           <option key={index} value={voiceItem.id}>{voiceItem.label}</option>,
         )}

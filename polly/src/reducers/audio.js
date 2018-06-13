@@ -8,7 +8,8 @@ const defaultState = {
   audioList: '',
   selectedVoice: 'Joanna',
   lastGenerated: null,
-  searchFilter: '*'
+  searchFilter: '*',
+  needsUpdate: false
 }
 
 
@@ -38,12 +39,14 @@ const audio = (state = defaultState, action) => {
       return {
         ...state,
         lastGenerated: action.payload['recordId'],
-        searchFilter:  action.payload['recordId']
+        searchFilter:  action.payload['recordId'],
+        needsUpdate: true
       };
     case 'UPDATE_LIST_FULFILLED':
       return {
         ...state,
         audioList: action.payload,
+        needsUpdate: false
       }
     default:
       return state;

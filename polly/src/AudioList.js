@@ -5,7 +5,12 @@ import AudioListControl from './AudioListControl';
 import AudioListView from './AudioListView';
 import { updateList, updateFilter } from './actions'
 
-const AudioList = ({searchFilter, audioList, handleSearch, handleFilterChange}) => {
+const AudioList = ({needsUpdate, searchFilter, audioList, handleSearch, handleFilterChange}) => {
+
+  if (needsUpdate) {
+    setTimeout(() => { handleSearch(searchFilter); }, 200);
+  }
+
   return(
     <div>
       <AudioListControl
@@ -21,13 +26,14 @@ const AudioList = ({searchFilter, audioList, handleSearch, handleFilterChange}) 
 const mapStateToProps = (state, ownProps) => {
   return {
     audioList: state.audio.audioList,
-    searchFilter: state.audio.searchFilter
+    searchFilter: state.audio.searchFilter,
+    needsUpdate: state.audio.needsUpdate
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleSearch: (selectedVoice) => dispatch(updateList(selectedVoice)),
+    handleSearch: (filter) => dispatch(updateList(filter)),
     handleFilterChange: (filter) => dispatch(updateFilter(filter))
   }
 }
