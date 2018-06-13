@@ -8,7 +8,8 @@ import { updateList, updateFilter } from './actions'
 const AudioList = ({needsUpdate, searchFilter, audioList, handleSearch, handleFilterChange}) => {
 
   if (needsUpdate) {
-    setTimeout(() => { handleSearch(searchFilter); }, 200);
+    // a little delay let's polly do the processing
+    setTimeout(() => { handleSearch(searchFilter); }, 500);
   }
 
   return(

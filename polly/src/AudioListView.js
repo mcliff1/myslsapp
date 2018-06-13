@@ -14,7 +14,8 @@ const AudioListView = ({list}) => {
       <col style={{width:"7%"}}/>
       <col style={{width:"45%"}}/>
       <col style={{width:"8%"}}/>
-      <col style={{width:"30%"}}/>
+      <col style={{width:"25%"}}/>
+      <col style={{width:"5%"}}/>
     </colgroup>
     <tbody>
       <tr>
@@ -23,6 +24,7 @@ const AudioListView = ({list}) => {
         <th>Post</th>
         <th>Status</th>
         <th>Player</th>
+        <th></th>
       </tr>
 
       {

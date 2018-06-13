@@ -9,7 +9,7 @@ const voiceList = [
   { id: "Kendra", label: 'Kendra [English - American]' },
   { id: "Kimberly", label: 'Kimberly [English - American]' },
   { id: "Salli", label: 'Salli [English - American]' },
-  { id: "Matthew", label: 'Salli [English - American]' },
+  { id: "Matthew", label: 'Matthew [English - American]' },
   { id: "Nicole", label: 'Nicole [English - Australian]' },
   { id: "Russell", label: 'Russell [English - Australian]' },
   { id: "Emma", label: 'Emma [English - British]' },
@@ -57,8 +57,15 @@ const voiceList = [
   { id: "Gwyneth", label: 'Gwyneth [Welsh]' },
 ]
 
+const languageList = [
+  { id: 'English', label: 'English'},
+  { id: 'French', label: 'French'},
+  { id: 'German', label: 'German'},
+  { id: 'Spanish', label: 'Spanish'},
+  { id: 'Portuguese', label: 'Portuguese'},
+]
 
-const TextToAudioControl = ({handleVoice, handleGenerate, selectedVoice}) => {
+const TextToAudioControl = ({handleVoice, selectedLanguage, handleLanguage, handleGenerate, selectedVoice}) => {
   return(
     <div>
       Text to Audio Control
@@ -71,7 +78,15 @@ const TextToAudioControl = ({handleVoice, handleGenerate, selectedVoice}) => {
           <option key={index} value={voiceItem.id}>{voiceItem.label}</option>,
         )}
       </select>
-      <button onClick={() => handleGenerate(selectedVoice)}>Generate</button>
+      <select id='selectLanguage'
+          onChange={(event) => handleLanguage(event.target.value)}
+          defaultValue={selectedLanguage}>
+        {languageList.map((item, index) =>
+          <option key={index} value={item.id}>{item.label}</option>,
+        )}
+      </select>
+
+      <button onClick={() => handleGenerate(selectedVoice, selectedLanguage)}>Generate</button>
       </div>
       <br/>
 
@@ -83,5 +98,7 @@ TextToAudioControl.propTypes = {
   handleGenerate: PropTypes.func.isRequired,
   selectedVoice: PropTypes.string.isRequired,
   handleVoice: PropTypes.func.isRequired,
+  handleLanguage: PropTypes.func.isRequired,
+  selectedLanguage: PropTypes.string.isRequired,
 }
 export default TextToAudioControl;

@@ -9,7 +9,7 @@ const handleTextKeyup = (e) => {
 }
 
 
-const TextToAudioView = ({text, handleTextChange, lastGenerated}) => {
+const TextToAudioView = ({text, translatedText, handleTextChange, lastGenerated}) => {
   return(
     <div>
       <textarea id="textToConvert" value={text}
@@ -22,6 +22,13 @@ const TextToAudioView = ({text, handleTextChange, lastGenerated}) => {
         :
         <div></div>
       }
+
+      {
+        translatedText ?
+        <div>{translatedText}</div>
+        :
+        <div></div>
+      }
     </div>
   );
 }
@@ -30,5 +37,7 @@ const TextToAudioView = ({text, handleTextChange, lastGenerated}) => {
 TextToAudioView.propTypes = {
   handleTextChange: PropTypes.func.isRequired,
   text: PropTypes.string.isRequired,
+  translatedText: PropTypes.string,
+  lastGenerated: PropTypes.string
 }
 export default TextToAudioView;

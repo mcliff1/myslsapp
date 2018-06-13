@@ -5,11 +5,13 @@
  */
 const defaultState = {
   text: '',
+  translatedText: null,
   audioList: '',
   selectedVoice: 'Joanna',
   lastGenerated: null,
   searchFilter: '*',
-  needsUpdate: false
+  needsUpdate: false,
+  selectedLanguage: 'English'
 }
 
 
@@ -29,7 +31,12 @@ const audio = (state = defaultState, action) => {
         ...state,
         searchFilter: action.payload
       };
-
+    case 'SELECT_LANGUAGE':
+      return {
+        ...state,
+        selectedLanguage: action.payload,
+        translatedText: (action.payload === 'English' ? null : 'Sprechen Sie')
+      };
     case 'SELECT_VOICE':
       return {
         ...state,

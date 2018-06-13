@@ -15,10 +15,16 @@ export const updateText = (text) => ({
 });
 
 
-export const selectVoice = (selectedVoice) => ({
+export const selectVoice = (selected) => ({
   type: 'SELECT_VOICE',
-  payload: selectedVoice
+  payload: selected
 });
+
+export const selectLanguage = (selected) => ({
+  type: 'SELECT_LANGUAGE',
+  payload: selected
+});
+
 
 export const updateFilter = (filter) => ({
   type: 'UPDATE_FILTER',
@@ -27,7 +33,7 @@ export const updateFilter = (filter) => ({
 
 
 
-export const generateAudio = (voice, text) => ({
+export const generateAudio = (voice, language, text) => ({
   type: 'GENERATE_AUDIO',
   payload: fetch(API_ENDPOINT, {
       method: 'POST',
@@ -35,7 +41,8 @@ export const generateAudio = (voice, text) => ({
       'Accept' : 'application/json, text/plain, */*'
       },
 
-      body: '{ "voice" : "' + voice + '", "text" : "' + text + '" }'
+      body: '{ "voice" : "' + voice +
+              '", "text" : "' + text + '" }'
     }).then(res => res.json())
 });
 

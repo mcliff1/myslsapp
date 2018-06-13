@@ -5,11 +5,11 @@ import React from 'react';
 const AudioListViewDetail = ({item}) => {
   return(
     <tr>
-      <th>{item.id}</th>
-      <th>{item.voice}</th>
-      <th>{item.text}</th>
-      <th>{item.status}</th>
-      <th>
+      <td>{item.id}</td>
+      <td>{item.voice}</td>
+      <td>{item.text}</td>
+      <td>{item.status}</td>
+      <td>
         {
           typeof item['url'] === 'undefined' ?
           <div></div>
@@ -18,7 +18,8 @@ const AudioListViewDetail = ({item}) => {
             <source src={item.url} type='audio/mpeg' />
           </audio>
         }
-      </th>
+      </td>
+      <td>del</td>
     </tr>
   );
 }

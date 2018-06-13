@@ -3,18 +3,25 @@ import { connect } from 'react-redux';
 
 import TextToAudioView from './TextToAudioView';
 import TextToAudioControl from './TextToAudioControl';
-import { updateText, generateAudio, selectVoice } from './actions'
+import { updateText, generateAudio, selectVoice, selectLanguage } from './actions'
 
-const TextToAudio = ({text, selectedVoice, lastGenerated, handleTextChange, handleGenerate, handleVoice}) => {
+const TextToAudio = ({text,
+  selectedVoice, selectedLanguage,
+  lastGenerated, handleTextChange, translatedText,
+  handleGenerate, handleVoice, handleLanguage
+}) => {
 
   return(
     <div>
       <TextToAudioControl
-          handleGenerate={(voice) => handleGenerate(voice, text)}
+          handleGenerate={(voice, language) => handleGenerate(voice, language, text)}
           selectedVoice={selectedVoice}
-          handleVoice={handleVoice} />
+          selectedLanguage={selectedLanguage}
+          handleVoice={handleVoice}
+          handleLanguage={handleLanguage} />
       <TextToAudioView
           text={text}
+          translatedText={translatedText}
           lastGenerated={lastGenerated}
           handleTextChange={handleTextChange} />
     </div>
@@ -25,6 +32,8 @@ const TextToAudio = ({text, selectedVoice, lastGenerated, handleTextChange, hand
 const mapStateToProps = (state, ownProps) => {
   return {
     text: state.audio.text,
+    translatedText: state.audio.translatedText,
+    selectedLanguage: state.audio.selectedLanguage,
     selectedVoice: state.audio.selectedVoice,
     needListUpdate: state.audio.needListUpdate,
     lastGenerated: state.audio.lastGenerated
@@ -33,8 +42,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleVoice: (selectedVoice) => dispatch(selectVoice(selectedVoice)),
-    handleGenerate: (voice, text) => dispatch(generateAudio(voice, text)),
+    handleVoice: (selected) => dispatch(selectVoice(selected)),
+    handleLanguage: (selected) => dispatch(selectLanguage(selected)),
+    handleGenerate: (voice, language, text) => dispatch(generateAudio(voice, language, text)),
     handleTextChange: (text) => dispatch(updateText(text))
   }
 }
