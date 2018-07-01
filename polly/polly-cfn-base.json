@@ -36,6 +36,11 @@
       "Description" : "ARN for the Web ACM (must be created in us-east-1)",
       "Type" : "String",
       "Default" : ""
+    },
+    "GitHubLocation" : {
+      "Description" : "Clone URL from GitHub for Code Build",
+      "Type" : "String",
+      "Default" : "https://github.com/mcliff1/myslsapp.git"
     }
   },
   "Resources": {
@@ -102,6 +107,61 @@
             "Effect" : "Allow"
           }
         }
+      }
+    },
+    "CodeBuildRole" : {
+      "Type" : "AWS::IAM::Role",
+      "Properties" : {
+        "AssumeRolePolicyDocument" : {
+          "Statement" : [
+            {
+              "Effect" : "Allow",
+              "Principal" : {
+                "Service" : [
+                  "codebuild.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path" : "/",
+        "Policies" : [
+          {
+            "PolicyName" : "codebuild-service",
+            "PolicyDocument" : {
+              "Version" : "2012-10-17",
+              "Statement" : [
+                {
+                  "Action" : [
+                    "codebuild:*"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "s3:GetObject",
+                    "s3:GetObjectVersion",
+                    "s3:GetBucketVersioning"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "s3:*",
+                    "logs:*"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                }
+              ]
+            }
+          }
+        ]
       }
     },
     "AudioBucket" : {
@@ -205,6 +265,39 @@
           "ReadCapacityUnits" : 1,
           "WriteCapacityUnits" : 1
         }
+      }
+    },
+    "CodeBuild": {
+      "Type" : "AWS::CodeBuild::Project",
+      "DependsOn" : "CodeBuildRole",
+      "Properties" : {
+        "Name" : { "Ref" : "AWS::StackName" },
+        "Description" : "Polly Application Code Build and Deployment",
+        "Artifacts" : {
+          "Type" : "no_artifacts"
+        },
+        "Environment" : {
+          "Type" : "LINUX_CONTAINER",
+          "ComputeType" : "BUILD_GENERAL1_SMALL",
+          "Image" : "aws/codebuild/nodejs:8.11.0",
+          "EnvironmentVariables" : [
+            {
+              "Name" : "WEB_BUCKET",
+              "Value" : { "Ref" : "WebBucket" }
+            }
+          ]
+        },
+        "ServiceRole" : { "Ref" : "CodeBuildRole" },
+        "Source" : {
+          "Type" : "GITHUB",
+          "BuildSpec" : "polly/buildspec.yml",
+          "Location" : { "Ref" : "GitHubLocation"},
+          "GitCloneDepth" : 1
+        },
+        "Tags" : [
+          { "Key" : "Name", "Value" : {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-CodeBuild"]]}},
+          { "Key" : "Project", "Value" : {"Ref": "Project"} }
+        ]
       }
     },
     "ssmDomainName": {
