@@ -8,14 +8,12 @@ phases:
   install:
     commands:
       - cd contactless && npm install -g serverless
-      - npm install -g yarn
   build:
     commands:
   post_build:
     commands:
-      - serverless info
-      - serverless --stage=dev --verbose deploy
-      - servlerless info
+      - serverless --stage=dev --verbose deploy --region $AWS_REGION
+      - servlerless info --region $AWS_REGION
 
 artifacts:
   files:
