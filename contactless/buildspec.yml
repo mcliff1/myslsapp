@@ -7,7 +7,7 @@ phases:
 
   install:
     commands:
-      - cd contactless && npm serverless
+      - cd contactless && npm install -g serverless
       - npm install -g yarn
   build:
     commands:
