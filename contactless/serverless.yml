@@ -10,7 +10,7 @@ custom:
   stage: ${opt:stage, self:provider.stage}
   region: ${opt:region, self:provider.region}
   extra: ${file(serverless-${self:custom.stage}.json)}
-  basestackname: contactless
+  basestackname: contact
 
   domainname: ${ssm:/${self:custom.basestackname}/domainName}
   hostname: ${ssm:/${self:custom.basestackname}/apiHostName}

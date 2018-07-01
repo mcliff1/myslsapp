@@ -26,6 +26,11 @@
       "Description" : "ARN for the API ACM (must be created in us-east-1)",
       "Type" : "String",
       "Default" : ""
+    },
+    "GitHubLocation" : {
+      "Description" : "Clone URL from GitHub for Code Build",
+      "Type" : "String",
+      "Default" : "https://github.com/mcliff1/myslsapp.git"
     }
   },
   "Resources": {
@@ -36,6 +41,80 @@
         "DisplayName": {"Fn::Sub" : "General Announcments For ${AWS::StackName} network"}
       }
     },
+    "CodeBuildRole" : {
+      "Type" : "AWS::IAM::Role",
+      "Properties" : {
+        "AssumeRolePolicyDocument" : {
+          "Statement" : [
+            {
+              "Effect" : "Allow",
+              "Principal" : {
+                "Service" : [
+                  "codebuild.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path" : "/",
+        "Policies" : [
+          {
+            "PolicyName" : "codebuild-service",
+            "PolicyDocument" : {
+              "Version" : "2012-10-17",
+              "Statement" : [
+                {
+                  "Action" : [
+                    "logs:*"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+
+    "CodeBuild": {
+      "Type" : "AWS::CodeBuild::Project",
+      "DependsOn" : "CodeBuildRole",
+      "Properties" : {
+        "Name" : { "Ref" : "AWS::StackName" },
+        "Description" : "Application Code Build and Deployment",
+        "Artifacts" : {
+          "Type" : "no_artifacts"
+        },
+        "Environment" : {
+          "Type" : "LINUX_CONTAINER",
+          "ComputeType" : "BUILD_GENERAL1_SMALL",
+          "Image" : "aws/codebuild/nodejs:8.11.0",
+          "EnvironmentVariables" : [
+            {
+              "Name" : "WEB_BUCKET",
+              "Value" : "placeholder"
+            }
+          ]
+        },
+        "ServiceRole" : { "Ref" : "CodeBuildRole" },
+        "Source" : {
+          "Type" : "GITHUB",
+          "BuildSpec" : "contactless/buildspec.yml",
+          "Location" : { "Ref" : "GitHubLocation"},
+          "GitCloneDepth" : 1
+        },
+        "Tags" : [
+          { "Key" : "Name", "Value" : {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-CodeBuild"]]}},
+          { "Key" : "Project", "Value" : {"Ref": "Project"} }
+        ]
+      }
+    },
+
+
     "ssmDomainName": {
       "Type" : "AWS::SSM::Parameter",
       "Properties" : {
