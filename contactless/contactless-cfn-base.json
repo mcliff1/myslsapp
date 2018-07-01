@@ -1,0 +1,168 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description": "Creates framework necessary for SLS for Contact Form",
+  "Parameters" : {
+    "Project" : {
+      "Description" : "Enter Project Name",
+      "Type" : "String",
+      "Default" : "Contact Serverless Base"
+    },
+    "DomainName" : {
+      "Description" : "Enter Domain Name to Use (must be HostedZone)",
+      "Type" : "String",
+      "Default" : "mydomain.com"
+    },
+    "ApiHostName" : {
+      "Description" : "Enter Host Name for API",
+      "Type" : "String",
+      "Default" : "contact"
+    },
+    "TopicName" : {
+      "Description" : "Enter SNS Topic Name",
+      "Type" : "String",
+      "Default" : "contact-sns"
+    },
+    "ApiACMArn" : {
+      "Description" : "ARN for the API ACM (must be created in us-east-1)",
+      "Type" : "String",
+      "Default" : ""
+    }
+  },
+  "Resources": {
+    "SNSTopic" : {
+      "Type" : "AWS::SNS::Topic",
+      "Properties" : {
+        "TopicName": {"Fn::Sub": "${AWS::StackName}-GeneralTopic" },
+        "DisplayName": {"Fn::Sub" : "General Announcments For ${AWS::StackName} network"}
+      }
+    },
+    "ssmDomainName": {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "/${AWS::StackName}/domainName"},
+        "Description" : "Domain Name",
+        "Type" : "String",
+        "Value" : { "Ref" : "DomainName" }
+      }
+    },
+    "ssmApiHostName": {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "/${AWS::StackName}/apiHostName"},
+        "Description" : "API Host Name",
+        "Type" : "String",
+        "Value" : { "Ref" : "ApiHostName" }
+      }
+    },
+    "ssmApiAcmArn": {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "/${AWS::StackName}/apiAcmArn"},
+        "Description" : "ARN for the ACM (Certificate) for the API",
+        "Type" : "String",
+        "Value" : { "Ref" : "ApiACMArn" }
+      }
+    }
+
+
+  },
+  "Outputs": {
+    "Project" : {
+      "Description" : "The Project Name",
+      "Value" : {"Ref": "Project"}
+    },
+    "SNSTopic" : {
+      "Description" : "SNS Topic Created",
+      "Value" : {"Ref": "SNSTopic"},
+      "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-TopicArn"}}
+    },
+    "DomainName" : {
+      "Description" : "Domain Name to be used",
+      "Value" : {"Ref": "SNSTopic"},
+      "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-DomainName"}}
+    },
+    "ApiHostName" : {
+      "Description" : "Hostname for the API",
+      "Value" : {"Ref": "ApiHostName"},
+      "Export" : {"Name" : {"Fn::Sub": "${AWS::StackName}-ApiHostName"}}
+    }
+
+
+  },
+
+  "Metadata": {
+    "AWS::CloudFormation::Interface" : {
+      "ParameterGroups" : [
+        {
+          "Label" : { "default" : "Project Information"},
+          "Parameters" : [ "Project" ]
+        },
+        {
+          "Label" : { "default" : "Hostnames and DNS"},
+          "Parameters" : [ "DomainName", "WebHostName", "ApiHostName"]
+        },
+        {
+          "Label" : { "default" : "SSL Certificates (pre-created)"},
+          "Parameters" : [ "ApiACMArn", "WebACMArn"]
+        }
+      ],
+      "ParameterLabels" : {
+        "ApiHostName": { "default" : "Hostname (not include domain) for the API" },
+        "WebHostName": { "default" : "Hostname (not include domain) for the Web" }
+      }
+    }
+  },
+
+  "Mappings" : {
+    "RegionMap": {
+      "ap-northeast-1": {
+        "S3hostedzoneID": "Z2M4EHUR26P7ZW",
+        "websiteendpoint": "s3-website-ap-northeast-1.amazonaws.com"
+      },
+      "ap-northeast-2": {
+        "S3hostedzoneID": "Z3W03O7B5YMIYP",
+        "websiteendpoint": "s3-website-ap-northeast-2.amazonaws.com"
+      },
+      "ap-south-1": {
+        "S3hostedzoneID": "Z11RGJOFQNVJUP",
+        "websiteendpoint": "s3-website-ap-south-1.amazonaws.com"
+      },
+      "ap-southeast-1": {
+        "S3hostedzoneID": "Z3O0J2DXBE1FTB",
+        "websiteendpoint": "s3-website-ap-southeast-1.amazonaws.com"
+      },
+      "ap-southeast-2": {
+        "S3hostedzoneID": "Z1WCIGYICN2BYD",
+        "websiteendpoint": "s3-website-ap-southeast-2.amazonaws.com"
+      },
+      "eu-central-1": {
+        "S3hostedzoneID": "Z21DNDUVLTQW6Q",
+        "websiteendpoint": "s3-website-eu-central-1.amazonaws.com"
+      },
+      "eu-west-1": {
+        "S3hostedzoneID": "Z1BKCTXD74EZPE",
+        "websiteendpoint": "s3-website-eu-west-1.amazonaws.com"
+      },
+      "sa-east-1": {
+        "S3hostedzoneID": "Z7KQH4QJS55SO",
+        "websiteendpoint": "s3-website-sa-east-1.amazonaws.com"
+      },
+      "us-east-1": {
+        "S3hostedzoneID": "Z3AQBSTGFYJSTF",
+        "websiteendpoint": "s3-website-us-east-1.amazonaws.com"
+      },
+      "us-east-2": {
+        "S3hostedzoneID": "Z2O1EMRO9K5GLX",
+        "websiteendpoint": "s3-website-us-east-2.amazonaws.com"
+      },
+      "us-west-1": {
+        "S3hostedzoneID": "Z2F56UZL2M1ACD",
+        "websiteendpoint": "s3-website-us-west-1.amazonaws.com"
+      },
+      "us-west-2": {
+        "S3hostedzoneID": "Z3BJ6K6RIION7M",
+        "websiteendpoint": "s3-website-us-west-2.amazonaws.com"
+      }
+    }
+  }
+}
