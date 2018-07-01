@@ -1,0 +1,21 @@
+# uses aws/codebuild/nodejs:8.11.0
+#
+version: 0.2
+
+
+phases:
+
+  install:
+    commands:
+      - npm install
+  build:
+    commands:
+      - npm run build
+  post_build:
+    commands:
+      - aws s3 sync ./build s3://$WEB_BUCKET/ --delete --acl public-read
+
+artifacts:
+  files:
+    - "**/*"
+  base-directory: build
