@@ -12,7 +12,7 @@ phases:
     commands:
   post_build:
     commands:
-      - serverless --stage=dev --verbose deploy --region $AWS_REGION
+      - serverless deploy --stage dev --region $AWS_REGION
       - servlerless info --region $AWS_REGION
 
 artifacts:
