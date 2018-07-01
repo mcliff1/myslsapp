@@ -7,15 +7,15 @@ phases:
 
   install:
     commands:
-      - npm install
+      - cd polly && npm install
   build:
     commands:
-      - npm run build
+      - cd polly && npm run build
   post_build:
     commands:
-      - aws s3 sync ./build s3://$WEB_BUCKET/ --delete --acl public-read
+      - cd polly && aws s3 sync ./build s3://$WEB_BUCKET/ --delete --acl public-read
 
 artifacts:
   files:
     - "**/*"
-  base-directory: build
+  base-directory: polly/build
