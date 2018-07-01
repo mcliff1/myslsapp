@@ -68,7 +68,8 @@
               "Statement" : [
                 {
                   "Action" : [
-                    "logs:*"
+                    "logs:*",
+                    "ssm:GetParameter"
                   ],
                   "Resource" : "*",
                   "Effect" : "Allow"
