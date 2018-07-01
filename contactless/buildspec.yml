@@ -13,7 +13,7 @@ phases:
     commands:
   post_build:
     commands:
-      - serverless --stage=dev Deployment
+      - serverless --stage=dev deploy
       - servlerless info
 
 artifacts:
