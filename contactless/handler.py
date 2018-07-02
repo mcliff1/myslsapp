@@ -83,7 +83,19 @@ def get_call(jsonstr):
     """
     logging.info("get_call()")
 
-    form = "<table border=\"1\"><tr><td>1</td><td>hut</td></tr></table>"
+    form = """
+        <div><b><p id="form-response"></p></b></div>
+        <form id="contactForm">
+        <div class="row">
+        <label>Email</label>
+        <input class="form-control" type="text" name="email" placeholder="email@yahoo.com" required />
+        </div>
+
+        <div class="row">
+        <input type="submit" class="btn btn-primary" value="Submit"/>
+        </div>
+        </form>
+        """
     body = "<html><body><div>THis is the body</div><div>" + form + "</div></body></html>"
 
     return {
