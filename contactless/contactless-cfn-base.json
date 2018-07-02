@@ -69,9 +69,59 @@
                 {
                   "Action" : [
                     "logs:*",
-                    "ssm:GetParameter"
+                    "ssm:GetParameter",
+                    "cloudformation:DescribeStacks",
+                    "cloudformation:ListExports",
+                    "cloudformation:ListImports",
+                    "cloudformation:ListSTacks",
+                    "s3:HeadBucket",
+                    "s3:ListAllMyBuckets",
+                    "route53:ListHostedZones",
+                    "cloudfront:UpdateDistribution"
                   ],
                   "Resource" : "*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "apigateway:*",
+                    "lambda:*"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "route53:GetChange",
+                  ],
+                  "Resource" : "arc:aws:route53:::change/*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "route53:GetChange",
+                    "route53:ChangeResourceRecordSets"
+                  ],
+                  "Resource" : "arc:aws:route53:::hostedzone/*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "iam:GetRole",
+                    "iam:CreateRole",
+                    "iam:DeleteRole",
+                    "iam:PutRolePolicy",
+                    "iam:DeleteRolePolicy",
+                    "iam:PassRole"
+                  ],
+                  "Resource" : "arn:aws:iam::*:role/contactless*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "cloudformation:*"
+                  ],
+                  "Resource" : "arn:aws:cloudformation:*:*:stack/contactless*/*",
                   "Effect" : "Allow"
                 }
               ]

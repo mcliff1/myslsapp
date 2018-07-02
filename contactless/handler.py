@@ -81,18 +81,17 @@ def get_call(jsonstr):
     """
     Does the GET request for the specific object and given request string
     """
-    logging.info("get_call(%s)" % (jsonstr,))
+    logging.info("get_call()")
 
-    jstr = None
-    rc = 503
+    form = "<table border=\"1\"><tr><td>1</td><td>hut</td></tr></table>"
+    body = "<html><body><div>THis is the body</div><div>" + form + "</div></body></html>"
 
-    logging.info("return string %s", jstr)
     return {
-        "body": json.dumps(jstr, cls=DecimalEncoder),
-        "statusCode" : rc,
+        "body": body,
+        "statusCode" : 200,
         "headers": {
             "Access-Control-Allow-Origin" : "*",
-            "Content-Type" : "application/json",
+            "Content-Type" : "text/html",
         },
     }
 
@@ -113,8 +112,6 @@ def handle(event, context):
         data = {}
 
     # inject the object Type to the data string
-    objectType = event['pathParameters']['ObjectType']
-    data['ObjectType'] = objectType
     logging.debug("incoming data: %s", data)
 
     operations = {

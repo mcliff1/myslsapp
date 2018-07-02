@@ -9,7 +9,6 @@ frameworkVersion: ">=1.1.0 < 2.0.0"
 custom:
   stage: ${opt:stage, self:provider.stage}
   region: ${opt:region, self:provider.region}
-  extra: ${file(serverless-${self:custom.stage}.json)}
   basestackname: contact
 
   domainname: ${ssm:/${self:custom.basestackname}/domainName}
@@ -89,6 +88,7 @@ resources:
       Properties:
         DomainName: { "Ref" : ApiGatewayDomain }
         RestApiId: { "Ref" : ApiGatewayRestApi }
+
 
     ApiGatewayResponse:
       Type: 'AWS::ApiGateway::GatewayResponse'
