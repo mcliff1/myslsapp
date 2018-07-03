@@ -96,7 +96,30 @@ def get_call(jsonstr):
         </div>
         </form>
         """
-    body = "<html><body><div>THis is the body</div><div>" + form + "</div></body></html>"
+
+    script = """
+        $(document).ready(function(){
+
+            $('#contactForm').submit(function(event) {
+                alert("Here we go");
+            });
+
+        });
+        """
+
+    body = """
+        <html>
+        <body>
+        <div><h2>Serverless Contact Demo</h2></div>
+        <div>
+        """ + form + """
+        </div>
+        </body>
+        <script>
+        """ + script + """
+        </script>
+        </html>
+        """
 
     return {
         "body": body,
