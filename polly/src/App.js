@@ -20,7 +20,7 @@ class App extends Component {
         <TextToAudio />
         <p>To work the filter, use &quot;*&quot; to show all</p>
         <AudioList />
-        <p>Last Published 7/1/2018</p>
+        <p>Last Published 7/10/2018</p>
       </div>
     );
   }
