@@ -188,7 +188,7 @@ def handle(event, context):
 
     return {
         "body": {"message" : "unknown method(%s)" % (operation, )},
-        "statusCode" : 400,
+        "statusCode" : 200,
         "headers": {
             "Content-Type" : "application/json",
         },
