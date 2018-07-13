@@ -16,3 +16,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 The API folder was created with the *serverless* tool.
 `serverless craete --template aws-python3 --path api` (**NOTE** I had to run this on a EC2 instance set up for Node)
+
+## Build Notes
+
+we have a hook in github from the Code Pipeline in us-west-2
