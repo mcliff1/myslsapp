@@ -101,14 +101,16 @@ def get_call(jsonstr):
         $(document).ready(function(){
 
             $('#contactForm').submit(function(event) {
-                var formData = new FormData();
-                formData.append('email', $('#email').val());
-                alert("Here we go:", formData);
+                var formData = {
+                    'email' : $('#email').val())
+                }
+                console.log("Here we go:", formData);
 
 
-                fetch('https://contact.mattcliff.net/', {
+                $.ajax({
+                    url: 'https://contact.mattcliff.net/',
                     method: 'POST',
-                    url: '/',
+                    data: JSON.stringify(formData),
                     success: function() {
                         alert("got success");
                         $('#form-response').text('data sent');
