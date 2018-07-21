@@ -1,98 +1,97 @@
-#
-#
-#  flush this out as cloudformation,  with these key pieces
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description": "Creates framework necessary for SLS services, including ACM certs, S3 buckets and cognito identity pool",
+  "Parameters" : {
+    "Project" : {
+      "Description" : "Enter Project Name",
+      "Type" : "String",
+      "Default" : "FFMPEG Lambda Project"
+    },
+    "TargetBucket" : {
+      "Description" : "S3 Bucket to store output",
+      "Type" : "String",
+      "Default" : "XXX"
+    }
+  },
+  "Resources": {
 
 
-# mp3downloaderRole  (with this policy)
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Principal": {
-          "Service": [
-            "apigateway.amazonaws.com",
-            "lambda.amazonaws.com"
+    "Mp3Role" : {
+      "Type" : "AWS::IAM::Role",
+      "Properties" : {
+        "AssumeRolePolicyDocument" : {
+          "Statement" : [
+            {
+              "Effect" : "Allow",
+              "Principal" : {
+                "Service" : [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
           ]
         },
-        "Action": "sts:AssumeRole"
-      }
-    ]
-  }
-aws iam create-role --role_name "myrole" --assume-role-policy "${above}"
-
-
-
-
-
-# make the role (witht he policyId from above}
-{
-    "Role": {
-        "Path": "/",
-        "RoleName": "YoutubeMp3DownloaderRole",
-        "RoleId": "AROAIYOVCJF3FXJNTQ2II",
-        "Arn": "arn:aws:iam::421311779261:role/YoutubeMp3DownloaderRole",  (from create-role above)
-        "CreateDate": "2018-04-03T19:15:45.606Z",
-        "AssumeRolePolicyDocument": {
-            "Version": "2012-10-17",
-            "Statement": [
+        "Path" : "/",
+        "Policies" : [
+          {
+            "PolicyName" : "mp3build-service",
+            "PolicyDocument" : {
+              "Version" : "2012-10-17",
+              "Statement" : [
                 {
-                    "Effect": "Allow",
-                    "Principal": {
-                        "Service": [
-                            "apigateway.amazonaws.com",
-                            "lambda.amazonaws.com"
-                        ]
-                    },
-                    "Action": "sts:AssumeRole"
+                  "Action" : [
+                    "lambda:*"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "s3:*"
+                  ],
+                  "Resource" : { "Fn::Join" : ["", ["arn:aws:s3:::", {"Ref" : "TargetBucket" }] ]},
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "s3:ListAllMyBuckets"
+                  ],
+                  "Resource" : "arn:aws:s3:::*",
+                  "Effect" : "Allow"
                 }
-            ]
-        }
-    }
-}
-
-
-
-## another policy docuiment to tie to the role
- {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": [
-          "apigateway:*"
-        ],
-        "Resource": "arn:aws:apigateway:*::/*"
-      },
-      {
-        "Effect": "Allow",
-        "Action": [
-          "execute-api:Invoke"
-        ],
-        "Resource": "arn:aws:execute-api:*:*:*"
-      },
-      {
-        "Effect": "Allow",
-        "Action": [
-            "lambda:*"
-        ],
-        "Resource": "*"
-      },
-      {
-        "Effect": "Allow",
-        "Action": "s3:ListAllMyBuckets",
-        "Resource": "arn:aws:s3:::*"
-      },
-      {
-        "Effect": "Allow",
-        "Action": "s3:*",
-        "Resource": [
-          "arn:aws:s3:::${bucket_name}",
-          "arn:aws:s3:::${bucket_name}/*"
+              ]
+            }
+          }
         ]
       }
-    ]
+    }
+  },
+  "Outputs": {
+    "Project" : {
+      "Description" : "The Project Name",
+      "Value" : {"Ref": "Project"}
+    }
+
+  },
+
+  "Metadata": {
+    "AWS::CloudFormation::Interface" : {
+      "ParameterGroups" : [
+        {
+          "Label" : { "default" : "Project Information"},
+          "Parameters" : [ "Project" ]
+        },
+        {
+          "Label" : { "default" : "Buckets"},
+          "Parameters" : [ "TargetBucket"]
+        }
+      ],
+      "ParameterLabels" : {
+        "TargetBucket": { "default" : "Name of S3 bucket to store results" }
+      }
+    }
   }
-
-aws iam put-role-policy --role-name "myrole" --policy-name "mypolicy" --policy_document "${above}"
-
-
-
+}
