@@ -1,0 +1,16 @@
+{
+  "name": "audiomix",
+  "version": "1.0.0",
+  "description": "Mix Mp3 using ffmpeg",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matt Cliff",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.279.1",
+    "request": "^2.87.0",
+    "tempy": "^0.2.1"
+  }
+}

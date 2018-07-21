@@ -1,0 +1,98 @@
+#
+#
+#  flush this out as cloudformation,  with these key pieces
+
+
+# mp3downloaderRole  (with this policy)
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": [
+            "apigateway.amazonaws.com",
+            "lambda.amazonaws.com"
+          ]
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  }
+aws iam create-role --role_name "myrole" --assume-role-policy "${above}"
+
+
+
+
+
+# make the role (witht he policyId from above}
+{
+    "Role": {
+        "Path": "/",
+        "RoleName": "YoutubeMp3DownloaderRole",
+        "RoleId": "AROAIYOVCJF3FXJNTQ2II",
+        "Arn": "arn:aws:iam::421311779261:role/YoutubeMp3DownloaderRole",  (from create-role above)
+        "CreateDate": "2018-04-03T19:15:45.606Z",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": [
+                            "apigateway.amazonaws.com",
+                            "lambda.amazonaws.com"
+                        ]
+                    },
+                    "Action": "sts:AssumeRole"
+                }
+            ]
+        }
+    }
+}
+
+
+
+## another policy docuiment to tie to the role
+ {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "apigateway:*"
+        ],
+        "Resource": "arn:aws:apigateway:*::/*"
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "execute-api:Invoke"
+        ],
+        "Resource": "arn:aws:execute-api:*:*:*"
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+            "lambda:*"
+        ],
+        "Resource": "*"
+      },
+      {
+        "Effect": "Allow",
+        "Action": "s3:ListAllMyBuckets",
+        "Resource": "arn:aws:s3:::*"
+      },
+      {
+        "Effect": "Allow",
+        "Action": "s3:*",
+        "Resource": [
+          "arn:aws:s3:::${bucket_name}",
+          "arn:aws:s3:::${bucket_name}/*"
+        ]
+      }
+    ]
+  }
+
+aws iam put-role-policy --role-name "myrole" --policy-name "mypolicy" --policy_document "${above}"
+
+
+

@@ -9,6 +9,7 @@ MyDemo  |  ...
 react_base  | base react, this project was pieced together to get a better understanding of the REACT environment
 static_congito  |  simple static content leveraging AWS Cognito
 tms  | *Transportation Management System* template site for logistics company management
+audiomix | lambda function to wrap ffmpeg which will combine mp3 files
 
 This app will have login capability, a list of customers, a list of items, and orders.
 
