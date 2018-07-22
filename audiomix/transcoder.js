@@ -6,7 +6,7 @@ const AWS = require('aws-sdk');
 const request = require('request');
 const tempy = require('tempy');
 
-const s3 = AWS.S3();
+const s3 = new AWS.S3();
 
 exports.handler = (event, context, callback) => {
 
@@ -23,11 +23,11 @@ exports.handler = (event, context, callback) => {
   const inputFilename = tempy.file();
   const mp3Filename = tempy.file({ extention: 'mp3' });
 
-  // download sources from S3
+  // download sources from the url to memory
   Promise.resolve().then(() => new Promise((resolve, revoke) => {
     const writeStream = fs.createWriteStream(inputFilename);
     writeStream.on('finish', resolve);
-    writeStream.on('error', revokve);
+    writeStream.on('error', revoke);
     requrest(url).pipe(writeStream);
   }))
   // perform the transcoding
