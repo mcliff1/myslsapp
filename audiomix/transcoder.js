@@ -8,7 +8,7 @@ const tempy = require('tempy');
 
 const s3 = AWS.S3();
 
-export.handler = (event, context, callback) => {
+exports.handler = (event, context, callback) => {
 
   // work asynch, make immediate callback down the chain
   callback();
@@ -34,7 +34,7 @@ export.handler = (event, context, callback) => {
   .then(() => {
     // using the excodus exports supporting ffmpeg
     const ffmeg = path.resolve(__dirname, 'exodus', 'bin', 'ffmpgeg');
-    
+
     // convert input to output
     const ffmpegArgs = [
       '-i', inputFilename,
@@ -55,7 +55,7 @@ export.handler = (event, context, callback) => {
       Key: mp3Key,
       ContentDisposition: `attachment; filename="${filename.replace('"', '\'')}"`,
       ContentType: 'audio/mpeg'
-    }), (error) => {
+    }, (error) => {
       if (error) {
         revoke(error);
       } else {
@@ -68,8 +68,9 @@ export.handler = (event, context, callback) => {
           ContentDisposition: `inline; filename="${logFilename.replace('"', '\'')}"`,
           ContentType: 'text/plain'
         }, resolve);
-    }
-  })
+      }
+    });
+  }))
   .catch(console.error)
   // delete the temp files
   .then(() => {
@@ -82,4 +83,3 @@ export.handler = (event, context, callback) => {
 
 
 }
-

@@ -15,6 +15,17 @@
   },
   "Resources": {
 
+    "WorkBucket" : {
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "Tags" : [
+          { "Key" : "Name", "Value" : {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-WorkBucket"]]}},
+          { "Key" : "Project", "Value" : {"Ref": "Project"} }
+        ]
+      }
+    },
+
+
 
     "Mp3Role" : {
       "Type" : "AWS::IAM::Role",
@@ -52,7 +63,10 @@
                   "Action" : [
                     "s3:*"
                   ],
-                  "Resource" : { "Fn::Join" : ["", ["arn:aws:s3:::", {"Ref" : "TargetBucket" }] ]},
+                  "Resource" : [
+                    { "Fn::Join" : ["", ["arn:aws:s3:::", {"Ref" : "TargetBucket" }] ]},
+                    { "Fn::GetAtt" : ["WorkBucket", "Arn" ] }
+                  ],
                   "Effect" : "Allow"
                 },
                 {
@@ -73,6 +87,10 @@
     "Project" : {
       "Description" : "The Project Name",
       "Value" : {"Ref": "Project"}
+    },
+    "WorkBucket" : {
+      "Description" : "Name of S3 bucket for workspace",
+      "Value" : {"Ref": "WorkBucket"}
     }
 
   },
