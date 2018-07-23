@@ -58,6 +58,34 @@ const callFfmpeg = (inputFilename, mp3Filename) => {
 
 }
 
+const parseInput = (partList) => {
+
+
+	// input is of form:  '/123_foldername/partname.mp3'   
+  const timingList = partList.map(key => key.split('/')[1].split('_')[0]);
+
+
+  const filterPart1 = timingList.map((key,idx) => '[' + idx + ']adelay=' + key + '|' + key + '[out' + idx + '];' ).filter(key => key.split('=')[1].split('|')[0] > 0).join(' ');
+
+  const filterPart2 = timingList.map((key,idx) => '[' + (key == 0 ? '' : 'out') + idx + ']').join('') + 'amix=' + timingList.length;
+
+
+
+
+// does the -i part
+  return partList.map(key => '-i ' + key).join(' ') +
+		' -filter_complex "' + filterPart1 + filterPart2 +
+		'" -c:a libmp3lame -q:a 0 -y output.mp3';
+
+}
+
+
+
+const s3Copy = (bucket, partList) => {
+	console.log("implement me --- s3Copy with:" + partList);
+
+}
+
 
 
 
@@ -69,6 +97,9 @@ const callFfmpeg = (inputFilename, mp3Filename) => {
 exports.handler = (event, context, callback) => {
   console.log("begin");
 
+const testInput = [ '/000_part1/cuban.mp3', '/003_part2/back.mp3', '/121_part3/matt.mp3' ];
+const pt = parseInput(testInput);
+	console.log("testInput:"+pt);
   // work asynch, make immediate callback down the chain
   callback();
 
@@ -84,13 +115,17 @@ exports.handler = (event, context, callback) => {
 
   // download sources from the url to memory
   Promise.resolve().then(() => new Promise((resolve, revoke) => { 
-	   
+
+
+
     const writeStream = fs.createWriteStream(inputFilename);
     writeStream.on('finish', resolve);
     writeStream.on('error', revoke);
     //writeStream.on('finish', () => { console.log('copied file'); });
     //writeStream.on('error', (err) => {console.error(err); } );
     request(url).pipe(writeStream);
+    s3Copy(s3Bucket, testInput);
+
 
 //    return new Promise((resolve,reject) => {
 //      writeStream.on('finish', (code, signal) => {resolve(); });
@@ -101,22 +136,43 @@ exports.handler = (event, context, callback) => {
 .then(() => { 
     console.log("call next step");
     // using the excodus exports supporting ffmpeg
-    callFfmpeg(inputFilename, mp3Filename)
-    .then(() => {
-        console.log("completed call to ffmpeg");
-    }, (data) => {   
-        console.log("error calling ffmpeg:" + data);
-    },
-    () => {
-	   console.log("call error message");
-    });
+    return callFfmpeg(inputFilename, mp3Filename);
+ //   .then(() => {
+//        console.log("completed call to ffmpeg");
+//    }, (data) => {   
+//        console.log("error calling ffmpeg:" + data);
+//    },
+//    () => {
+//	   console.log("call error message");
+ //   });
+})
+.then(() => { 
+  console.log("completed call to ffmpeg");
+  console.log("copy the new files up to S3:", s3Bucket, mp3Key);
+
+  s3.putObject({
+    Body: fs.createReadStream(mp3Filename),
+    Bucket: s3Bucket,
+    Key: mp3Key,
+    ContentDisposition: `attachment; filename="${filename.replace('\"', '\'')}"`,
+    ContentType: 'audio/mpeg'
+  }, (error, data) => {
+    if (error) {
+      console.log("error copying mp3 file", error);
+    } else {
+      console.log("copied mp3 file, now copy logs");
+    }
+  });
+
+}, 
+() => {
+  console.log("error calling ffmpeg");
 });
     //console.log("file created:", mp3Filename);
 // //   return process.stdout.toString() + process.stderr.toString();
 // //  })
   // upload the generated mp3 to S3
 // //  .then(logContent => new Promise((resolve, revoke) => {
-    console.log("copy the new files up to S3:", s3Bucket, mp3Key);
 //    s3.putObject({
 //      Body: fs.createReadStream(mp3Filename),
 //      Bucket: s3Bucket,
