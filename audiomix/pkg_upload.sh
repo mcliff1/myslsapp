@@ -7,12 +7,12 @@
 #
 BUCKET=audiomix-workbucket-xw1zulrmqu6f
 ZIPFILE=audiomix.zip
-PROFILE="--profile mp3"
+#PROFILE="--profile mp3"
 LAMBDA_FUNCTION=audiomix
 
-#zip --symlink --recurse-paths ${ZIPFILE} transcoder.js package.json node_modules/ exodus/
+zip -u --symlink --recurse-paths ${ZIPFILE} transcoder.js package.json node_modules/ exodus/
 # symlink not support in gitbash
-zip --recurse-paths ${ZIPFILE} transcoder.js package.json node_modules/ exodus/
+#zip --recurse-paths ${ZIPFILE} transcoder.js package.json node_modules/ exodus/
 
 aws ${PROFILE} s3 cp ${ZIPFILE} s3://${BUCKET}
 
