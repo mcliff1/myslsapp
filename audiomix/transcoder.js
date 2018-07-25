@@ -13,6 +13,7 @@ const s3 = new AWS.S3();
 //
 // invokes ffmpeg
 const callFfmpeg = (inputFilename, mp3Filename) => {
+    const METHOD = "callFfmpeg():";
     const ffmpeg = path.resolve(__dirname, 'exodus', 'bin', 'ffmpeg');
 
     // convert input to output
@@ -24,7 +25,7 @@ const callFfmpeg = (inputFilename, mp3Filename) => {
       '-q:a', '6', // set quality to near 128 kb/s
       '-y', mp3Filename
     ];
-    console.log("ffmpeg args:", ffmpegArgs);
+    console.log(METHOD + "ffmpeg args:", ffmpegArgs);
 
     //const process = child_process.spawnSync(ffmpeg, ffmpegArgs);
     //const process = child_process.spawn(ffmpeg, ffmpegArgs, {
@@ -33,25 +34,25 @@ const callFfmpeg = (inputFilename, mp3Filename) => {
     const myproc = child_process.spawn(ffmpeg, ffmpegArgs);
     //const myproc = child_process.spawn("ls", [ "-l", "exodus/bin/ffmpeg" ]);
     myproc.stdout.on('data', (chunk) => {
-      console.log("proc:out:"+ chunk);
+      console.log(METHOD + "proc:out:"+ chunk);
     });
     myproc.stderr.on('data', (chunk) => {
-      console.log("proc:err:"+ chunk);
+      console.log(METHOD + "proc:err:"+ chunk);
     });
     myproc.on('message', (message, sendHandle) => {
-      console.log("message:", message);
+      console.log(METHOD + "message:", message);
     });
     myproc.on('error', (err) => {
-      console.log("error:", err);
+      console.log(METHOD + "error:", err);
     });
     myproc.on('exit', (code, signal) => {
-      console.log("exit:", code, signal);
+      console.log(METHOD + "exit:", code, signal);
     });
     myproc.on('close', (code, signal) => {
-      console.log("close:", code, signal);
+      console.log(METHOD + "close:", code, signal);
     });
 
-    console.log("spawned proc:", myproc.pid);
+    console.log(METHOD + "spawned proc:", myproc.pid);
     return new Promise((resolve,reject) => {
       myproc.on('exit', (code, signal) => {resolve(code); });
     });
@@ -60,9 +61,8 @@ const callFfmpeg = (inputFilename, mp3Filename) => {
 
 const parseInput = (partList) => {
 
-
 	// input is of form:  '/123_foldername/partname.mp3'   
-  const timingList = partList.map(key => key.split('/')[1].split('_')[0]);
+  const timingList = partList.map(key => key.split('/')[0].split('_')[0]);
 
 
   const filterPart1 = timingList.map((key,idx) => '[' + idx + ']adelay=' + key + '|' + key + '[out' + idx + '];' ).filter(key => key.split('=')[1].split('|')[0] > 0).join(' ');
@@ -80,10 +80,72 @@ const parseInput = (partList) => {
 }
 
 
-
+// ref:
+//  https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html
+//
+//  returns list of string of the target filenames
 const s3Copy = (bucket, partList) => {
-	console.log("implement me --- s3Copy with:" + partList);
+   return new Promise((resolve, reject) => {
 
+
+
+    const METHOD = "s3Copy():";
+	console.log(METHOD + "implement me --- s3Copy with:" + partList);
+	var fileList = [];
+
+  const s3Key = partList[0];
+	console.log(METHOD + "s3Copy:part:" + s3Key);
+    //const s3Promise = s3.getObject({
+	//
+	//
+      const localFilename = tempy.file({name: s3Key});
+	    fileList.push(localFilename);
+     console.log(METHOD + 'stream the file');
+
+    const fileStream = fs.createWriteStream(localFilename);
+
+     const params = { Bucket: bucket, Key: s3Key };
+     const s3Stream = s3.getObject(params).createReadStream();
+
+     s3Stream.on('error', reject);
+     fileStream.on('error', reject);
+     fileStream.on('close', () => resolve(fileList));
+     s3Stream.on('error', reject);
+
+     console.log(METHOD + 'done, return fileList' + fileList);
+
+
+ // }, (error, data) => {
+  //  if (error) {
+   //   console.log("error copying mp3 file" + error, error.stack);
+ //   } else {
+ //     const localFilename = tempy.file({name: s3Key});
+//	    fileList.push(localFilename);
+//      console.log('stream the file');
+//	    const writeStream = fs.createWriteStream(localFilename);
+//	    data.Body.pipe(writeStream);
+
+ //     console.log("copied mp3 file, now copy logs");
+  //  }
+//  });
+
+//    const s3Promise = s3.getObject({
+//      Bucket: bucket,
+//      Key: s3Key
+//     }).promise();
+
+//	s3Promise.then((data) => {
+//      const localFilename = tempy.file({name: s3Key});
+//	    fileList.push(localFilename);
+//      console.log('stream the file');
+//	    const writeStream = fs.createWriteStream(localFilename);
+//	    writeStream.write(data.Body, () => { writeStream.end(); console.log("done streaming"); });
+
+//	});
+	//
+	//
+  return fileList;
+  }); // end return promise)
 }
 
 
@@ -97,7 +159,7 @@ const s3Copy = (bucket, partList) => {
 exports.handler = (event, context, callback) => {
   console.log("begin");
 
-const testInput = [ '/000_part1/cuban.mp3', '/003_part2/back.mp3', '/121_part3/matt.mp3' ];
+const testInput = [ '00000_backingtracks/cuban.mp3', '04000_names/mati.mp3', '08000_occasion/birthday.mp3' ];
 const pt = parseInput(testInput);
 	console.log("testInput:"+pt);
   // work asynch, make immediate callback down the chain
@@ -113,6 +175,9 @@ const pt = parseInput(testInput);
   const inputFilename = tempy.file();
   const mp3Filename = tempy.file({ extension: 'mp3' });
 
+  var targetList = [];
+
+
   // download sources from the url to memory
   Promise.resolve().then(() => new Promise((resolve, revoke) => { 
 
@@ -124,8 +189,10 @@ const pt = parseInput(testInput);
     //writeStream.on('finish', () => { console.log('copied file'); });
     //writeStream.on('error', (err) => {console.error(err); } );
     request(url).pipe(writeStream);
-    s3Copy(s3Bucket, testInput);
 
+
+    return s3Copy('songparts', testInput);
+    //console.log("targetList is " + targetList);
 
 //    return new Promise((resolve,reject) => {
 //      writeStream.on('finish', (code, signal) => {resolve(); });
@@ -145,8 +212,10 @@ const pt = parseInput(testInput);
 //    () => {
 //	   console.log("call error message");
  //   });
+//},() => {
+//	console.log("s3Copy call was rejected");
 })
-.then(() => { 
+.then((ffmpgPromise) => { 
   console.log("completed call to ffmpeg");
   console.log("copy the new files up to S3:", s3Bucket, mp3Key);
 
@@ -164,10 +233,13 @@ const pt = parseInput(testInput);
     }
   });
 
-}, 
-() => {
-  console.log("error calling ffmpeg");
+})
+.catch(error => {
+    console.log("final:catch:" + error, error);
 });
+
+
+
     //console.log("file created:", mp3Filename);
 // //   return process.stdout.toString() + process.stderr.toString();
 // //  })
@@ -209,18 +281,18 @@ const pt = parseInput(testInput);
     //    fs.unlinkSync(filename);
     //  }
     //});
-    console.log("delete the file", inputFilename);
-    if (fs.existsSync(inputFilename)) {
-      fs.unlinkSync(inputFilename);
-    }
-    console.log("delete the file", mp3Filename);
-    if (fs.existsSync(mp3Filename)) {
-      fs.unlinkSync(mp3Filename);
-    }
-    console.log("end the promise");
+//    console.log("delete the file", inputFilename);
+ //   if (fs.existsSync(inputFilename)) {
+  //    fs.unlinkSync(inputFilename);
+ //   }
+//    console.log("delete the file", mp3Filename);
+//    if (fs.existsSync(mp3Filename)) {
+//      fs.unlinkSync(mp3Filename);
+//    }
 // //  });
-  console.log("end the function");
 
+
+  console.log("end the function");
 
 
 }

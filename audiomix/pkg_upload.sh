@@ -14,7 +14,7 @@ zip -u --symlink --recurse-paths ${ZIPFILE} transcoder.js package.json node_modu
 # symlink not support in gitbash
 #zip --recurse-paths ${ZIPFILE} transcoder.js package.json node_modules/ exodus/
 
-aws ${PROFILE} s3 cp ${ZIPFILE} s3://${BUCKET}
+time aws ${PROFILE} s3 cp ${ZIPFILE} s3://${BUCKET}
 
 aws ${PROFILE} lambda update-function-code --function-name ${LAMBDA_FUNCTION} --s3-bucket ${BUCKET} --s3-key ${ZIPFILE}
 
