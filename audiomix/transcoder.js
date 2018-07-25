@@ -80,71 +80,59 @@ const parseInput = (partList) => {
 }
 
 
+
+
+//
+//ref:
+//
+//copies a single file to local temp storage, returning the local path
+const s3Copy = (bucket, key) => {
+  return new Promise((resolve, reject) => {
+    const METHOD = "s3Copy():";
+    console.log(METHOD + "bucket, key:" + bucket + "," + key);
+    //const localFilename = tempy.file({name: key});  - could not write to this
+    const localFilename = tempy.file();
+
+    const fileStream = fs.createWriteStream(localFilename);
+    const params = { Bucket: bucket, Key: key };
+    const s3Stream = s3.getObject(params).createReadStream();
+
+    s3Stream.on('error', reject);
+    fileStream.on('error', reject);
+    fileStream.on('close', () => resolve(localFilename));
+    s3Stream.pipe(fileStream);
+  });
+}
+
+
+
 // ref:
 //  https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html
 //
 //  returns list of string of the target filenames
-const s3Copy = (bucket, partList) => {
+const s3CopyAll = (bucket, song, inputList) => {
    return new Promise((resolve, reject) => {
 
 
+    const METHOD = "s3CopyAll():";
+    console.log(METHOD + inputList);
 
-    const METHOD = "s3Copy():";
-	console.log(METHOD + "implement me --- s3Copy with:" + partList);
-	var fileList = [];
+    // prefix the song
+    //const s3KeyList = inputList.map(key => song + '/' + key);
+    const s3KeyList = inputList;
 
-  const s3Key = partList[0];
-	console.log(METHOD + "s3Copy:part:" + s3Key);
-    //const s3Promise = s3.getObject({
-	//
-	//
-      const localFilename = tempy.file({name: s3Key});
-	    fileList.push(localFilename);
-     console.log(METHOD + 'stream the file');
+   console.log(METHOD + s3KeyList);
+    
+     const promiseList = s3KeyList.map(key => s3Copy(bucket, key));
 
-    const fileStream = fs.createWriteStream(localFilename);
+     Promise.all(promiseList).then(	
+         (fileList) => {  
+	      console.log(METHOD + "2oogie" + filename); 
+	     resolve(fileList);
+	 },
+	 (error) => { reject(error); }
+      );
 
-     const params = { Bucket: bucket, Key: s3Key };
-     const s3Stream = s3.getObject(params).createReadStream();
-
-     s3Stream.on('error', reject);
-     fileStream.on('error', reject);
-     fileStream.on('close', () => resolve(fileList));
-     s3Stream.on('error', reject);
-
-     console.log(METHOD + 'done, return fileList' + fileList);
-
-
- // }, (error, data) => {
-  //  if (error) {
-   //   console.log("error copying mp3 file" + error, error.stack);
- //   } else {
- //     const localFilename = tempy.file({name: s3Key});
-//	    fileList.push(localFilename);
-//      console.log('stream the file');
-//	    const writeStream = fs.createWriteStream(localFilename);
-//	    data.Body.pipe(writeStream);
-
- //     console.log("copied mp3 file, now copy logs");
-  //  }
-//  });
-
-//    const s3Promise = s3.getObject({
-//      Bucket: bucket,
-//      Key: s3Key
-//     }).promise();
-
-//	s3Promise.then((data) => {
-//      const localFilename = tempy.file({name: s3Key});
-//	    fileList.push(localFilename);
-//      console.log('stream the file');
-//	    const writeStream = fs.createWriteStream(localFilename);
-//	    writeStream.write(data.Body, () => { writeStream.end(); console.log("done streaming"); });
-
-//	});
-	//
-	//
-  return fileList;
   }); // end return promise)
 }
 
@@ -161,8 +149,11 @@ exports.handler = (event, context, callback) => {
 
 const testInput = [ '00000_backingtracks/cuban.mp3', '04000_names/mati.mp3', '08000_occasion/birthday.mp3' ];
 const pt = parseInput(testInput);
-	console.log("testInput:"+pt);
-  // work asynch, make immediate callback down the chain
+
+//	console.log("testInput:"+pt);
+//
+//
+  // work async, make immediate callback down the chain
   callback();
 
   // extract event params
@@ -170,38 +161,40 @@ const pt = parseInput(testInput);
   const filename = event.filename || path.basename(mp3Key);
   const logKey = event.logKey || `${mp3Key}.log`;
   const s3Bucket = event.s3Bucket || 'defaultsBucket';
+  const inputList = event.inputList || testInput;
+  const sourceBucket = event.sourceBucket || 'songparts';
 
   // create tmp files to work with
   const inputFilename = tempy.file();
   const mp3Filename = tempy.file({ extension: 'mp3' });
 
-  var targetList = [];
 
 
   // download sources from the url to memory
-  Promise.resolve().then(() => new Promise((resolve, revoke) => { 
-
-
-
-    const writeStream = fs.createWriteStream(inputFilename);
-    writeStream.on('finish', resolve);
-    writeStream.on('error', revoke);
-    //writeStream.on('finish', () => { console.log('copied file'); });
-    //writeStream.on('error', (err) => {console.error(err); } );
-    request(url).pipe(writeStream);
-
-
-    return s3Copy('songparts', testInput);
+//  Promise.resolve().then(() => new Promise((resolve, revoke) => { 
+//
+//
+//
+ //   const writeStream = fs.createWriteStream(inputFilename);
+  //  writeStream.on('finish', resolve);
+//    writeStream.on('error', revoke);
+//    //writeStream.on('finish', () => { console.log('copied file'); });
+//    //writeStream.on('error', (err) => {console.error(err); } );
+//    request(url).pipe(writeStream);
+//
+//
+//    s3Copy('songparts', testInput);
+  s3CopyAll(sourceBucket, 'songparts', inputList)
     //console.log("targetList is " + targetList);
 
 //    return new Promise((resolve,reject) => {
 //      writeStream.on('finish', (code, signal) => {resolve(); });
 //    });
 
-}))
+//}))
   // perform the transcoding
 .then(() => { 
-    console.log("call next step");
+    console.log("got songparts call next step");
     // using the excodus exports supporting ffmpeg
     return callFfmpeg(inputFilename, mp3Filename);
  //   .then(() => {
