@@ -127,7 +127,7 @@ const s3CopyAll = (bucket, song, inputList) => {
 
      Promise.all(promiseList).then(	
          (fileList) => {  
-	      console.log(METHOD + "2oogie" + filename); 
+	      console.log(METHOD + "2oogie" + fileList); 
 	     resolve(fileList);
 	 },
 	 (error) => { reject(error); }
