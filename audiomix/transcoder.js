@@ -12,19 +12,30 @@ const s3 = new AWS.S3();
 
 //
 // invokes ffmpeg
-const callFfmpeg = (inputFilename, mp3Filename) => {
+//
+// inputList  '0000_piece/key.mp3' +
+// fileList   '/tmp/0bd7876e8ba87c9e9f76565f'
+//
+// first combine these the lists element by element
+const callFfmpeg = (inputList, fileList) => {
     const METHOD = "callFfmpeg():";
     const ffmpeg = path.resolve(__dirname, 'exodus', 'bin', 'ffmpeg');
 
     // convert input to output
-    const ffmpegArgs = [
-      '-i', inputFilename,
-      '-vn', // disable video
-      '-acodec', 'libmp3lame',  // use Lame for mp3 encoding
-      '-ac', '2', // set 2 audio channels
-      '-q:a', '6', // set quality to near 128 kb/s
-      '-y', mp3Filename
-    ];
+//    const ffmpegArgs = [
+//      '-i', inputFilename,
+//      '-vn', // disable video
+//      '-acodec', 'libmp3lame',  // use Lame for mp3 encoding
+//      '-ac', '2', // set 2 audio channels
+//      '-q:a', '6', // set quality to near 128 kb/s
+//      '-y', mp3Filename
+//    ];
+    const mp3Filename = tempy.file({ extension: 'mp3' });
+
+    const ffmpegArgs = generateFFargs(inputList, fileList, mp3Filename)
+		           .split(/(\s+)/)
+		           .filter(s => s.trim().length > 0);
+
     console.log(METHOD + "ffmpeg args:", ffmpegArgs);
 
     //const process = child_process.spawnSync(ffmpeg, ffmpegArgs);
@@ -54,29 +65,30 @@ const callFfmpeg = (inputFilename, mp3Filename) => {
 
     console.log(METHOD + "spawned proc:", myproc.pid);
     return new Promise((resolve,reject) => {
-      myproc.on('exit', (code, signal) => {resolve(code); });
+      myproc.on('exit', (code, signal) => {resolve(mp3Filename); });
     });
 
 }
 
-const parseInput = (partList) => {
-
-	// input is of form:  '/123_foldername/partname.mp3'   
-  const timingList = partList.map(key => key.split('/')[0].split('_')[0]);
 
 
-  const filterPart1 = timingList.map((key,idx) => '[' + idx + ']adelay=' + key + '|' + key + '[out' + idx + '];' ).filter(key => key.split('=')[1].split('|')[0] > 0).join(' ');
+// souceList is of form:  '/tmp/
+// partList is of the form '12312_foldername/partname.mp3
+// mp3Filename is '/tmp/085fedb3a7b10f.mp3'
+const generateFFargs = (inputList, fileList, mp3Filename) => {
+
+  const timingList = inputList.map(key => key.split('/')[0].split('_')[0]);
+
+  // the complex filter only uses the timing offsets from the partList
+  const filterPart1 = timingList.map((key,idx) => '[' + idx + ']adelay=' + key + '|' + key + '[out' + idx + '];' ).filter(key => key.split('=')[1].split('|')[0] > 0).join('');
 
   const filterPart2 = timingList.map((key,idx) => '[' + (key == 0 ? '' : 'out') + idx + ']').join('') + 'amix=' + timingList.length;
 
 
-
-
 // does the -i part
-  return partList.map(key => '-i ' + key).join(' ') +
-		' -filter_complex "' + filterPart1 + filterPart2 +
-		'" -c:a libmp3lame -q:a 0 -y output.mp3';
-
+  return fileList.map(key => '-i ' + key).join(' ') +
+		' -filter_complex ' + filterPart1 + filterPart2 +
+		' -c:a libmp3lame -q:a 0 -y ' + mp3Filename
 }
 
 
@@ -148,7 +160,7 @@ exports.handler = (event, context, callback) => {
   console.log("begin");
 
 const testInput = [ '00000_backingtracks/cuban.mp3', '04000_names/mati.mp3', '08000_occasion/birthday.mp3' ];
-const pt = parseInput(testInput);
+//const pt = parseInput(testInput);
 
 //	console.log("testInput:"+pt);
 //
@@ -165,8 +177,8 @@ const pt = parseInput(testInput);
   const sourceBucket = event.sourceBucket || 'songparts';
 
   // create tmp files to work with
-  const inputFilename = tempy.file();
-  const mp3Filename = tempy.file({ extension: 'mp3' });
+  //const inputFilename = tempy.file();
+  //const mp3Filename = tempy.file({ extension: 'mp3' });
 
 
 
@@ -193,10 +205,17 @@ const pt = parseInput(testInput);
 
 //}))
   // perform the transcoding
-.then(() => { 
+.then((fileList) => { 
     console.log("got songparts call next step");
+
+
+fs.readdir('/tmp/', (err, files) => {
+	files.forEach(file => { console.log('file:', file); });
+});
+
+
     // using the excodus exports supporting ffmpeg
-    return callFfmpeg(inputFilename, mp3Filename);
+    return callFfmpeg(inputList, fileList);
  //   .then(() => {
 //        console.log("completed call to ffmpeg");
 //    }, (data) => {   
@@ -208,9 +227,8 @@ const pt = parseInput(testInput);
 //},() => {
 //	console.log("s3Copy call was rejected");
 })
-.then((ffmpgPromise) => { 
+.then((mp3Filename) => { 
   console.log("completed call to ffmpeg");
-  console.log("copy the new files up to S3:", s3Bucket, mp3Key);
 
   s3.putObject({
     Body: fs.createReadStream(mp3Filename),
