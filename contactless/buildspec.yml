@@ -12,6 +12,7 @@ phases:
     commands:
   post_build:
     commands:
+      - echo $AWS_REGION
       - serverless deploy --stage dev --region $AWS_REGION
       - serverless info --region $AWS_REGION
 
