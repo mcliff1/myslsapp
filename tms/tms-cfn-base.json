@@ -22,11 +22,6 @@
       "Type" : "String",
       "Default" : "tms-api"
     },
-    "TopicName" : {
-      "Description" : "Enter SNS Topic Name",
-      "Type" : "String",
-      "Default" : "tms-sns"
-    },
     "ApiACMArn" : {
       "Description" : "ARN for the API ACM (must be created in us-east-1)",
       "Type" : "String",
@@ -36,13 +31,22 @@
       "Description" : "ARN for the Web ACM (must be created in us-east-1)",
       "Type" : "String",
       "Default" : ""
+    },
+    "OAuthToken" : {
+      "Description" : "Token for GitHub repository to include in Code Pipeline",
+      "Type" : "String",
+      "Default" : ""
+    },
+    "Branch" : {
+      "Description" : "GitLab Branch to Connect to",
+      "Type" : "String",
+      "AllowedValues" : [ "develop", "prod" ]
     }
   },
   "Resources": {
     "SNSTopic" : {
       "Type" : "AWS::SNS::Topic",
       "Properties" : {
-        "TopicName": {"Fn::Sub": "${AWS::StackName}-GeneralTopic" },
         "DisplayName": {"Fn::Sub" : "General Announcments For ${AWS::StackName} network"}
       }
     },
@@ -69,6 +73,15 @@
         "ExplicitAuthFlows": [ "ADMIN_NO_SRP_AUTH" ],
         "GenerateSecret": "False",
         "UserPoolId": { "Ref" : "UserPool" }
+      }
+    },
+    "ArtifactStoreBucket" : {
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "Tags" : [
+          { "Key" : "Name", "Value" : {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-ArtifactBucket"]]}},
+          { "Key" : "Project", "Value" : {"Ref": "Project"} }
+        ]
       }
     },
     "BuildBucket" : {
@@ -190,6 +203,255 @@
         }
       }
     },
+
+
+
+
+
+
+
+
+
+
+    "CodeBuildRole" : {
+      "Type" : "AWS::IAM::Role",
+      "Properties" : {
+        "AssumeRolePolicyDocument" : {
+          "Statement" : [
+            {
+              "Effect" : "Allow",
+              "Principal" : {
+                "Service" : [
+                  "codebuild.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path" : "/",
+        "Policies" : [
+          {
+            "PolicyName" : "codebuild-service",
+            "PolicyDocument" : {
+              "Version" : "2012-10-17",
+              "Statement" : [
+                {
+                  "Action" : [
+                    "codebuild:*"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "s3:GetObject",
+                    "s3:GetObjectVersion",
+                    "s3:GetBucketVersioning"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "s3:*",
+                    "logs:*"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "iam:PutRolePolicy"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "ssm:*",
+                    "cloudformation:*",
+                    "apigateway:*",
+                    "iam:CreateRole",
+                    "iam:GetRole",
+                    "lambda:*"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                }
+
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "CodePipelineRole" : {
+      "Type" : "AWS::IAM::Role",
+      "Properties" : {
+        "AssumeRolePolicyDocument" : {
+          "Statement" : [
+            {
+              "Effect" : "Allow",
+              "Principal" : {
+                "Service" : [
+                  "codepipeline.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path" : "/",
+        "Policies" : [
+          {
+            "PolicyName" : "codepipeline-service",
+            "PolicyDocument" : {
+              "Version" : "2012-10-17",
+              "Statement" : [
+                {
+                  "Action" : [
+                    "codepipeline:*",
+                    "codebuild:*"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "s3:GetObject",
+                    "s3:GetObjectVersion",
+                    "s3:GetBucketVersioning"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "s3:*",
+                    "logs:*"
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "CodePipeline" : {
+      "Type" : "AWS::CodePipeline::Pipeline",
+      "Properties" : {
+        "RoleArn" : {"Fn::GetAtt" : ["CodePipelineRole", "Arn"]},
+        "ArtifactStore" : {
+          "Type" : "S3",
+          "Location" : {"Ref" : "ArtifactStoreBucket"}
+        },
+        "Stages": [
+          {
+            "Name" : "Source",
+            "Actions" : [
+              {
+                "Name" : "SourceAction",
+                "ActionTypeId" : {
+                  "Category" : "Source",
+                  "Owner" : "ThirdParty",
+                  "Version" : "1",
+                  "Provider" : "GitHub"
+                },
+                "OutputArtifacts" : [
+                  { "Name" : "SourceOutput" }
+                ],
+                "Configuration" : {
+                  "Owner" : "mcliff1",
+                  "Repo" : "myslsapp",
+                  "PollForSourceChanges" : "false",
+                  "Branch" : {"Ref" : "Branch"},
+                  "OAuthToken" : {"Ref" : "OAuthToken" }
+                },
+                "RunOrder" : 1
+              }
+            ]
+          },
+          {
+            "Name" : "Build",
+            "Actions" : [
+              {
+                "Name" : "BuildAction",
+                "InputArtifacts" : [
+                  {"Name" : "SourceOutput"}
+                ],
+                "ActionTypeId" : {
+                  "Category" : "Build",
+                  "Owner" : "AWS",
+                  "Version" : "1",
+                  "Provider" : "CodeBuild"
+                },
+                "Configuration" : {
+                  "ProjectName" : {"Ref" : "CodeBuild"}
+                },
+                "OutputArtifacts" : [
+                  { "Name" : "BuildOutput" }
+                ],
+                "RunOrder" : 1
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "CodeBuild": {
+      "Type" : "AWS::CodeBuild::Project",
+      "DependsOn" : "CodeBuildRole",
+      "Properties" : {
+        "Description" : "Polly Application Code Build and Deployment",
+        "Artifacts" : {
+          "Type" : "CODEPIPELINE"
+        },
+        "Environment" : {
+          "Type" : "LINUX_CONTAINER",
+          "ComputeType" : "BUILD_GENERAL1_SMALL",
+          "Image" : "aws/codebuild/nodejs:8.11.0",
+          "EnvironmentVariables" : [
+            {
+              "Name" : "BRANCH",
+              "Value" : { "Ref" : "Branch" }
+            },
+            {
+              "Name" : "WEB_BUCKET",
+              "Value" : { "Ref" : "WebBucket" }
+            },
+            {
+              "Name" : "STACK_NAME",
+              "Value" : { "Ref" : "AWS::StackName" }
+            }
+          ]
+        },
+        "ServiceRole" : { "Ref" : "CodeBuildRole" },
+        "Source" : {
+          "Type" : "CODEPIPELINE"
+        },
+        "Tags" : [
+          { "Key" : "Name", "Value" : {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-CodeBuild"]]}},
+          { "Key" : "Project", "Value" : {"Ref": "Project"} }
+        ]
+      }
+    },
+
+
+
+
+
+
+
+
+
+
     "ssmDomainName": {
       "Type" : "AWS::SSM::Parameter",
       "Properties" : {
