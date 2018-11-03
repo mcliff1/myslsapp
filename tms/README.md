@@ -2,6 +2,8 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
+**Moving this project to BitBucket** - 11/3/2018
+
 ## Design
 
 [Design Docs](https://github.com/mcliff1/myslsapp/tms/usecases/README.md)
