@@ -9,7 +9,7 @@
   "author": "Matt Cliff",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.279.1",
+    "aws-sdk": "^2.814.0",
     "request": "^2.87.0",
     "tempy": "^0.2.1"
   }
