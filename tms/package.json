@@ -6,7 +6,7 @@
   "dependencies": {
     "ajv": "^6.5.4",
     "amazon-cognito-identity-js": "^2.0.30",
-    "aws-amplify": "^5.0.5",
+    "aws-amplify": "^5.3.12",
     "formik": "^0.11.11",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
